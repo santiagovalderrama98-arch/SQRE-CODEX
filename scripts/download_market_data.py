@@ -12,12 +12,21 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from sqre.data_acquisition.market_data_manager import MarketDataManager
-from sqre.data_acquisition.providers import DukascopyProvider, HistDataProvider
+from sqre.data_acquisition.providers import (
+    DukascopyProvider,
+    HistDataProvider,
+    MT5Provider,
+    TwelveDataProvider,
+)
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Download SQRE market data")
-    parser.add_argument("--provider", required=True, choices=["histdata", "dukascopy"])
+    parser.add_argument(
+        "--provider",
+        required=True,
+        choices=["histdata", "dukascopy", "twelvedata", "mt5"],
+    )
     parser.add_argument("--symbol", required=True)
     parser.add_argument("--timeframe", required=True)
     parser.add_argument("--start", required=True, type=date.fromisoformat)
@@ -31,7 +40,15 @@ def main() -> int:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
     args = parse_args()
 
-    manager = MarketDataManager([HistDataProvider(), DukascopyProvider()])
+    manager = MarketDataManager(
+        [
+            HistDataProvider(),
+            DukascopyProvider(),
+            TwelveDataProvider(),
+            MT5Provider(),
+        ]
+    )
+
     print(f"Provider selected: {args.provider}")
     print(f"Target: {args.symbol.upper()} {args.timeframe.upper()}")
 
@@ -47,12 +64,17 @@ def main() -> int:
 
     if not result.success:
         print(f"Download failed: {result.message}")
-        print("Recommended manual ingestion:")
-        print(
-            "python3 scripts/ingest_histdata_file.py "
-            "--file data/external/DAT_ASCII_EURUSD_M1_2020.csv "
-            "--symbol EURUSD --timeframe M1"
-        )
+        if args.provider == "histdata":
+            print("Recommended manual ingestion:")
+            print(
+                "python3 scripts/ingest_histdata_file.py "
+                "--file data/external/DAT_ASCII_EURUSD_M1_2020.csv "
+                "--symbol EURUSD --timeframe M1"
+            )
+        elif args.provider == "twelvedata":
+            print("Check TWELVE_DATA_API_KEY, API limits, symbol/timeframe support, and date range.")
+        elif args.provider == "mt5":
+            print("Check that MetaTrader 5 terminal is installed, running, logged in, and the symbol is available.")
         return 1
 
     print(f"Output path: {result.output_path}")
