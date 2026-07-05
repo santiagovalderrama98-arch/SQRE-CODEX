@@ -10,13 +10,33 @@ import pandas as pd
 class MarketStructureReport:
     """Write a concise descriptive market structure report."""
 
-    def write(self, structures: pd.DataFrame, output_path: Path | str) -> Path:
+    def write(
+        self,
+        structures: pd.DataFrame,
+        output_path: Path | str,
+        *,
+        input_event_count: int = 0,
+        unique_structural_point_count: int = 0,
+    ) -> Path:
         path = Path(output_path)
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(self._build_report(structures), encoding="utf-8")
+        path.write_text(
+            self._build_report(
+                structures,
+                input_event_count=input_event_count,
+                unique_structural_point_count=unique_structural_point_count,
+            ),
+            encoding="utf-8",
+        )
         return path
 
-    def _build_report(self, structures: pd.DataFrame) -> str:
+    def _build_report(
+        self,
+        structures: pd.DataFrame,
+        *,
+        input_event_count: int,
+        unique_structural_point_count: int,
+    ) -> str:
         if structures.empty:
             return "\n".join(
                 [
@@ -25,10 +45,12 @@ class MarketStructureReport:
                     "",
                     "Symbol: UNKNOWN",
                     "Timeframe: UNKNOWN",
-                    "Total Events Processed: 0",
-                    "Total Structural Points: 0",
+                    f"Input Events Processed: {input_event_count}",
+                    f"Unique Structural Points: {unique_structural_point_count}",
                     "Total Legs: 0",
                     "Total Structures Detected: 0",
+                    "Structure Event Assignments: 0",
+                    "Structure Point Assignments: 0",
                     "",
                     "Key observations:",
                     "- No market structures were detected.",
@@ -38,8 +60,8 @@ class MarketStructureReport:
             )
 
         first = structures.iloc[0]
-        total_events = int(structures["Event_Count"].sum())
-        total_points = int(structures["Point_Count"].sum())
+        structure_event_assignments = int(structures["Event_Count"].sum())
+        structure_point_assignments = int(structures["Point_Count"].sum())
         total_legs = int(structures["Leg_Count"].sum())
         most_common_direction = structures["Direction"].mode().iloc[0] if not structures["Direction"].mode().empty else "UNKNOWN"
 
@@ -50,10 +72,12 @@ class MarketStructureReport:
             f"Symbol: {first['Symbol']}",
             f"Timeframe: {first['Timeframe']}",
             f"Period: {structures['Start_Time'].min()} -> {structures['End_Time'].max()}",
-            f"Total Events Processed: {total_events}",
-            f"Total Structural Points: {total_points}",
+            f"Input Events Processed: {input_event_count}",
+            f"Unique Structural Points: {unique_structural_point_count}",
             f"Total Legs: {total_legs}",
             f"Total Structures Detected: {len(structures)}",
+            f"Structure Event Assignments: {structure_event_assignments}",
+            f"Structure Point Assignments: {structure_point_assignments}",
             "",
             f"Average Structure Duration: {structures['Duration_Seconds'].mean():.2f} seconds",
             f"Average Price Displacement: {structures['Price_Displacement'].mean():.6f}",
