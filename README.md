@@ -42,3 +42,23 @@ experimental provider and is disabled by default.
 ```bash
 pytest
 ```
+
+## Market Structure
+
+After `data/processed/events.csv` exists, run:
+
+```bash
+python3 scripts/run_market_structure.py \
+  --events data/processed/events.csv \
+  --output-dir data/processed \
+  --report data/reports/market_structure_report.txt
+The Market Structure pipeline groups structural highs/lows into descriptive
+legs and structures, then writes:
+data/processed/structures.csv
+data/processed/structure_events.csv
+data/processed/structural_units.csv
+data/processed/structural_fingerprints.csv
+data/reports/market_structure_report.txt
+This module is descriptive only. It does not implement trading signals, Market
+States, Coverage, a Transition Engine, backtesting, optimization, or portfolio
+logic.
