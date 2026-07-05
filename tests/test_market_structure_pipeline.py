@@ -50,4 +50,10 @@ def test_market_structure_pipeline_writes_all_outputs(tmp_path) -> None:
     assert {"Structure_ID", "Persistence", "Confidence"}.issubset(fingerprints.columns)
     assert {"Structure_ID", "Event_ID", "Role_In_Structure"}.issubset(links.columns)
     assert {"Unit_ID", "Unit_Type", "Confidence"}.issubset(units.columns)
-    assert "SQRE Market Structure Report" in report_path.read_text(encoding="utf-8")
+    report = report_path.read_text(encoding="utf-8")
+    assert "SQRE Market Structure Report" in report
+    assert "Input Events Processed: 8" in report
+    assert "Unique Structural Points: 5" in report
+    assert "Structure Event Assignments:" in report
+    assert "Structure Point Assignments:" in report
+    assert "Total Events Processed:" not in report

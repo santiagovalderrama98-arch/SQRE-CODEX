@@ -73,7 +73,12 @@ class MarketStructurePipeline:
         structure_events_frame.to_csv(paths["structure_events"], index=False)
         structural_units_frame.to_csv(paths["structural_units"], index=False)
         fingerprints_frame.to_csv(paths["structural_fingerprints"], index=False)
-        self.reporter.write(structures_frame, paths["report"])
+        self.reporter.write(
+            structures_frame,
+            paths["report"],
+            input_event_count=len(events),
+            unique_structural_point_count=len(points),
+        )
 
         return MarketStructureResult(
             events_processed=len(events),
