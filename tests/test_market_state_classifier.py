@@ -50,6 +50,34 @@ def test_classifies_directional_expansion() -> None:
     assert result.classification_rule == "directional_expansion_rule"
 
 
+def test_classifies_directional_displacement() -> None:
+    result = MarketStateClassifier().classify(
+        structure(
+            direction="DOWN",
+            persistence_index=0.3,
+            structural_efficiency=0.7,
+            structural_confidence=0.6,
+        )
+    )
+
+    assert result.market_state == "DIRECTIONAL_DISPLACEMENT"
+    assert result.classification_rule == "directional_displacement_rule"
+
+
+def test_directional_expansion_priority_wins_over_displacement() -> None:
+    result = MarketStateClassifier().classify(
+        structure(
+            direction="UP",
+            persistence_index=0.7,
+            structural_efficiency=0.7,
+            structural_confidence=0.8,
+        )
+    )
+
+    assert result.market_state == "DIRECTIONAL_EXPANSION"
+    assert result.classification_rule == "directional_expansion_rule"
+
+
 def test_classifies_directional_drift() -> None:
     assert (
         classify(
@@ -109,7 +137,7 @@ def test_classifies_volatile_rotation() -> None:
 
 
 def test_returns_unclassified_when_no_rule_applies() -> None:
-    assert classify(structure(persistence_index=0.1, structural_efficiency=0.8, structural_confidence=0.8)) == "UNCLASSIFIED"
+    assert classify(structure(persistence_index=0.1, structural_efficiency=0.55, structural_confidence=0.8)) == "UNCLASSIFIED"
 
 
 def test_classification_priority_low_quality_wins() -> None:

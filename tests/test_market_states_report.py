@@ -44,6 +44,7 @@ def test_market_states_report_is_generated_and_descriptive(tmp_path) -> None:
     text = report_path.read_text(encoding="utf-8")
 
     assert report_path.exists()
+    assert "- Directional Displacement: 0" in text
     assert "- Directional Drift: 2" in text
     assert "- Low Quality Structure: 1" in text
     assert "Most Common State: Directional Drift" in text

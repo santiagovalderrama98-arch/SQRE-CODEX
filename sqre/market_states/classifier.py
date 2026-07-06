@@ -19,6 +19,8 @@ class MarketStateClassifier:
             return StateClassificationResult("LOW_QUALITY_STRUCTURE", "low_quality_structure_rule")
         if self._is_directional_expansion(structure):
             return StateClassificationResult("DIRECTIONAL_EXPANSION", "directional_expansion_rule")
+        if self._is_directional_displacement(structure):
+            return StateClassificationResult("DIRECTIONAL_DISPLACEMENT", "directional_displacement_rule")
         if self._is_complex_consolidation(structure):
             return StateClassificationResult("COMPLEX_CONSOLIDATION", "complex_consolidation_rule")
         if self._is_volatile_rotation(structure):
@@ -38,6 +40,13 @@ class MarketStateClassifier:
             and structure.persistence_index >= self.config.directional_expansion_persistence_threshold
             and structure.structural_efficiency >= self.config.directional_expansion_efficiency_threshold
             and structure.structural_confidence >= self.config.directional_expansion_confidence_threshold
+        )
+
+    def _is_directional_displacement(self, structure: StructuralInput) -> bool:
+        return (
+            structure.direction in self.DIRECTIONAL_DIRECTIONS
+            and structure.structural_efficiency >= self.config.directional_displacement_efficiency_threshold
+            and structure.structural_confidence >= self.config.directional_displacement_confidence_threshold
         )
 
     def _is_directional_drift(self, structure: StructuralInput) -> bool:

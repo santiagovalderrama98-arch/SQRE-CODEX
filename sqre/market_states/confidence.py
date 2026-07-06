@@ -22,6 +22,12 @@ class StateConfidenceCalculator:
                 structure.structural_efficiency,
                 structure.structural_confidence,
             )
+        if state == "DIRECTIONAL_DISPLACEMENT":
+            return self._average(
+                structure.structural_efficiency,
+                structure.structural_confidence,
+                1 - abs(structure.persistence_index - 0.50),
+            )
         if state == "DIRECTIONAL_DRIFT":
             return self._average(
                 structure.persistence_index,

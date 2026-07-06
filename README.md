@@ -93,6 +93,7 @@ The v1.0 taxonomy is:
 
 ```text
 DIRECTIONAL_EXPANSION
+DIRECTIONAL_DISPLACEMENT
 DIRECTIONAL_DRIFT
 NEUTRAL_COMPRESSION
 COMPLEX_CONSOLIDATION
@@ -100,5 +101,8 @@ VOLATILE_ROTATION
 LOW_QUALITY_STRUCTURE
 UNCLASSIFIED
 ```
+
+`DIRECTIONAL_DISPLACEMENT` describes efficient directional displacement without
+enough persistence to qualify as Directional Expansion.
 
 This module is descriptive only and does not generate trading signals.

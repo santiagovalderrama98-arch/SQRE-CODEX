@@ -11,6 +11,8 @@ class MarketStatesConfig:
     directional_expansion_persistence_threshold: float = 0.50
     directional_expansion_efficiency_threshold: float = 0.60
     directional_expansion_confidence_threshold: float = 0.65
+    directional_displacement_efficiency_threshold: float = 0.60
+    directional_displacement_confidence_threshold: float = 0.55
     directional_drift_persistence_threshold: float = 0.35
     directional_drift_efficiency_threshold: float = 0.60
     directional_drift_confidence_threshold: float = 0.60

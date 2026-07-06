@@ -10,6 +10,7 @@ from sqre.market_states.models import MarketState
 
 STATE_ORDER = [
     "DIRECTIONAL_EXPANSION",
+    "DIRECTIONAL_DISPLACEMENT",
     "DIRECTIONAL_DRIFT",
     "NEUTRAL_COMPRESSION",
     "COMPLEX_CONSOLIDATION",
@@ -20,6 +21,7 @@ STATE_ORDER = [
 
 DISPLAY_NAMES = {
     "DIRECTIONAL_EXPANSION": "Directional Expansion",
+    "DIRECTIONAL_DISPLACEMENT": "Directional Displacement",
     "DIRECTIONAL_DRIFT": "Directional Drift",
     "NEUTRAL_COMPRESSION": "Neutral Compression",
     "COMPLEX_CONSOLIDATION": "Complex Consolidation",

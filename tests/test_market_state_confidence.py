@@ -43,6 +43,7 @@ def test_confidence_values_are_normalized_for_all_states() -> None:
     for state in [
         "LOW_QUALITY_STRUCTURE",
         "DIRECTIONAL_EXPANSION",
+        "DIRECTIONAL_DISPLACEMENT",
         "DIRECTIONAL_DRIFT",
         "NEUTRAL_COMPRESSION",
         "COMPLEX_CONSOLIDATION",
@@ -59,6 +60,20 @@ def test_low_quality_structure_confidence() -> None:
 
 def test_directional_expansion_confidence() -> None:
     assert round(confidence("DIRECTIONAL_EXPANSION"), 4) == round((0.6 + 0.4 + 0.7) / 3, 4)
+
+
+def test_directional_displacement_confidence() -> None:
+    input_structure = structure(
+        persistence_index=0.35,
+        structural_efficiency=0.7,
+        structural_confidence=0.65,
+    )
+
+    expected = (0.7 + 0.65 + (1 - abs(0.35 - 0.50))) / 3
+    value = confidence("DIRECTIONAL_DISPLACEMENT", input_structure)
+
+    assert 0 <= value <= 1
+    assert round(value, 4) == round(expected, 4)
 
 
 def test_directional_drift_confidence() -> None:
