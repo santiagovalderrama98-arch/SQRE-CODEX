@@ -69,3 +69,40 @@ data/reports/market_structure_report.txt
 This module is descriptive only. It does not implement trading signals, Market
 States, Coverage, a Transition Engine, backtesting, optimization, or portfolio
 logic.
+
+## Market States
+
+After `data/processed/structures.csv` exists, run:
+
+```bash
+python3 scripts/run_market_states.py \
+  --structures data/processed/structures.csv \
+  --output data/processed/market_states.csv \
+  --report data/reports/market_states_report.txt
+```
+
+The Market States pipeline classifies each Market Structure into one
+descriptive v1.0 state and writes:
+
+```text
+data/processed/market_states.csv
+data/reports/market_states_report.txt
+```
+
+The v1.0 taxonomy is:
+
+```text
+DIRECTIONAL_EXPANSION
+DIRECTIONAL_DISPLACEMENT
+DIRECTIONAL_DRIFT
+NEUTRAL_COMPRESSION
+COMPLEX_CONSOLIDATION
+VOLATILE_ROTATION
+LOW_QUALITY_STRUCTURE
+UNCLASSIFIED
+```
+
+`DIRECTIONAL_DISPLACEMENT` describes efficient directional displacement without
+enough persistence to qualify as Directional Expansion.
+
+This module is descriptive only and does not generate trading signals.
