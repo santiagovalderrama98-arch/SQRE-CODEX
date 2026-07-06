@@ -106,3 +106,37 @@ UNCLASSIFIED
 enough persistence to qualify as Directional Expansion.
 
 This module is descriptive only and does not generate trading signals.
+
+## Transition Engine
+
+Phase 6 measures observed transitions between Market States. It does not
+generate trading signals or operational recommendations.
+
+Input file:
+
+```text
+data/processed/market_states.csv
+```
+
+Run:
+
+```bash
+python3 scripts/run_transition_engine.py \
+  --states data/processed/market_states.csv \
+  --output-dir data/processed \
+  --report data/reports/transition_engine_report.txt
+```
+
+The Transition Engine writes:
+
+```text
+data/processed/state_transitions.csv
+data/processed/transition_matrix.csv
+data/processed/transition_sequences.csv
+data/reports/transition_engine_report.txt
+```
+
+Transition frequencies are descriptive frequencies inside the processed
+dataset only. They are not predictive probabilities. Transitions are built only
+within the same `Symbol` and `Timeframe`; states from different symbols or
+timeframes are never linked together.
