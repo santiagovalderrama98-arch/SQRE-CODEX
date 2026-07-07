@@ -178,3 +178,55 @@ data/reports/research_engine_report.txt
 
 The generated frequencies describe observed historical occurrence inside the
 processed dataset only. Low sample size conditions are flagged for review.
+
+## Price Outcome Research
+
+Phase 7.2 connects market states and state transitions with observed forward
+price behavior inside the processed dataset. It measures historical price
+outcome fields such as observed forward close return, observed forward range,
+observed favorable displacement, observed adverse displacement, and direction
+alignment rate.
+
+Input files:
+
+```text
+data/processed/market_states.csv
+data/processed/state_transitions.csv
+data/raw/EURUSD_H1.csv
+```
+
+Run:
+
+```bash
+python3 scripts/run_price_outcome_research.py \
+  --states data/processed/market_states.csv \
+  --transitions data/processed/state_transitions.csv \
+  --ohlc data/raw/EURUSD_H1.csv \
+  --output-dir data/research \
+  --report data/reports/price_outcome_research_report.txt \
+  --pip-size 0.0001 \
+  --forward-candles 3,6,12 \
+  --minimum-sample-size 5
+```
+
+For each state or transition occurrence, `Reference_Time` is the occurrence
+`End_Time`. SQRE aligns that timestamp to the first OHLC candle where `Date` is
+greater than or equal to `Reference_Time`. Forward candles start after the
+reference candle; the reference candle is not included in the forward window.
+
+`pip_size` controls pip conversion for return, range, and displacement fields.
+Incomplete forward windows near the end of a dataset are retained and marked
+explicitly. Low sample size groups are also marked explicitly.
+
+The Price Outcome Research pipeline writes:
+
+```text
+data/research/price_outcomes.csv
+data/research/condition_price_outcome_summary.csv
+data/research/price_outcome_distributions.csv
+data/reports/price_outcome_research_report.txt
+```
+
+This phase is descriptive only. It does not run backtesting, profitability
+analysis, position sizing, machine learning, optimization, or decision
+guidance.
