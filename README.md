@@ -140,3 +140,41 @@ Transition frequencies are descriptive frequencies inside the processed
 dataset only. They are not predictive probabilities. Transitions are built only
 within the same `Symbol` and `Timeframe`; states from different symbols or
 timeframes are never linked together.
+
+## Research Engine
+
+Phase 7.1 summarizes historical state and transition conditions from the
+processed SQRE dataset. It is descriptive only and does not generate trading
+signals, price outcome research, backtesting, machine learning, or portfolio
+logic.
+
+Input files:
+
+```text
+data/processed/market_states.csv
+data/processed/state_transitions.csv
+```
+
+Run:
+
+```bash
+python3 scripts/run_research_engine.py \
+  --states data/processed/market_states.csv \
+  --transitions data/processed/state_transitions.csv \
+  --output-dir data/research \
+  --report data/reports/research_engine_report.txt
+```
+
+The Research Engine writes:
+
+```text
+data/research/forward_state_distributions.csv
+data/research/forward_transition_distributions.csv
+data/research/preceding_state_distributions.csv
+data/research/sequence_outcomes.csv
+data/research/condition_summaries.csv
+data/reports/research_engine_report.txt
+```
+
+The generated frequencies describe observed historical occurrence inside the
+processed dataset only. Low sample size conditions are flagged for review.
