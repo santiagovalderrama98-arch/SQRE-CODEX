@@ -283,3 +283,44 @@ Missing input files are marked as `MISSING_INPUT` in non-strict mode. Use
 This phase is a descriptive validation orchestrator. It does not add execution
 guidance, portfolio logic, backtesting, machine learning, optimization, or a
 decision layer.
+
+## Calibration Review
+
+Phase 7.4 reads consolidated validation summaries and produces a diagnostic
+calibration review across scenarios and timeframes.
+
+Run after multi-scenario validation and temporal OOS validation summaries exist:
+
+```bash
+python3 scripts/run_calibration_review.py \
+  --summary-csv data/validation/multi_scenario_validation_summary.csv \
+  --summary-csv data/validation/temporal_oos_validation_summary.csv \
+  --output data/validation/calibration_review_summary.csv \
+  --report data/validation/calibration_review_report.txt
+```
+
+Optional diagnostic thresholds:
+
+```bash
+python3 scripts/run_calibration_review.py \
+  --summary-csv data/validation/multi_scenario_validation_summary.csv \
+  --summary-csv data/validation/temporal_oos_validation_summary.csv \
+  --output data/validation/calibration_review_summary.csv \
+  --report data/validation/calibration_review_report.txt \
+  --duration-near-max-threshold 0.85 \
+  --state-dominance-threshold 0.60 \
+  --low-state-diversity-threshold 4 \
+  --low-sample-rate-threshold 0.50 \
+  --high-directional-ratio-threshold 0.75
+```
+
+The runner writes:
+
+```text
+data/validation/calibration_review_summary.csv
+data/validation/calibration_review_report.txt
+```
+
+This phase is diagnostic only. It compares validation metrics, highlights
+low-sample and concentration patterns, and leaves all SQRE runtime behavior
+unchanged.
