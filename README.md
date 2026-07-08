@@ -230,3 +230,56 @@ data/reports/price_outcome_research_report.txt
 This phase is descriptive only. It does not run backtesting, profitability
 analysis, position sizing, machine learning, optimization, or decision
 guidance.
+
+## Multi-Scenario Validation
+
+Phase 7.3A runs the SQRE pipeline across configured scenarios and timeframes,
+then writes a consolidated validation summary.
+
+Config file:
+
+```text
+configs/validation/eurusd_multitimeframe_validation.yaml
+```
+
+Run all configured scenarios:
+
+```bash
+python3 scripts/run_multi_scenario_validation.py \
+  --config configs/validation/eurusd_multitimeframe_validation.yaml \
+  --output-dir data/validation \
+  --report data/validation/multi_scenario_validation_report.txt
+```
+
+Run one scenario:
+
+```bash
+python3 scripts/run_multi_scenario_validation.py \
+  --config configs/validation/eurusd_multitimeframe_validation.yaml \
+  --scenario eurusd_m5_period_2 \
+  --output-dir data/validation \
+  --report data/validation/multi_scenario_validation_report.txt
+```
+
+The runner writes per-scenario artifacts under:
+
+```text
+data/validation/<scenario_id>/processed
+data/validation/<scenario_id>/research
+data/validation/<scenario_id>/reports
+```
+
+It also writes:
+
+```text
+data/validation/multi_scenario_validation_summary.csv
+data/validation/multi_scenario_validation_report.txt
+```
+
+Missing input files are marked as `MISSING_INPUT` in non-strict mode. Use
+`--strict` to stop on the first missing input or failed scenario. Use
+`--skip-existing` to keep existing scenario outputs.
+
+This phase is a descriptive validation orchestrator. It does not add execution
+guidance, portfolio logic, backtesting, machine learning, optimization, or a
+decision layer.

@@ -11,3 +11,8 @@ data/reports/*.csv
 data/reports/*.txt
 data/validation/*.csv
 data/validation/*.txt
+data/validation/
+data/research/
+data/processed/
+data/reports/
+data/raw/
