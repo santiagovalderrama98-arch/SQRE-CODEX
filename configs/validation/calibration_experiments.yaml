@@ -1,0 +1,50 @@
+experiment_name: calibration_experiments_v1
+symbol: EURUSD
+pip_size: 0.0001
+forward_candles: [3, 6, 12]
+
+base_scenarios:
+  - scenario_id: eurusd_h4_period_1
+    symbol: EURUSD
+    timeframe: H4
+    ohlc_path: data/raw/EURUSD_H4_period_1.csv
+  - scenario_id: eurusd_h4_period_2
+    symbol: EURUSD
+    timeframe: H4
+    ohlc_path: data/raw/EURUSD_H4_period_2.csv
+  - scenario_id: eurusd_d1_period_1
+    symbol: EURUSD
+    timeframe: D1
+    ohlc_path: data/raw/EURUSD_D1_period_1.csv
+  - scenario_id: eurusd_d1_period_2
+    symbol: EURUSD
+    timeframe: D1
+    ohlc_path: data/raw/EURUSD_D1_period_2.csv
+
+duration_experiments:
+  - experiment_id: duration_conservative
+    description: Shorter structural duration limits
+    max_structure_duration_seconds:
+      H4: 432000
+      D1: 1814400
+  - experiment_id: duration_baseline
+    description: Current baseline structural duration limits
+    max_structure_duration_seconds:
+      H4: 604800
+      D1: 2592000
+  - experiment_id: duration_expanded
+    description: Longer structural duration limits
+    max_structure_duration_seconds:
+      H4: 864000
+      D1: 3888000
+
+sample_size_experiments:
+  - experiment_id: sample_size_5
+    description: Baseline minimum sample size
+    minimum_sample_size: 5
+  - experiment_id: sample_size_10
+    description: Moderate minimum sample size
+    minimum_sample_size: 10
+  - experiment_id: sample_size_20
+    description: Strict minimum sample size
+    minimum_sample_size: 20

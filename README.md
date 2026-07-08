@@ -324,3 +324,65 @@ data/validation/calibration_review_report.txt
 This phase is diagnostic only. It compares validation metrics, highlights
 low-sample and concentration patterns, and leaves all SQRE runtime behavior
 unchanged.
+
+## Calibration Adjustment Experiments
+
+Phase 7.4.1 follows Calibration Review with controlled diagnostic experiments.
+It compares duration sensitivity and minimum sample size sensitivity across
+configured H4 and D1 scenarios.
+
+Config file:
+
+```text
+configs/validation/calibration_experiments.yaml
+```
+
+Run all configured experiments:
+
+```bash
+python3 scripts/run_calibration_experiments.py \
+  --config configs/validation/calibration_experiments.yaml \
+  --output-dir data/validation/calibration_experiments \
+  --summary-csv data/validation/calibration_experiments/calibration_experiment_summary.csv \
+  --report data/validation/calibration_experiments/calibration_experiment_report.txt
+```
+
+Run only duration experiments:
+
+```bash
+python3 scripts/run_calibration_experiments.py \
+  --config configs/validation/calibration_experiments.yaml \
+  --output-dir data/validation/calibration_experiments \
+  --summary-csv data/validation/calibration_experiments/calibration_experiment_summary.csv \
+  --report data/validation/calibration_experiments/calibration_experiment_report.txt \
+  --experiment-type DURATION
+```
+
+Run one scenario:
+
+```bash
+python3 scripts/run_calibration_experiments.py \
+  --config configs/validation/calibration_experiments.yaml \
+  --output-dir data/validation/calibration_experiments \
+  --summary-csv data/validation/calibration_experiments/calibration_experiment_summary.csv \
+  --report data/validation/calibration_experiments/calibration_experiment_report.txt \
+  --scenario eurusd_h4_period_1
+```
+
+The runner writes experiment outputs under:
+
+```text
+data/validation/calibration_experiments/<experiment_id>/<scenario_id>/processed
+data/validation/calibration_experiments/<experiment_id>/<scenario_id>/research
+data/validation/calibration_experiments/<experiment_id>/<scenario_id>/reports
+```
+
+It also writes:
+
+```text
+data/validation/calibration_experiments/calibration_experiment_summary.csv
+data/validation/calibration_experiments/calibration_experiment_report.txt
+```
+
+This phase does not modify production thresholds or runtime defaults. Market
+State threshold experiments are deferred to a later configuration phase.
