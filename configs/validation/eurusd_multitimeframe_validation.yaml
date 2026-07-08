@@ -1,0 +1,40 @@
+validation_name: eurusd_multitimeframe_validation
+symbol: EURUSD
+pip_size: 0.0001
+minimum_sample_size: 5
+
+scenarios:
+  - scenario_id: eurusd_m5_baseline
+    symbol: EURUSD
+    timeframe: M5
+    ohlc_path: data/raw/EURUSD_M5_baseline.csv
+    max_structure_duration_seconds: 14400
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_m5_period_2
+    symbol: EURUSD
+    timeframe: M5
+    ohlc_path: data/raw/EURUSD_M5_period_2.csv
+    max_structure_duration_seconds: 14400
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_h1_period_1
+    symbol: EURUSD
+    timeframe: H1
+    ohlc_path: data/raw/EURUSD_H1_period_1.csv
+    max_structure_duration_seconds: 86400
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_h4_period_1
+    symbol: EURUSD
+    timeframe: H4
+    ohlc_path: data/raw/EURUSD_H4_period_1.csv
+    max_structure_duration_seconds: 604800
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_d1_period_1
+    symbol: EURUSD
+    timeframe: D1
+    ohlc_path: data/raw/EURUSD_D1_period_1.csv
+    max_structure_duration_seconds: 2592000
+    forward_candles: [3, 6, 12]
