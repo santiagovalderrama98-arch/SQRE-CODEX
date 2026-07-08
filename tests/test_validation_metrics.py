@@ -102,6 +102,118 @@ def test_collect_scenario_metrics_from_generated_csvs(tmp_path):
     assert metrics_to_frame([metrics]).iloc[0]["Scenario_ID"] == "eurusd_m5"
 
 
+def test_research_metrics_use_condition_id_unique_count(tmp_path):
+    scenario = _scenario(tmp_path)
+    scenario.research_dir.mkdir(parents=True)
+    _write_csv(
+        scenario.research_dir / "condition_summaries.csv",
+        [
+            {"Condition_ID": "C1", "Low_Sample_Size": True},
+            {"Condition_ID": "C1", "Low_Sample_Size": False},
+            {"Condition_ID": "C2", "Low_Sample_Size": True},
+        ],
+    )
+
+    metrics = collect_scenario_metrics(scenario, _result(scenario))
+
+    assert metrics.condition_summary_rows == 3
+    assert metrics.conditions_evaluated == 2
+    assert metrics.low_sample_conditions_research == 2
+
+
+def test_research_metrics_support_lowercase_condition_summary_columns(tmp_path):
+    scenario = _scenario(tmp_path)
+    scenario.research_dir.mkdir(parents=True)
+    _write_csv(
+        scenario.research_dir / "condition_summaries.csv",
+        [
+            {
+                "condition_id": "COND_000001",
+                "condition_type": "STATE_CONDITION",
+                "condition_value": "A",
+                "sample_size": 0,
+                "low_sample_size": "True",
+            },
+            {
+                "condition_id": "COND_000002",
+                "condition_type": "STATE_CONDITION",
+                "condition_value": "B",
+                "sample_size": 6,
+                "low_sample_size": "False",
+            },
+            {
+                "condition_id": "COND_000003",
+                "condition_type": "STATE_CONDITION",
+                "condition_value": "C",
+                "sample_size": 2,
+                "low_sample_size": "True",
+            },
+        ],
+    )
+
+    metrics = collect_scenario_metrics(scenario, _result(scenario))
+
+    assert metrics.condition_summary_rows == 3
+    assert metrics.conditions_evaluated == 3
+    assert metrics.low_sample_conditions_research == 2
+
+
+def test_research_metrics_fall_back_to_condition_summary_rows_without_condition_id(tmp_path):
+    scenario = _scenario(tmp_path)
+    scenario.research_dir.mkdir(parents=True)
+    _write_csv(
+        scenario.research_dir / "condition_summaries.csv",
+        [
+            {"Condition_Value": "A", "Low_Sample_Size": False},
+            {"Condition_Value": "B", "Low_Sample_Size": True},
+            {"Condition_Value": "C", "Low_Sample_Size": False},
+        ],
+    )
+
+    metrics = collect_scenario_metrics(scenario, _result(scenario))
+
+    assert metrics.condition_summary_rows == 3
+    assert metrics.conditions_evaluated == 3
+    assert metrics.low_sample_conditions_research == 1
+
+
+def test_research_low_sample_count_supports_string_values(tmp_path):
+    scenario = _scenario(tmp_path)
+    scenario.research_dir.mkdir(parents=True)
+    _write_csv(
+        scenario.research_dir / "condition_summaries.csv",
+        [
+            {"Condition_ID": "C1", "Low_Sample_Size": "True"},
+            {"Condition_ID": "C2", "Low_Sample_Size": "FALSE"},
+            {"Condition_ID": "C3", "Low_Sample_Size": "1"},
+            {"Condition_ID": "C4", "Low_Sample_Size": "yes"},
+        ],
+    )
+
+    metrics = collect_scenario_metrics(scenario, _result(scenario))
+
+    assert metrics.conditions_evaluated == 4
+    assert metrics.low_sample_conditions_research == 3
+
+
+def test_research_low_sample_count_defaults_to_zero_when_column_missing(tmp_path):
+    scenario = _scenario(tmp_path)
+    scenario.research_dir.mkdir(parents=True)
+    _write_csv(
+        scenario.research_dir / "condition_summaries.csv",
+        [
+            {"Condition_ID": "C1", "Condition_Value": "A"},
+            {"Condition_ID": "C2", "Condition_Value": "B"},
+        ],
+    )
+
+    metrics = collect_scenario_metrics(scenario, _result(scenario))
+
+    assert metrics.condition_summary_rows == 2
+    assert metrics.conditions_evaluated == 2
+    assert metrics.low_sample_conditions_research == 0
+
+
 def _scenario(tmp_path: Path) -> ValidationScenario:
     return ValidationScenario(
         scenario_id="eurusd_m5",
@@ -113,6 +225,21 @@ def _scenario(tmp_path: Path) -> ValidationScenario:
         pip_size=0.0001,
         minimum_sample_size=5,
         output_root=tmp_path / "validation",
+    )
+
+
+def _result(scenario: ValidationScenario) -> ScenarioRunResult:
+    return ScenarioRunResult(
+        scenario_id=scenario.scenario_id,
+        symbol=scenario.symbol,
+        timeframe=scenario.timeframe,
+        status=COMPLETED,
+        message="Scenario completed",
+        ohlc_path=scenario.ohlc_path,
+        scenario_output_dir=scenario.scenario_output_dir,
+        processed_dir=scenario.processed_dir,
+        research_dir=scenario.research_dir,
+        reports_dir=scenario.reports_dir,
     )
 
 

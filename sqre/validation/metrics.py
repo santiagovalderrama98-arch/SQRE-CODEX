@@ -149,7 +149,7 @@ def collect_scenario_metrics(scenario: ValidationScenario, result: ScenarioRunRe
         average_transition_stability=_mean(transitions, "Transition_Stability"),
         average_state_confidence_change=_mean(transitions, "State_Confidence_Change"),
         average_structural_quality_change=_mean(transitions, "Structural_Quality_Change"),
-        conditions_evaluated=_unique_conditions(condition_summaries, forward_states, forward_transitions, preceding_states),
+        conditions_evaluated=_conditions_evaluated(condition_summaries),
         forward_state_rows=len(forward_states),
         forward_transition_rows=len(forward_transitions),
         preceding_state_rows=len(preceding_states),
@@ -195,22 +195,25 @@ def _read_csv_if_exists(path: Path) -> pd.DataFrame:
 
 
 def _period_from_ohlc(frame: pd.DataFrame) -> tuple[str, str]:
-    if frame.empty or "Date" not in frame.columns:
+    date_column = _column(frame, "Date")
+    if frame.empty or date_column is None:
         return "", ""
-    dates = pd.to_datetime(frame["Date"])
+    dates = pd.to_datetime(frame[date_column])
     return str(dates.min()), str(dates.max())
 
 
 def _mean(frame: pd.DataFrame, column: str) -> float:
-    if frame.empty or column not in frame.columns:
+    actual = _column(frame, column)
+    if frame.empty or actual is None:
         return 0.0
-    return float(pd.to_numeric(frame[column], errors="coerce").fillna(0).mean())
+    return float(pd.to_numeric(frame[actual], errors="coerce").fillna(0).mean())
 
 
 def _mode(frame: pd.DataFrame, column: str) -> str:
-    if frame.empty or column not in frame.columns:
+    actual = _column(frame, column)
+    if frame.empty or actual is None:
         return ""
-    values = frame[column].dropna()
+    values = frame[actual].dropna()
     if values.empty:
         return ""
     mode = values.mode()
@@ -218,62 +221,85 @@ def _mode(frame: pd.DataFrame, column: str) -> str:
 
 
 def _unique(frame: pd.DataFrame, column: str) -> int:
-    if frame.empty or column not in frame.columns:
+    actual = _column(frame, column)
+    if frame.empty or actual is None:
         return 0
-    return int(frame[column].nunique())
+    return int(frame[actual].nunique())
 
 
 def _counts(frame: pd.DataFrame, column: str) -> dict[str, int]:
-    if frame.empty or column not in frame.columns:
+    actual = _column(frame, column)
+    if frame.empty or actual is None:
         return {state: 0 for state in STATE_TYPES}
-    counts = frame[column].value_counts().to_dict()
+    counts = frame[actual].value_counts().to_dict()
     return {str(key): int(value) for key, value in counts.items()}
 
 
 def _boolean_rate(frame: pd.DataFrame, column: str) -> float:
-    if frame.empty or column not in frame.columns:
+    actual = _column(frame, column)
+    if frame.empty or actual is None:
         return 0.0
-    values = frame[column]
+    values = frame[actual]
     if values.empty:
         return 0.0
-    normalized = values.map(lambda value: str(value).lower() in {"true", "1", "yes"})
+    normalized = values.map(_is_truthy)
     return float(normalized.mean())
 
 
-def _unique_conditions(*frames: pd.DataFrame) -> int:
-    conditions: set[str] = set()
-    for frame in frames:
-        if not frame.empty and "Condition_ID" in frame.columns:
-            conditions.update(str(item) for item in frame["Condition_ID"].dropna().unique())
-    return len(conditions)
+def _conditions_evaluated(frame: pd.DataFrame) -> int:
+    if frame.empty:
+        return 0
+    condition_column = _column(frame, "Condition_ID")
+    if condition_column is not None:
+        return int(frame[condition_column].dropna().nunique())
+    return len(frame)
 
 
 def _low_sample_count(frame: pd.DataFrame) -> int:
-    if frame.empty or "Low_Sample_Size" not in frame.columns:
+    low_sample_column = _column(frame, "Low_Sample_Size")
+    if frame.empty or low_sample_column is None:
         return 0
-    return int(frame["Low_Sample_Size"].map(lambda value: str(value).lower() in {"true", "1", "yes"}).sum())
+    return int(frame[low_sample_column].map(_is_truthy).sum())
 
 
 def _most_observed_condition(frame: pd.DataFrame) -> str:
-    if frame.empty or "Condition_Value" not in frame.columns or "Sample_Size" not in frame.columns:
+    condition_column = _column(frame, "Condition_Value")
+    sample_column = _column(frame, "Sample_Size")
+    if frame.empty or condition_column is None or sample_column is None:
         return ""
-    ordered = frame.sort_values(["Sample_Size", "Condition_Value"], ascending=[False, True])
-    return str(ordered.iloc[0]["Condition_Value"]) if not ordered.empty else ""
+    ordered = frame.sort_values([sample_column, condition_column], ascending=[False, True])
+    return str(ordered.iloc[0][condition_column]) if not ordered.empty else ""
 
 
 def _max_condition(frame: pd.DataFrame, column: str) -> str:
-    if frame.empty or column not in frame.columns or "Condition_Value" not in frame.columns:
+    actual = _column(frame, column)
+    condition_column = _column(frame, "Condition_Value")
+    if frame.empty or actual is None or condition_column is None:
         return ""
     values = frame.copy()
-    if "Low_Sample_Size" in values.columns:
-        preferred = values[~values["Low_Sample_Size"].map(lambda item: str(item).lower() in {"true", "1", "yes"})]
+    low_sample_column = _column(values, "Low_Sample_Size")
+    if low_sample_column is not None:
+        preferred = values[~values[low_sample_column].map(_is_truthy)]
         if not preferred.empty:
             values = preferred
-    values[column] = pd.to_numeric(values[column], errors="coerce")
-    values = values.dropna(subset=[column])
+    values[actual] = pd.to_numeric(values[actual], errors="coerce")
+    values = values.dropna(subset=[actual])
     if values.empty:
         return ""
-    return str(values.sort_values([column, "Condition_Value"], ascending=[False, True]).iloc[0]["Condition_Value"])
+    return str(values.sort_values([actual, condition_column], ascending=[False, True]).iloc[0][condition_column])
+
+
+def _column(frame: pd.DataFrame, expected: str) -> str | None:
+    lookup = {_normalize_column(column): column for column in frame.columns}
+    return lookup.get(_normalize_column(expected))
+
+
+def _normalize_column(column: object) -> str:
+    return str(column).strip().lower()
+
+
+def _is_truthy(value: object) -> bool:
+    return str(value).strip().lower() in {"true", "1", "yes"}
 
 
 def _snake(column: str) -> str:
