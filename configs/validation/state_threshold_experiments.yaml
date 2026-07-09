@@ -1,0 +1,33 @@
+experiment_name: state_threshold_experiments_v1
+symbol: EURUSD
+pip_size: 0.0001
+forward_candles: [3, 6, 12]
+minimum_sample_size: 5
+baseline_max_structure_duration_seconds:
+  H4: 604800
+  D1: 2592000
+state_config_path: configs/validation/state_threshold_profiles.yaml
+
+base_scenarios:
+  - scenario_id: eurusd_h4_period_1
+    symbol: EURUSD
+    timeframe: H4
+    ohlc_path: data/raw/EURUSD_H4_period_1.csv
+  - scenario_id: eurusd_h4_period_2
+    symbol: EURUSD
+    timeframe: H4
+    ohlc_path: data/raw/EURUSD_H4_period_2.csv
+  - scenario_id: eurusd_d1_period_1
+    symbol: EURUSD
+    timeframe: D1
+    ohlc_path: data/raw/EURUSD_D1_period_1.csv
+  - scenario_id: eurusd_d1_period_2
+    symbol: EURUSD
+    timeframe: D1
+    ohlc_path: data/raw/EURUSD_D1_period_2.csv
+
+profiles:
+  - state_baseline
+  - directional_stricter
+  - consolidation_sensitive
+  - balanced_high_tf

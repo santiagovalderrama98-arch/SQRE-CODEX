@@ -386,3 +386,62 @@ data/validation/calibration_experiments/calibration_experiment_report.txt
 
 This phase does not modify production thresholds or runtime defaults. Market
 State threshold experiments are deferred to a later configuration phase.
+
+## Timeframe-Aware State Threshold Experiments
+
+Phase 7.4.2 adds optional Market State threshold profiles while preserving the
+default production behavior. Running Market States without a config still uses
+the original v1.0 thresholds.
+
+Run Market States with an explicit threshold profile:
+
+```bash
+python3 scripts/run_market_states.py \
+  --structures data/processed/structures.csv \
+  --output data/processed/market_states.csv \
+  --report data/reports/market_states_report.txt \
+  --state-config configs/validation/state_threshold_profiles.yaml \
+  --state-profile balanced_high_tf \
+  --timeframe H4
+```
+
+Run all configured state threshold experiments:
+
+```bash
+python3 scripts/run_state_threshold_experiments.py \
+  --config configs/validation/state_threshold_experiments.yaml \
+  --output-dir data/validation/state_threshold_experiments \
+  --summary-csv data/validation/state_threshold_experiments/state_threshold_experiment_summary.csv \
+  --report data/validation/state_threshold_experiments/state_threshold_experiment_report.txt
+```
+
+Run a single profile and scenario:
+
+```bash
+python3 scripts/run_state_threshold_experiments.py \
+  --config configs/validation/state_threshold_experiments.yaml \
+  --output-dir data/validation/state_threshold_experiments \
+  --summary-csv data/validation/state_threshold_experiments/state_threshold_experiment_summary.csv \
+  --report data/validation/state_threshold_experiments/state_threshold_experiment_report.txt \
+  --profile directional_stricter \
+  --scenario eurusd_h4_period_1
+```
+
+The runner writes profile/scenario outputs under:
+
+```text
+data/validation/state_threshold_experiments/<profile_id>/<scenario_id>/processed
+data/validation/state_threshold_experiments/<profile_id>/<scenario_id>/research
+data/validation/state_threshold_experiments/<profile_id>/<scenario_id>/reports
+```
+
+It also writes:
+
+```text
+data/validation/state_threshold_experiments/state_threshold_experiment_summary.csv
+data/validation/state_threshold_experiments/state_threshold_experiment_report.txt
+```
+
+This phase is diagnostic only. It does not modify default thresholds, does not
+change production runtime behavior, and does not add operational market action
+logic.
