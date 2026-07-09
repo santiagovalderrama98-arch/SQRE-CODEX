@@ -1,0 +1,33 @@
+validation_name: eurusd_temporal_oos_validation
+symbol: EURUSD
+pip_size: 0.0001
+minimum_sample_size: 5
+
+scenarios:
+  - scenario_id: eurusd_h4_period_1
+    symbol: EURUSD
+    timeframe: H4
+    ohlc_path: data/raw/EURUSD_H4_period_1.csv
+    max_structure_duration_seconds: 604800
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_h4_period_2
+    symbol: EURUSD
+    timeframe: H4
+    ohlc_path: data/raw/EURUSD_H4_period_2.csv
+    max_structure_duration_seconds: 604800
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_d1_period_1
+    symbol: EURUSD
+    timeframe: D1
+    ohlc_path: data/raw/EURUSD_D1_period_1.csv
+    max_structure_duration_seconds: 2592000
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_d1_period_2
+    symbol: EURUSD
+    timeframe: D1
+    ohlc_path: data/raw/EURUSD_D1_period_2.csv
+    max_structure_duration_seconds: 2592000
+    forward_candles: [3, 6, 12]
