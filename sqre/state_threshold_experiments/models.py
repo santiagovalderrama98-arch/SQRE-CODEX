@@ -118,6 +118,13 @@ class StateThresholdExperimentMetricsRow:
     relative_unclassified_rate_vs_baseline: float = 0.0
     relative_low_quality_rate_vs_baseline: float = 0.0
     relative_forward_range_change_vs_baseline: float = 0.0
+    absolute_most_common_state_ratio_change_vs_baseline: float = 0.0
+    absolute_directional_state_ratio_change_vs_baseline: float = 0.0
+    absolute_volatile_rotation_ratio_change_vs_baseline: float = 0.0
+    absolute_compression_consolidation_ratio_change_vs_baseline: float = 0.0
+    absolute_unclassified_rate_change_vs_baseline: float = 0.0
+    absolute_low_quality_rate_change_vs_baseline: float = 0.0
+    absolute_forward_range_change_vs_baseline: float = 0.0
     experiment_notes: str = ""
 
 
