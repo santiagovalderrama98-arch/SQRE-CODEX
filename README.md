@@ -445,3 +445,65 @@ data/validation/state_threshold_experiments/state_threshold_experiment_report.tx
 This phase is diagnostic only. It does not modify default thresholds, does not
 change production runtime behavior, and does not add operational market action
 logic.
+
+## Expanded Historical Sample Validation
+
+Phase 7.4.3 adds configuration and utility scripts for expanding EURUSD
+historical validation coverage across M5, H1, H4, and D1 samples. It prepares a
+larger research sample set without changing production defaults or runtime
+thresholds.
+
+Expanded sample plan:
+
+```text
+configs/validation/eurusd_expanded_historical_samples.yaml
+```
+
+Generate download commands without executing them:
+
+```bash
+python3 scripts/generate_expanded_sample_download_commands.py \
+  --config configs/validation/eurusd_expanded_historical_samples.yaml
+```
+
+Generate commands for one timeframe:
+
+```bash
+python3 scripts/generate_expanded_sample_download_commands.py \
+  --config configs/validation/eurusd_expanded_historical_samples.yaml \
+  --timeframe H4
+```
+
+Write a shell script containing only currently missing sample downloads:
+
+```bash
+python3 scripts/generate_expanded_sample_download_commands.py \
+  --config configs/validation/eurusd_expanded_historical_samples.yaml \
+  --missing-only \
+  --output-script scripts/download_expanded_historical_samples.sh
+```
+
+Check which expanded sample files are available locally:
+
+```bash
+python3 scripts/check_expanded_sample_data.py \
+  --samples-config configs/validation/eurusd_expanded_historical_samples.yaml \
+  --validation-config configs/validation/eurusd_expanded_historical_validation.yaml \
+  --output data/validation/expanded_historical_data_availability.csv \
+  --report data/validation/expanded_historical_data_availability_report.txt
+```
+
+Run expanded multi-scenario validation after the required raw CSV files exist:
+
+```bash
+python3 scripts/run_multi_scenario_validation.py \
+  --config configs/validation/eurusd_expanded_historical_validation.yaml \
+  --output-dir data/validation/expanded_historical \
+  --report data/validation/expanded_historical/multi_scenario_validation_report.txt \
+  --summary-csv data/validation/expanded_historical/multi_scenario_validation_summary.csv
+```
+
+The expanded validation config includes 25 scenarios: the existing EURUSD
+validation scenarios plus 18 additional historical sample targets. This phase is
+research-only and does not introduce automated threshold changes, model
+selection, backtesting, or a decision layer.
