@@ -11,6 +11,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from sqre.market_states import MarketStatesPipeline
+from sqre.market_states.config_loader import load_market_state_config_from_yaml
 
 
 def parse_args() -> argparse.Namespace:
@@ -18,6 +19,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--structures", required=True, help="Input structures CSV path")
     parser.add_argument("--output", required=True, help="Output market states CSV path")
     parser.add_argument("--report", required=True, help="Output market states report path")
+    parser.add_argument("--state-config", type=Path, help="Optional Market State threshold profile YAML")
+    parser.add_argument("--state-profile", help="Profile ID to load from --state-config")
+    parser.add_argument("--timeframe", help="Optional timeframe for timeframe-specific overrides")
     return parser.parse_args()
 
 
@@ -28,9 +32,16 @@ def main() -> int:
     print(f"Input structures: {args.structures}")
     print(f"Output states: {args.output}")
     print(f"Report: {args.report}")
+    config = None
+    if args.state_config:
+        config = load_market_state_config_from_yaml(
+            args.state_config,
+            profile_id=args.state_profile,
+            timeframe=args.timeframe,
+        )
 
     try:
-        result = MarketStatesPipeline().run(
+        result = MarketStatesPipeline(config=config).run(
             structures_path=args.structures,
             output_path=args.output,
             report_path=args.report,
