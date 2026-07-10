@@ -43,6 +43,30 @@ def _row() -> StateThresholdExperimentMetricsRow:
     )
 
 
+def _compared_row() -> StateThresholdExperimentMetricsRow:
+    return StateThresholdExperimentMetricsRow(
+        experiment_run_id="balanced_high_tf__eurusd_d1_period_1",
+        profile_id="balanced_high_tf",
+        scenario_id="eurusd_d1_period_1",
+        symbol="EURUSD",
+        timeframe="D1",
+        status="COMPLETED",
+        message="Completed successfully",
+        states_generated=10,
+        unique_states=4,
+        most_common_state="UNCLASSIFIED",
+        most_common_state_ratio=0.4,
+        directional_state_ratio=0.5,
+        unclassified_rate=0.0811,
+        relative_directional_state_ratio_vs_baseline=-0.0833,
+        relative_state_diversity_change_vs_baseline=0.3333,
+        relative_unclassified_rate_vs_baseline=0.0,
+        relative_forward_range_change_vs_baseline=0.0537,
+        absolute_unclassified_rate_change_vs_baseline=0.0811,
+        experiment_notes="Baseline comparison: unclassified rate increased from zero.",
+    )
+
+
 def test_write_state_threshold_experiment_summary_csv(tmp_path) -> None:
     output = tmp_path / "summary.csv"
 
@@ -51,6 +75,8 @@ def test_write_state_threshold_experiment_summary_csv(tmp_path) -> None:
     text = output.read_text(encoding="utf-8")
     assert "Experiment_Run_ID" in text
     assert "Relative_Forward_Range_Change_vs_Baseline" in text
+    assert "Absolute_Unclassified_Rate_Change_vs_Baseline" in text
+    assert "Absolute_Forward_Range_Change_vs_Baseline" in text
 
 
 def test_write_state_threshold_experiment_report_sections_and_guardrails(tmp_path) -> None:
@@ -78,3 +104,24 @@ def test_write_state_threshold_experiment_report_sections_and_guardrails(tmp_pat
     assert "Do Not Change Yet" in text
     assert "No profile ranking is produced." in text
     assert "No operational market action logic was added." in text
+
+
+def test_report_uses_absolute_unclassified_change_for_zero_baseline(tmp_path) -> None:
+    output = tmp_path / "report.txt"
+    summary = StateThresholdExperimentSummary(
+        experiment_name="state_threshold_experiments_v1",
+        runs_configured=2,
+        runs_completed=2,
+        runs_missing_input=0,
+        runs_failed=0,
+        summary_rows=2,
+        output_path=tmp_path / "summary.csv",
+        report_path=output,
+    )
+
+    write_state_threshold_experiment_report(output, summary, [_row(), _compared_row()])
+
+    text = output.read_text(encoding="utf-8")
+    assert "unclassified_absolute_change=0.0811" in text
+    assert "unclassified_note=increased from zero" in text
+    assert "unclassified_change=0.0000" not in text

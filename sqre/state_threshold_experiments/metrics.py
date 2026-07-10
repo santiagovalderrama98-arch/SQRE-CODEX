@@ -26,6 +26,8 @@ STATE_TYPES = [
     "UNCLASSIFIED",
 ]
 
+_ZERO_TOLERANCE = 0.000001
+
 
 def collect_state_threshold_metrics(
     experiment_run: StateThresholdExperimentRun,
@@ -141,6 +143,16 @@ def _with_comparison(
     unclassified_change = _relative_change(row.unclassified_rate, baseline.unclassified_rate)
     low_quality_change = _relative_change(row.low_quality_rate, baseline.low_quality_rate)
     range_change = _relative_change(row.average_forward_range_pips, baseline.average_forward_range_pips)
+    most_common_delta = _absolute_change(row.most_common_state_ratio, baseline.most_common_state_ratio)
+    directional_delta = _absolute_change(row.directional_state_ratio, baseline.directional_state_ratio)
+    rotation_delta = _absolute_change(row.volatile_rotation_ratio, baseline.volatile_rotation_ratio)
+    compression_delta = _absolute_change(
+        row.compression_consolidation_ratio,
+        baseline.compression_consolidation_ratio,
+    )
+    unclassified_delta = _absolute_change(row.unclassified_rate, baseline.unclassified_rate)
+    low_quality_delta = _absolute_change(row.low_quality_rate, baseline.low_quality_rate)
+    range_delta = _absolute_change(row.average_forward_range_pips, baseline.average_forward_range_pips)
     return replace(
         row,
         relative_most_common_state_ratio_vs_baseline=most_common_change,
@@ -151,7 +163,14 @@ def _with_comparison(
         relative_unclassified_rate_vs_baseline=unclassified_change,
         relative_low_quality_rate_vs_baseline=low_quality_change,
         relative_forward_range_change_vs_baseline=range_change,
-        experiment_notes=_comparison_notes(row.status, directional_change, diversity_change, unclassified_change, range_change),
+        absolute_most_common_state_ratio_change_vs_baseline=most_common_delta,
+        absolute_directional_state_ratio_change_vs_baseline=directional_delta,
+        absolute_volatile_rotation_ratio_change_vs_baseline=rotation_delta,
+        absolute_compression_consolidation_ratio_change_vs_baseline=compression_delta,
+        absolute_unclassified_rate_change_vs_baseline=unclassified_delta,
+        absolute_low_quality_rate_change_vs_baseline=low_quality_delta,
+        absolute_forward_range_change_vs_baseline=range_delta,
+        experiment_notes=_comparison_notes(row.status, row=row, baseline=baseline),
     )
 
 
@@ -243,6 +262,10 @@ def _relative_change(value: float, baseline: float) -> float:
     return (float(value) - float(baseline)) / float(baseline)
 
 
+def _absolute_change(value: float, baseline: float) -> float:
+    return float(value) - float(baseline)
+
+
 def _column(frame: pd.DataFrame, expected: str) -> str | None:
     lookup = {_normalize_column(column): column for column in frame.columns}
     return lookup.get(_normalize_column(expected))
@@ -266,20 +289,33 @@ def _notes(status: str) -> str:
 
 def _comparison_notes(
     status: str,
-    directional_change: float,
-    diversity_change: float,
-    unclassified_change: float,
-    range_change: float,
+    *,
+    row: StateThresholdExperimentMetricsRow,
+    baseline: StateThresholdExperimentMetricsRow,
 ) -> str:
     if status not in {"COMPLETED", "SKIPPED"}:
         return _notes(status)
     labels = [
-        f"directional ratio {_direction_word(directional_change)}",
-        f"state diversity {_direction_word(diversity_change)}",
-        f"unclassified rate {_direction_word(unclassified_change)}",
-        f"forward range {_direction_word(range_change)}",
+        f"directional ratio {_change_label(row.directional_state_ratio, baseline.directional_state_ratio)}",
+        f"state diversity {_change_label(row.unique_states, baseline.unique_states)}",
+        f"unclassified rate {_change_label(row.unclassified_rate, baseline.unclassified_rate)}",
+        f"forward range {_change_label(row.average_forward_range_pips, baseline.average_forward_range_pips)}",
     ]
     return "Baseline comparison: " + ", ".join(labels) + "."
+
+
+def _change_label(value: float, baseline: float) -> str:
+    current = float(value)
+    reference = float(baseline)
+    current_is_zero = abs(current) <= _ZERO_TOLERANCE
+    baseline_is_zero = abs(reference) <= _ZERO_TOLERANCE
+    if baseline_is_zero and current_is_zero:
+        return "stable at zero"
+    if baseline_is_zero and current > 0:
+        return "increased from zero"
+    if reference > 0 and current_is_zero:
+        return "decreased to zero"
+    return _direction_word(_relative_change(current, reference))
 
 
 def _direction_word(value: float) -> str:

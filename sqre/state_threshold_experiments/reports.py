@@ -72,6 +72,13 @@ SUMMARY_COLUMNS = [
     "Relative_Unclassified_Rate_vs_Baseline",
     "Relative_Low_Quality_Rate_vs_Baseline",
     "Relative_Forward_Range_Change_vs_Baseline",
+    "Absolute_Most_Common_State_Ratio_Change_vs_Baseline",
+    "Absolute_Directional_State_Ratio_Change_vs_Baseline",
+    "Absolute_Volatile_Rotation_Ratio_Change_vs_Baseline",
+    "Absolute_Compression_Consolidation_Ratio_Change_vs_Baseline",
+    "Absolute_Unclassified_Rate_Change_vs_Baseline",
+    "Absolute_Low_Quality_Rate_Change_vs_Baseline",
+    "Absolute_Forward_Range_Change_vs_Baseline",
     "Experiment_Notes",
 ]
 
@@ -244,7 +251,8 @@ def _relative_change_lines(rows: list[StateThresholdExperimentMetricsRow]) -> li
         "- "
         f"{row.experiment_run_id}: directional_change={row.relative_directional_state_ratio_vs_baseline:.4f}, "
         f"diversity_change={row.relative_state_diversity_change_vs_baseline:.4f}, "
-        f"unclassified_change={row.relative_unclassified_rate_vs_baseline:.4f}, "
+        f"unclassified_absolute_change={row.absolute_unclassified_rate_change_vs_baseline:.4f}, "
+        f"unclassified_note={_absolute_change_note(row.unclassified_rate, row.absolute_unclassified_rate_change_vs_baseline)}, "
         f"forward_range_change={row.relative_forward_range_change_vs_baseline:.4f}."
         for row in rows
     ]
@@ -252,6 +260,18 @@ def _relative_change_lines(rows: list[StateThresholdExperimentMetricsRow]) -> li
 
 def _completed(rows: list[StateThresholdExperimentMetricsRow]) -> list[StateThresholdExperimentMetricsRow]:
     return [row for row in rows if row.status in {"COMPLETED", "SKIPPED"}]
+
+
+def _absolute_change_note(current_value: float, absolute_delta: float) -> str:
+    if abs(absolute_delta) <= 0.000001 and abs(current_value) <= 0.000001:
+        return "stable at zero"
+    if abs(absolute_delta) <= 0.000001:
+        return "stable"
+    if absolute_delta > 0 and abs(current_value - absolute_delta) <= 0.000001:
+        return "increased from zero"
+    if absolute_delta < 0 and abs(current_value) <= 0.000001:
+        return "decreased to zero"
+    return "increased" if absolute_delta > 0 else "decreased"
 
 
 def _snake(column: str) -> str:
