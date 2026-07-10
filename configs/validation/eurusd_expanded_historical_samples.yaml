@@ -1,0 +1,131 @@
+sample_set_name: eurusd_expanded_historical_samples_v1
+symbol: EURUSD
+provider: twelvedata
+pip_size: 0.0001
+
+samples:
+  - sample_id: eurusd_m5_period_3
+    symbol: EURUSD
+    timeframe: M5
+    start: 2026-05-01
+    end: 2026-05-15
+    output_path: data/raw/EURUSD_M5_period_3.csv
+
+  - sample_id: eurusd_m5_period_4
+    symbol: EURUSD
+    timeframe: M5
+    start: 2026-04-01
+    end: 2026-04-15
+    output_path: data/raw/EURUSD_M5_period_4.csv
+
+  - sample_id: eurusd_m5_period_5
+    symbol: EURUSD
+    timeframe: M5
+    start: 2026-03-01
+    end: 2026-03-15
+    output_path: data/raw/EURUSD_M5_period_5.csv
+
+  - sample_id: eurusd_m5_period_6
+    symbol: EURUSD
+    timeframe: M5
+    start: 2025-12-01
+    end: 2025-12-15
+    output_path: data/raw/EURUSD_M5_period_6.csv
+
+  - sample_id: eurusd_m5_period_7
+    symbol: EURUSD
+    timeframe: M5
+    start: 2025-09-01
+    end: 2025-09-15
+    output_path: data/raw/EURUSD_M5_period_7.csv
+
+  - sample_id: eurusd_m5_period_8
+    symbol: EURUSD
+    timeframe: M5
+    start: 2025-06-01
+    end: 2025-06-15
+    output_path: data/raw/EURUSD_M5_period_8.csv
+
+  - sample_id: eurusd_h1_period_2
+    symbol: EURUSD
+    timeframe: H1
+    start: 2026-04-01
+    end: 2026-05-31
+    output_path: data/raw/EURUSD_H1_period_2.csv
+
+  - sample_id: eurusd_h1_period_3
+    symbol: EURUSD
+    timeframe: H1
+    start: 2026-02-01
+    end: 2026-03-31
+    output_path: data/raw/EURUSD_H1_period_3.csv
+
+  - sample_id: eurusd_h1_period_4
+    symbol: EURUSD
+    timeframe: H1
+    start: 2025-10-01
+    end: 2025-11-30
+    output_path: data/raw/EURUSD_H1_period_4.csv
+
+  - sample_id: eurusd_h1_period_5
+    symbol: EURUSD
+    timeframe: H1
+    start: 2025-07-01
+    end: 2025-08-31
+    output_path: data/raw/EURUSD_H1_period_5.csv
+
+  - sample_id: eurusd_h1_period_6
+    symbol: EURUSD
+    timeframe: H1
+    start: 2025-04-01
+    end: 2025-05-31
+    output_path: data/raw/EURUSD_H1_period_6.csv
+
+  - sample_id: eurusd_h1_period_7
+    symbol: EURUSD
+    timeframe: H1
+    start: 2025-01-01
+    end: 2025-02-28
+    output_path: data/raw/EURUSD_H1_period_7.csv
+
+  - sample_id: eurusd_h4_period_3
+    symbol: EURUSD
+    timeframe: H4
+    start: 2022-01-01
+    end: 2023-06-30
+    output_path: data/raw/EURUSD_H4_period_3.csv
+
+  - sample_id: eurusd_h4_period_4
+    symbol: EURUSD
+    timeframe: H4
+    start: 2020-07-01
+    end: 2021-12-31
+    output_path: data/raw/EURUSD_H4_period_4.csv
+
+  - sample_id: eurusd_h4_period_5
+    symbol: EURUSD
+    timeframe: H4
+    start: 2019-01-01
+    end: 2020-06-30
+    output_path: data/raw/EURUSD_H4_period_5.csv
+
+  - sample_id: eurusd_h4_period_6
+    symbol: EURUSD
+    timeframe: H4
+    start: 2017-07-01
+    end: 2018-12-31
+    output_path: data/raw/EURUSD_H4_period_6.csv
+
+  - sample_id: eurusd_d1_period_3
+    symbol: EURUSD
+    timeframe: D1
+    start: 2010-01-01
+    end: 2015-06-30
+    output_path: data/raw/EURUSD_D1_period_3.csv
+
+  - sample_id: eurusd_d1_period_4
+    symbol: EURUSD
+    timeframe: D1
+    start: 2004-01-01
+    end: 2009-12-31
+    output_path: data/raw/EURUSD_D1_period_4.csv
