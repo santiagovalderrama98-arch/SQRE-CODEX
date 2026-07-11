@@ -541,3 +541,52 @@ The expanded validation config includes 25 scenarios: the existing EURUSD
 validation scenarios plus 18 additional historical sample targets. This phase is
 research-only and does not introduce automated threshold changes, model
 selection, backtesting, or a decision layer.
+
+## Expanded Historical Calibration Review
+
+Phase 7.4.4 reads expanded historical validation summary CSV files and produces
+a diagnostic calibration review by timeframe. It is designed for descriptive
+review of structural stability, state diversity, low sample pressure, and
+forward range regime sensitivity across expanded EURUSD samples.
+
+Input summary CSV example:
+
+```text
+data/validation/expanded_historical_consolidated/all_timeframes_expanded_summary.csv
+```
+
+Run:
+
+```bash
+python3 scripts/run_expanded_calibration_review.py \
+  --summary-csv data/validation/expanded_historical_consolidated/all_timeframes_expanded_summary.csv \
+  --output data/validation/expanded_historical_calibration_review/expanded_calibration_review_summary.csv \
+  --report data/validation/expanded_historical_calibration_review/expanded_calibration_review_report.txt
+```
+
+The runner writes:
+
+```text
+data/validation/expanded_historical_calibration_review/expanded_calibration_review_summary.csv
+data/validation/expanded_historical_calibration_review/expanded_calibration_review_report.txt
+```
+
+The summary includes timeframe-level metrics for scenario count, OHLC rows,
+structure count variation, average structure duration, state diversity, state
+composition ratios, forward range variation, direction alignment rate, and low
+sample pressure.
+
+Diagnostic flags include:
+
+```text
+Structural_Stability_Flag
+State_Diversity_Flag
+Low_Sample_Pressure_Flag
+Forward_Range_Regime_Sensitivity_Flag
+Unclassified_Pressure_Flag
+Low_Quality_Pressure_Flag
+```
+
+The review also emits descriptive diagnostic profiles and non-operational
+follow-up text. This phase does not change production defaults, does not modify
+thresholds, and does not introduce trading logic.
