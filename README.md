@@ -493,6 +493,40 @@ python3 scripts/check_expanded_sample_data.py \
   --report data/validation/expanded_historical_data_availability_report.txt
 ```
 
+### Historical Sample Coverage Completeness
+
+File existence is not enough for expanded historical validation. A sample also
+needs to cover the configured expected date range. The availability checker
+compares each file's actual first and last timestamps against the configured
+sample window, then classifies each file as:
+
+```text
+AVAILABLE_FULL
+AVAILABLE_PARTIAL
+MISSING
+INVALID_COLUMNS
+EMPTY_FILE
+READ_ERROR
+```
+
+`AVAILABLE_PARTIAL` means the file exists and has valid OHLC columns, but the
+actual date range does not sufficiently cover the expected date range. Partial
+files should not be interpreted as full historical samples. This helps identify
+provider historical limitations before running expanded validation.
+
+Run the coverage completeness check with explicit tolerances:
+
+```bash
+python3 scripts/check_expanded_sample_data.py \
+  --samples-config configs/validation/eurusd_expanded_historical_samples.yaml \
+  --validation-config configs/validation/eurusd_expanded_historical_validation.yaml \
+  --output data/validation/expanded_historical_data_availability.csv \
+  --report data/validation/expanded_historical_data_availability_report.txt \
+  --min-coverage-ratio 0.90 \
+  --max-start-gap-days 7 \
+  --max-end-gap-days 7
+```
+
 Run expanded multi-scenario validation after the required raw CSV files exist:
 
 ```bash
