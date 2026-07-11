@@ -146,7 +146,7 @@ def _build_report(
             "- Review depends on available processed datasets.",
             "- Partial/missing samples are excluded from the summary input.",
             "- Findings are descriptive.",
-            "- No timeframe ranking is produced.",
+            "- No comparative ordering is produced.",
             "",
         ]
     )
