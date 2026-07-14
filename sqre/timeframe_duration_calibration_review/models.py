@@ -36,6 +36,15 @@ OPTIONAL_COUNT_COLUMNS = [
 ]
 
 
+OPTIONAL_RATIO_COLUMNS = [
+    "Directional_State_Ratio",
+    "Complex_Consolidation_Ratio",
+    "Volatile_Rotation_Ratio",
+    "Low_Quality_Rate",
+    "Unclassified_Rate",
+]
+
+
 @dataclass(frozen=True)
 class DurationExperimentRunRow:
     scenario_id: str
@@ -60,6 +69,16 @@ class DurationExperimentRunRow:
     low_quality_structure_count: int = 0
     unclassified_count: int = 0
     average_outcome_magnitude_pips: float = 0.0
+    directional_state_ratio: float | None = None
+    complex_consolidation_ratio: float | None = None
+    volatile_rotation_ratio: float | None = None
+    low_quality_rate: float | None = None
+    unclassified_rate: float | None = None
+    has_directional_count_columns: bool = True
+    has_complex_consolidation_count_column: bool = True
+    has_volatile_rotation_count_column: bool = True
+    has_low_quality_count_column: bool = True
+    has_unclassified_count_column: bool = True
 
 
 @dataclass(frozen=True)

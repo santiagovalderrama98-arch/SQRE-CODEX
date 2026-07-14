@@ -52,6 +52,37 @@ def test_loader_fills_missing_optional_count_columns_with_zero(tmp_path: Path):
     assert rows[0].states_generated == 0
 
 
+def test_loader_preserves_ratio_columns_when_count_columns_are_missing(tmp_path: Path):
+    summary = tmp_path / "summary.csv"
+    row = _row("one", "M5", "m5_duration_4h_baseline")
+    for column in [
+        "Directional_Displacement_Count",
+        "Directional_Expansion_Count",
+        "Directional_Drift_Count",
+        "Volatile_Rotation_Count",
+        "Complex_Consolidation_Count",
+    ]:
+        row.pop(column)
+    row["directional_ratio"] = 0.62
+    row["Compression_Consolidation_Ratio"] = 0.31
+    row["Volatile_Rotation_Ratio"] = 0.18
+    pd.DataFrame([row]).to_csv(summary, index=False)
+
+    rows = load_duration_experiment_summary(summary)
+
+    assert rows[0].directional_displacement_count == 0
+    assert rows[0].directional_expansion_count == 0
+    assert rows[0].directional_drift_count == 0
+    assert rows[0].volatile_rotation_count == 0
+    assert rows[0].complex_consolidation_count == 0
+    assert rows[0].directional_state_ratio == 0.62
+    assert rows[0].complex_consolidation_ratio == 0.31
+    assert rows[0].volatile_rotation_ratio == 0.18
+    assert rows[0].has_directional_count_columns is False
+    assert rows[0].has_complex_consolidation_count_column is False
+    assert rows[0].has_volatile_rotation_count_column is False
+
+
 def test_loader_fails_clearly_when_required_columns_are_missing(tmp_path: Path):
     summary = tmp_path / "summary.csv"
     row = _row("one", "H1", "h1_duration_18h")

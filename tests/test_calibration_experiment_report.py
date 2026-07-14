@@ -10,14 +10,15 @@ from sqre.calibration_experiments.reports import (
 )
 
 
-def _row() -> ExperimentMetricsRow:
+def _row(timeframe: str = "H4") -> ExperimentMetricsRow:
+    scenario_id = f"eurusd_{timeframe.lower()}_period_1"
     return ExperimentMetricsRow(
-        experiment_run_id="duration_baseline__eurusd_h4_period_1",
+        experiment_run_id=f"duration_baseline__{scenario_id}",
         experiment_type="DURATION",
         experiment_id="duration_baseline",
-        scenario_id="eurusd_h4_period_1",
+        scenario_id=scenario_id,
         symbol="EURUSD",
-        timeframe="H4",
+        timeframe=timeframe,
         status="COMPLETED",
         message="Completed successfully",
         structures_detected=10,
@@ -67,6 +68,45 @@ def test_write_calibration_experiment_report_includes_required_sections(tmp_path
     assert "Do Not Change Yet" in text
     assert "No production thresholds were modified." in text
     assert "No Market State thresholds were changed." in text
+
+
+def test_calibration_experiment_report_uses_dynamic_timeframe_scope(tmp_path: Path):
+    report = tmp_path / "report.txt"
+    summary = CalibrationExperimentSummary(
+        experiment_name="h1_m5_duration_calibration_experiments_v1",
+        runs_configured=2,
+        runs_completed=2,
+        runs_missing_input=0,
+        runs_failed=0,
+        summary_rows=2,
+        output_path=tmp_path / "summary.csv",
+        report_path=report,
+    )
+
+    write_calibration_experiment_report(report, summary, [_row("H1"), _row("M5")])
+
+    text = report.read_text(encoding="utf-8")
+    assert "- H1 and M5 scenarios" in text
+    assert "- H4 and D1 scenarios" not in text
+
+
+def test_calibration_experiment_report_keeps_h4_d1_scope_when_present(tmp_path: Path):
+    report = tmp_path / "report.txt"
+    summary = CalibrationExperimentSummary(
+        experiment_name="calibration_experiments_v1",
+        runs_configured=2,
+        runs_completed=2,
+        runs_missing_input=0,
+        runs_failed=0,
+        summary_rows=2,
+        output_path=tmp_path / "summary.csv",
+        report_path=report,
+    )
+
+    write_calibration_experiment_report(report, summary, [_row("H4"), _row("D1")])
+
+    text = report.read_text(encoding="utf-8")
+    assert "- H4 and D1 scenarios" in text
 
 
 def test_calibration_experiment_report_avoids_forbidden_language(tmp_path: Path):

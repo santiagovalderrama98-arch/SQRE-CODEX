@@ -77,27 +77,42 @@ def _build_group(
         low_quality_structure_total=sum(row.low_quality_structure_count for row in metric_rows),
         unclassified_total=sum(row.unclassified_count for row in metric_rows),
         average_directional_state_ratio=_average_ratio(
+            metric_rows,
             [
                 row.directional_displacement_count + row.directional_expansion_count + row.directional_drift_count
                 for row in metric_rows
             ],
             denominators,
+            "directional_state_ratio",
+            "has_directional_count_columns",
         ),
         average_complex_consolidation_ratio=_average_ratio(
+            metric_rows,
             [row.complex_consolidation_count for row in metric_rows],
             denominators,
+            "complex_consolidation_ratio",
+            "has_complex_consolidation_count_column",
         ),
         average_volatile_rotation_ratio=_average_ratio(
+            metric_rows,
             [row.volatile_rotation_count for row in metric_rows],
             denominators,
+            "volatile_rotation_ratio",
+            "has_volatile_rotation_count_column",
         ),
         average_low_quality_rate=_average_ratio(
+            metric_rows,
             [row.low_quality_structure_count for row in metric_rows],
             denominators,
+            "low_quality_rate",
+            "has_low_quality_count_column",
         ),
         average_unclassified_rate=_average_ratio(
+            metric_rows,
             [row.unclassified_count for row in metric_rows],
             denominators,
+            "unclassified_rate",
+            "has_unclassified_count_column",
         ),
         average_forward_range_pips=_mean([row.average_forward_range_pips for row in metric_rows]),
         average_outcome_magnitude_pips=_mean([row.average_outcome_magnitude_pips for row in metric_rows]),
@@ -278,9 +293,20 @@ def _safe_ratio(numerator: float, denominator: float) -> float:
     return float(numerator / denominator)
 
 
-def _average_ratio(numerators: list[int], denominators: list[int]) -> float:
-    ratios = [_safe_ratio(numerator, denominator) for numerator, denominator in zip(numerators, denominators)]
-    return _mean(ratios)
+def _average_ratio(
+    rows: list[DurationExperimentRunRow],
+    numerators: list[int],
+    denominators: list[int],
+    ratio_attribute: str,
+    count_flag_attribute: str,
+) -> float:
+    if rows and all(bool(getattr(row, count_flag_attribute)) for row in rows):
+        ratios = [_safe_ratio(numerator, denominator) for numerator, denominator in zip(numerators, denominators)]
+        return _mean(ratios)
+    fallback_ratios = [getattr(row, ratio_attribute) for row in rows if getattr(row, ratio_attribute) is not None]
+    if fallback_ratios:
+        return _mean(fallback_ratios)
+    return 0.0
 
 
 def _relative_change(value: float | None, baseline: float | None) -> float | None:

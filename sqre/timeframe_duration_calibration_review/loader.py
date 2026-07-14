@@ -10,8 +10,18 @@ import pandas as pd
 from sqre.timeframe_duration_calibration_review.models import (
     DurationExperimentRunRow,
     OPTIONAL_COUNT_COLUMNS,
+    OPTIONAL_RATIO_COLUMNS,
     REQUIRED_COLUMNS,
 )
+
+
+_RATIO_ALIASES = {
+    "Directional_State_Ratio": ["Directional_Ratio"],
+    "Complex_Consolidation_Ratio": ["Compression_Consolidation_Ratio"],
+    "Volatile_Rotation_Ratio": [],
+    "Low_Quality_Rate": [],
+    "Unclassified_Rate": [],
+}
 
 
 def load_duration_experiment_summary(path: Path | str) -> list[DurationExperimentRunRow]:
@@ -47,6 +57,27 @@ def _canonicalize_columns(frame: pd.DataFrame, source_path: Path) -> pd.DataFram
         raise ValueError(f"Missing required duration review column(s) in {source_path}: {', '.join(missing)}")
 
     output = frame.rename(columns=rename_map).copy()
+    output["__Has_Directional_Count_Columns"] = all(
+        resolve_column([str(column) for column in output.columns], column) is not None
+        for column in [
+            "Directional_Displacement_Count",
+            "Directional_Expansion_Count",
+            "Directional_Drift_Count",
+        ]
+    )
+    output["__Has_Complex_Consolidation_Count_Column"] = (
+        resolve_column([str(column) for column in output.columns], "Complex_Consolidation_Count") is not None
+    )
+    output["__Has_Volatile_Rotation_Count_Column"] = (
+        resolve_column([str(column) for column in output.columns], "Volatile_Rotation_Count") is not None
+    )
+    output["__Has_Low_Quality_Count_Column"] = (
+        resolve_column([str(column) for column in output.columns], "Low_Quality_Structure_Count") is not None
+    )
+    output["__Has_Unclassified_Count_Column"] = (
+        resolve_column([str(column) for column in output.columns], "Unclassified_Count") is not None
+    )
+
     for optional in OPTIONAL_COUNT_COLUMNS:
         if resolve_column([str(column) for column in output.columns], optional) is None:
             output[optional] = 0
@@ -54,12 +85,24 @@ def _canonicalize_columns(frame: pd.DataFrame, source_path: Path) -> pd.DataFram
             actual = resolve_column([str(column) for column in output.columns], optional)
             if actual != optional:
                 output = output.rename(columns={actual: optional})
+    for optional in OPTIONAL_RATIO_COLUMNS:
+        actual = _resolve_any([str(column) for column in output.columns], optional, _RATIO_ALIASES.get(optional, []))
+        if actual is not None and actual != optional:
+            output = output.rename(columns={actual: optional})
     return output
 
 
 def resolve_column(columns: list[str], target: str) -> str | None:
     lookup = {_normalize(column): column for column in columns}
     return lookup.get(_normalize(target))
+
+
+def _resolve_any(columns: list[str], target: str, aliases: list[str]) -> str | None:
+    for candidate in [target, *aliases]:
+        actual = resolve_column(columns, candidate)
+        if actual is not None:
+            return actual
+    return None
 
 
 def _row_to_model(row: pd.Series) -> DurationExperimentRunRow:
@@ -86,6 +129,16 @@ def _row_to_model(row: pd.Series) -> DurationExperimentRunRow:
         low_quality_structure_count=_integer(row, "Low_Quality_Structure_Count"),
         unclassified_count=_integer(row, "Unclassified_Count"),
         average_outcome_magnitude_pips=_number(row, "Average_Outcome_Magnitude_Pips"),
+        directional_state_ratio=_optional_number(row, "Directional_State_Ratio"),
+        complex_consolidation_ratio=_optional_number(row, "Complex_Consolidation_Ratio"),
+        volatile_rotation_ratio=_optional_number(row, "Volatile_Rotation_Ratio"),
+        low_quality_rate=_optional_number(row, "Low_Quality_Rate"),
+        unclassified_rate=_optional_number(row, "Unclassified_Rate"),
+        has_directional_count_columns=_boolean(row, "__Has_Directional_Count_Columns"),
+        has_complex_consolidation_count_column=_boolean(row, "__Has_Complex_Consolidation_Count_Column"),
+        has_volatile_rotation_count_column=_boolean(row, "__Has_Volatile_Rotation_Count_Column"),
+        has_low_quality_count_column=_boolean(row, "__Has_Low_Quality_Count_Column"),
+        has_unclassified_count_column=_boolean(row, "__Has_Unclassified_Count_Column"),
     )
 
 
@@ -108,6 +161,23 @@ def _number(row: pd.Series, column: str) -> float:
         return float(value)
     except (TypeError, ValueError):
         return 0.0
+
+
+def _optional_number(row: pd.Series, column: str) -> float | None:
+    value = _value(row, column, None)
+    if value is None or pd.isna(value):
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _boolean(row: pd.Series, column: str) -> bool:
+    value = _value(row, column, False)
+    if isinstance(value, bool):
+        return value
+    return str(value).strip().lower() in {"true", "1", "yes"}
 
 
 def _value(row: pd.Series, column: str, default: Any) -> Any:

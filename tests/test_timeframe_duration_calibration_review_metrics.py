@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from sqre.timeframe_duration_calibration_review.config import TimeframeDurationCalibrationReviewConfig
 from sqre.timeframe_duration_calibration_review.metrics import build_duration_review_rows
 from sqre.timeframe_duration_calibration_review.models import DurationExperimentRunRow
@@ -87,6 +89,44 @@ def test_flags_are_assigned_correctly():
     assert row.duration_utilization_flag == "NEAR_MAX"
 
 
+def test_metrics_use_ratio_fallback_without_fabricating_count_totals():
+    rows = build_duration_review_rows(
+        [
+            _run(
+                "one",
+                "M5",
+                "m5_duration_4h_baseline",
+                structures=20,
+                has_state_counts=False,
+                directional_ratio=0.60,
+                complex_ratio=0.25,
+                volatile_ratio=0.10,
+            ),
+            _run(
+                "two",
+                "M5",
+                "m5_duration_4h_baseline",
+                structures=30,
+                has_state_counts=False,
+                directional_ratio=0.40,
+                complex_ratio=0.35,
+                volatile_ratio=0.20,
+            ),
+        ],
+        TimeframeDurationCalibrationReviewConfig(),
+    )
+
+    row = rows[0]
+    assert row.directional_displacement_total == 0
+    assert row.directional_expansion_total == 0
+    assert row.directional_drift_total == 0
+    assert row.complex_consolidation_total == 0
+    assert row.volatile_rotation_total == 0
+    assert row.average_directional_state_ratio == pytest.approx(0.5)
+    assert row.average_complex_consolidation_ratio == pytest.approx(0.3)
+    assert row.average_volatile_rotation_ratio == pytest.approx(0.15)
+
+
 def _run(
     scenario_id: str,
     timeframe: str,
@@ -96,8 +136,17 @@ def _run(
     duration: float = 3600,
     max_duration: int | None = None,
     low_sample_research: int = 10,
+    has_state_counts: bool = True,
+    directional_ratio: float | None = None,
+    complex_ratio: float | None = None,
+    volatile_ratio: float | None = None,
 ) -> DurationExperimentRunRow:
     max_seconds = max_duration or (86400 if timeframe == "H1" else 14400)
+    directional_displacement_count = 3 if has_state_counts else 0
+    directional_expansion_count = 2 if has_state_counts else 0
+    directional_drift_count = 1 if has_state_counts else 0
+    volatile_rotation_count = 1 if has_state_counts else 0
+    complex_consolidation_count = 2 if has_state_counts else 0
     return DurationExperimentRunRow(
         scenario_id=scenario_id,
         timeframe=timeframe,
@@ -113,12 +162,18 @@ def _run(
         low_sample_conditions_research=low_sample_research,
         low_sample_conditions_price_outcome=8,
         states_generated=structures,
-        directional_displacement_count=3,
-        directional_expansion_count=2,
-        directional_drift_count=1,
-        volatile_rotation_count=1,
-        complex_consolidation_count=2,
+        directional_displacement_count=directional_displacement_count,
+        directional_expansion_count=directional_expansion_count,
+        directional_drift_count=directional_drift_count,
+        volatile_rotation_count=volatile_rotation_count,
+        complex_consolidation_count=complex_consolidation_count,
         low_quality_structure_count=1,
         unclassified_count=0,
         average_outcome_magnitude_pips=6,
+        directional_state_ratio=directional_ratio,
+        complex_consolidation_ratio=complex_ratio,
+        volatile_rotation_ratio=volatile_ratio,
+        has_directional_count_columns=has_state_counts,
+        has_complex_consolidation_count_column=has_state_counts,
+        has_volatile_rotation_count_column=has_state_counts,
     )

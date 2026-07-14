@@ -114,7 +114,7 @@ def _build_report(summary: CalibrationExperimentSummary, rows: list[ExperimentMe
         "----------------",
         "- Duration sensitivity experiments",
         "- Sample size sensitivity experiments",
-        "- H4 and D1 scenarios",
+        _timeframe_scope_line(rows),
         "- No Market State threshold changes",
         "",
         "Duration Sensitivity Summary",
@@ -154,6 +154,17 @@ def _build_report(summary: CalibrationExperimentSummary, rows: list[ExperimentMe
         ]
     )
     return "\n".join(lines)
+
+
+def _timeframe_scope_line(rows: list[ExperimentMetricsRow]) -> str:
+    timeframes = list(dict.fromkeys(row.timeframe for row in rows if row.timeframe))
+    if not timeframes:
+        return "- Configured timeframe scenarios"
+    if len(timeframes) == 1:
+        return f"- {timeframes[0]} scenarios"
+    if len(timeframes) == 2:
+        return f"- {timeframes[0]} and {timeframes[1]} scenarios"
+    return f"- {', '.join(timeframes[:-1])}, and {timeframes[-1]} scenarios"
 
 
 def _duration_lines(rows: list[ExperimentMetricsRow]) -> list[str]:
