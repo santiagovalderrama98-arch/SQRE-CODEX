@@ -148,7 +148,7 @@ def _build_report(summary: CalibrationExperimentSummary, rows: list[ExperimentMe
             "- Experiments are diagnostic.",
             "- Results depend on processed datasets.",
             "- Relative changes are descriptive.",
-            "- No experiment ranking is produced.",
+            "- No comparative ordering is produced.",
             "- No execution guidance is produced.",
             "",
         ]

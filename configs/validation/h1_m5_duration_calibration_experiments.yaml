@@ -1,0 +1,94 @@
+experiment_name: h1_m5_duration_calibration_experiments_v1
+symbol: EURUSD
+pip_size: 0.0001
+forward_candles: [3, 6, 12]
+
+base_scenarios:
+  - scenario_id: eurusd_h1_period_1
+    symbol: EURUSD
+    timeframe: H1
+    ohlc_path: data/raw/EURUSD_H1_period_1.csv
+  - scenario_id: eurusd_h1_period_2
+    symbol: EURUSD
+    timeframe: H1
+    ohlc_path: data/raw/EURUSD_H1_period_2.csv
+  - scenario_id: eurusd_h1_period_3
+    symbol: EURUSD
+    timeframe: H1
+    ohlc_path: data/raw/EURUSD_H1_period_3.csv
+  - scenario_id: eurusd_h1_period_4
+    symbol: EURUSD
+    timeframe: H1
+    ohlc_path: data/raw/EURUSD_H1_period_4.csv
+  - scenario_id: eurusd_h1_period_5
+    symbol: EURUSD
+    timeframe: H1
+    ohlc_path: data/raw/EURUSD_H1_period_5.csv
+  - scenario_id: eurusd_h1_period_6
+    symbol: EURUSD
+    timeframe: H1
+    ohlc_path: data/raw/EURUSD_H1_period_6.csv
+  - scenario_id: eurusd_h1_period_7
+    symbol: EURUSD
+    timeframe: H1
+    ohlc_path: data/raw/EURUSD_H1_period_7.csv
+  - scenario_id: eurusd_m5_baseline
+    symbol: EURUSD
+    timeframe: M5
+    ohlc_path: data/raw/EURUSD_M5_baseline.csv
+  - scenario_id: eurusd_m5_period_2
+    symbol: EURUSD
+    timeframe: M5
+    ohlc_path: data/raw/EURUSD_M5_period_2.csv
+  - scenario_id: eurusd_m5_period_3
+    symbol: EURUSD
+    timeframe: M5
+    ohlc_path: data/raw/EURUSD_M5_period_3.csv
+  - scenario_id: eurusd_m5_period_4
+    symbol: EURUSD
+    timeframe: M5
+    ohlc_path: data/raw/EURUSD_M5_period_4.csv
+  - scenario_id: eurusd_m5_period_5
+    symbol: EURUSD
+    timeframe: M5
+    ohlc_path: data/raw/EURUSD_M5_period_5.csv
+  - scenario_id: eurusd_m5_period_6
+    symbol: EURUSD
+    timeframe: M5
+    ohlc_path: data/raw/EURUSD_M5_period_6.csv
+  - scenario_id: eurusd_m5_period_7
+    symbol: EURUSD
+    timeframe: M5
+    ohlc_path: data/raw/EURUSD_M5_period_7.csv
+
+duration_experiments:
+  - experiment_id: h1_duration_18h
+    description: H1 18 hour duration calibration candidate
+    max_structure_duration_seconds:
+      H1: 64800
+  - experiment_id: h1_duration_24h_baseline
+    description: H1 baseline reference duration profile
+    max_structure_duration_seconds:
+      H1: 86400
+  - experiment_id: h1_duration_30h
+    description: H1 30 hour duration calibration candidate
+    max_structure_duration_seconds:
+      H1: 108000
+  - experiment_id: m5_duration_2h
+    description: M5 2 hour duration calibration candidate
+    max_structure_duration_seconds:
+      M5: 7200
+  - experiment_id: m5_duration_3h
+    description: M5 3 hour duration calibration candidate
+    max_structure_duration_seconds:
+      M5: 10800
+  - experiment_id: m5_duration_4h_baseline
+    description: M5 baseline reference duration profile
+    max_structure_duration_seconds:
+      M5: 14400
+  - experiment_id: m5_duration_6h
+    description: M5 6 hour duration calibration candidate
+    max_structure_duration_seconds:
+      M5: 21600
+
+sample_size_experiments: []
