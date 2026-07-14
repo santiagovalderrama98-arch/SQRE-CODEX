@@ -590,3 +590,70 @@ Low_Quality_Pressure_Flag
 The review also emits descriptive diagnostic profiles and non-operational
 follow-up text. This phase does not change production defaults, does not modify
 thresholds, and does not introduce trading logic.
+
+## Master Historical Calibration Review
+
+Phase 7.4.5 builds a deduplicated master historical calibration summary from
+multiple validation summary CSV files. It is useful when historical validation
+results are split across initial multi-scenario validation, temporal
+out-of-sample validation, and expanded historical validation outputs.
+
+Some scenarios can appear in more than one summary. The master builder
+deduplicates by `Scenario_ID` so the expanded calibration review consumes one
+retained row per scenario while still recording source-file provenance.
+
+Input summary examples:
+
+```text
+data/validation/multi_scenario_validation_summary.csv
+data/validation/temporal_oos_validation_summary.csv
+data/validation/expanded_historical_consolidated/all_timeframes_expanded_summary.csv
+```
+
+Build the master summary:
+
+```bash
+python3 scripts/build_master_calibration_summary.py \
+  --summary-csv data/validation/multi_scenario_validation_summary.csv \
+  --summary-csv data/validation/temporal_oos_validation_summary.csv \
+  --summary-csv data/validation/expanded_historical_consolidated/all_timeframes_expanded_summary.csv \
+  --output data/validation/master_historical_calibration/master_historical_summary.csv \
+  --report data/validation/master_historical_calibration/master_historical_summary_report.txt
+```
+
+The default dedupe policy is `last`, which keeps the later occurrence of a
+duplicate scenario. This is intended for research workflows where later
+validation summaries may contain refined or more complete runs.
+
+Available dedupe policies:
+
+```text
+first
+last
+error
+```
+
+If some expected input files are not available locally, run with:
+
+```bash
+--allow-missing-inputs
+```
+
+The builder writes:
+
+```text
+data/validation/master_historical_calibration/master_historical_summary.csv
+data/validation/master_historical_calibration/master_historical_summary_report.txt
+```
+
+Run the expanded calibration review on the master summary:
+
+```bash
+python3 scripts/run_expanded_calibration_review.py \
+  --summary-csv data/validation/master_historical_calibration/master_historical_summary.csv \
+  --output data/validation/master_historical_calibration/master_expanded_calibration_review_summary.csv \
+  --report data/validation/master_historical_calibration/master_expanded_calibration_review_report.txt
+```
+
+This phase is diagnostic and research-only. It does not change production
+defaults, does not modify thresholds, and does not introduce trading logic.
