@@ -743,3 +743,109 @@ Compression_Flag
 
 This phase is diagnostic and research-only. It does not change production
 defaults, does not modify thresholds, and does not add operational logic.
+
+## M15 Timeframe Introduction & Validation
+
+Phase 7.4.7 introduces EURUSD M15 as a descriptive intraday research timeframe.
+M15 is reviewed separately before any later aggregation because prior work
+paused M5 taxonomy compression review and identified a need for a cleaner
+intraday bridge between M5 and H1 context.
+
+M15 historical sample plan:
+
+```text
+configs/validation/eurusd_m15_historical_samples.yaml
+```
+
+Configured M15 periods:
+
+```text
+eurusd_m15_period_1: 2026-06-01 -> 2026-06-30
+eurusd_m15_period_2: 2026-05-01 -> 2026-05-31
+eurusd_m15_period_3: 2026-04-01 -> 2026-04-30
+eurusd_m15_period_4: 2026-03-01 -> 2026-03-31
+eurusd_m15_period_5: 2026-02-01 -> 2026-02-28
+eurusd_m15_period_6: 2025-12-01 -> 2025-12-31
+eurusd_m15_period_7: 2025-09-01 -> 2025-09-30
+```
+
+Generate download commands for missing M15 samples:
+
+```bash
+python3 scripts/generate_expanded_sample_download_commands.py \
+  --config configs/validation/eurusd_m15_historical_samples.yaml \
+  --timeframe M15 \
+  --missing-only \
+  --output-script data/validation/download_m15_samples.sh
+```
+
+Check M15 sample availability:
+
+```bash
+python3 scripts/check_expanded_sample_data.py \
+  --samples-config configs/validation/eurusd_m15_historical_samples.yaml \
+  --validation-config configs/validation/eurusd_m15_validation.yaml \
+  --output data/validation/m15_data_availability.csv \
+  --report data/validation/m15_data_availability_report.txt \
+  --min-coverage-ratio 0.90 \
+  --max-start-gap-days 7 \
+  --max-end-gap-days 7
+```
+
+Run M15 validation after the raw M15 CSV files exist:
+
+```bash
+python3 scripts/run_multi_scenario_validation.py \
+  --config configs/validation/eurusd_m15_validation.yaml \
+  --output-dir data/validation/m15_introduction \
+  --report data/validation/m15_introduction/m15_validation_report.txt \
+  --summary-csv data/validation/m15_introduction/m15_validation_summary.csv
+```
+
+M15 validation parameters:
+
+```text
+max_structure_duration_seconds: 28800
+forward_candles: [3, 6, 12]
+minimum_sample_size: 5
+pip_size: 0.0001
+```
+
+Run the M15 introduction review:
+
+```bash
+python3 scripts/run_m15_introduction_review.py \
+  --m15-summary-csv data/validation/m15_introduction/m15_validation_summary.csv \
+  --master-summary-csv data/validation/master_historical_calibration/master_historical_summary.csv \
+  --output data/validation/m15_introduction/m15_introduction_review_summary.csv \
+  --report data/validation/m15_introduction/m15_introduction_review_report.txt
+```
+
+The M15 review writes:
+
+```text
+data/validation/m15_introduction/m15_introduction_review_summary.csv
+data/validation/m15_introduction/m15_introduction_review_report.txt
+```
+
+The summary includes M15 scenario coverage, structure count stability, duration
+utilization, state diversity, state composition ratios, forward range
+stability, low sample pressure, and optional descriptive M5/H1 context.
+
+Diagnostic flags include:
+
+```text
+Structure_Stability_Flag
+Duration_Utilization_Flag
+State_Diversity_Flag
+Low_Sample_Pressure_Flag
+Forward_Range_Stability_Flag
+M15_Diagnostic_Profile
+```
+
+This phase does not include M5 period 8 and does not include H1, H4, or D1 as
+M15 scenarios. It does not change production defaults, thresholds, production
+taxonomy, Event Detection defaults, Market Structure defaults, H1/H4/D1
+behavior, or existing validation behavior. It does not add operational logic,
+automated threshold changes, model selection, machine learning, backtesting, or
+a decision layer. No comparative ordering is produced.

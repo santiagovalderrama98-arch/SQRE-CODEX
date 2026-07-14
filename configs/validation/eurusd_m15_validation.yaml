@@ -1,0 +1,54 @@
+validation_name: eurusd_m15_introduction_validation
+symbol: EURUSD
+pip_size: 0.0001
+minimum_sample_size: 5
+
+scenarios:
+  - scenario_id: eurusd_m15_period_1
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_1.csv
+    max_structure_duration_seconds: 28800
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_m15_period_2
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_2.csv
+    max_structure_duration_seconds: 28800
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_m15_period_3
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_3.csv
+    max_structure_duration_seconds: 28800
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_m15_period_4
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_4.csv
+    max_structure_duration_seconds: 28800
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_m15_period_5
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_5.csv
+    max_structure_duration_seconds: 28800
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_m15_period_6
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_6.csv
+    max_structure_duration_seconds: 28800
+    forward_candles: [3, 6, 12]
+
+  - scenario_id: eurusd_m15_period_7
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_7.csv
+    max_structure_duration_seconds: 28800
+    forward_candles: [3, 6, 12]
