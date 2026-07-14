@@ -657,3 +657,89 @@ python3 scripts/run_expanded_calibration_review.py \
 
 This phase is diagnostic and research-only. It does not change production
 defaults, does not modify thresholds, and does not introduce trading logic.
+
+## H1/M5 Duration Calibration Experiments
+
+Phase 7.4.6 adds a controlled duration calibration experiment workflow for H1
+and M5 only. The purpose is to compare candidate duration profiles against each
+timeframe's own baseline reference and produce descriptive diagnostics for
+structural fragmentation, structural compression, duration utilization, low
+sample pressure, and state diversity.
+
+H1 and M5 are targeted because prior calibration reviews identified H1 as a
+timeframe-specific duration calibration candidate and M5 as a microstructure
+calibration candidate. H4 and D1 remain monitoring references and are not varied
+in this phase.
+
+Duration profiles:
+
+```text
+H1:
+- h1_duration_18h: 64800 seconds
+- h1_duration_24h_baseline: 86400 seconds
+- h1_duration_30h: 108000 seconds
+
+M5:
+- m5_duration_2h: 7200 seconds
+- m5_duration_3h: 10800 seconds
+- m5_duration_4h_baseline: 14400 seconds
+- m5_duration_6h: 21600 seconds
+```
+
+Expected configured run count when all inputs exist:
+
+```text
+H1: 7 scenarios x 3 profiles = 21 runs
+M5: 7 scenarios x 4 profiles = 28 runs
+Total: 49 runs
+```
+
+Run the duration calibration experiments:
+
+```bash
+python3 scripts/run_calibration_experiments.py \
+  --config configs/validation/h1_m5_duration_calibration_experiments.yaml \
+  --output-dir data/validation/h1_m5_duration_calibration \
+  --summary-csv data/validation/h1_m5_duration_calibration/h1_m5_duration_experiment_summary.csv \
+  --report data/validation/h1_m5_duration_calibration/h1_m5_duration_experiment_report.txt
+```
+
+Run the duration calibration review:
+
+```bash
+python3 scripts/run_timeframe_duration_calibration_review.py \
+  --experiment-summary data/validation/h1_m5_duration_calibration/h1_m5_duration_experiment_summary.csv \
+  --output data/validation/h1_m5_duration_calibration/h1_m5_duration_review_summary.csv \
+  --report data/validation/h1_m5_duration_calibration/h1_m5_duration_review_report.txt
+```
+
+The experiment writes:
+
+```text
+data/validation/h1_m5_duration_calibration/h1_m5_duration_experiment_summary.csv
+data/validation/h1_m5_duration_calibration/h1_m5_duration_experiment_report.txt
+```
+
+The review writes:
+
+```text
+data/validation/h1_m5_duration_calibration/h1_m5_duration_review_summary.csv
+data/validation/h1_m5_duration_calibration/h1_m5_duration_review_report.txt
+```
+
+The review computes structure count CV, duration utilization, state diversity,
+state composition ratios, forward range metrics, direction alignment, low sample
+pressure, and relative changes versus the timeframe baseline reference.
+
+Diagnostic flags include:
+
+```text
+Structure_Stability_Flag
+Duration_Utilization_Flag
+Low_Sample_Pressure_Flag
+Fragmentation_Flag
+Compression_Flag
+```
+
+This phase is diagnostic and research-only. It does not change production
+defaults, does not modify thresholds, and does not add operational logic.
