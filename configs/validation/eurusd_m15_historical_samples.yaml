@@ -1,0 +1,54 @@
+sample_set_name: eurusd_m15_historical_samples_v1
+symbol: EURUSD
+provider: twelvedata
+pip_size: 0.0001
+
+samples:
+  - sample_id: eurusd_m15_period_1
+    symbol: EURUSD
+    timeframe: M15
+    start: 2026-06-01
+    end: 2026-06-30
+    output_path: data/raw/EURUSD_M15_period_1.csv
+
+  - sample_id: eurusd_m15_period_2
+    symbol: EURUSD
+    timeframe: M15
+    start: 2026-05-01
+    end: 2026-05-31
+    output_path: data/raw/EURUSD_M15_period_2.csv
+
+  - sample_id: eurusd_m15_period_3
+    symbol: EURUSD
+    timeframe: M15
+    start: 2026-04-01
+    end: 2026-04-30
+    output_path: data/raw/EURUSD_M15_period_3.csv
+
+  - sample_id: eurusd_m15_period_4
+    symbol: EURUSD
+    timeframe: M15
+    start: 2026-03-01
+    end: 2026-03-31
+    output_path: data/raw/EURUSD_M15_period_4.csv
+
+  - sample_id: eurusd_m15_period_5
+    symbol: EURUSD
+    timeframe: M15
+    start: 2026-02-01
+    end: 2026-02-28
+    output_path: data/raw/EURUSD_M15_period_5.csv
+
+  - sample_id: eurusd_m15_period_6
+    symbol: EURUSD
+    timeframe: M15
+    start: 2025-12-01
+    end: 2025-12-31
+    output_path: data/raw/EURUSD_M15_period_6.csv
+
+  - sample_id: eurusd_m15_period_7
+    symbol: EURUSD
+    timeframe: M15
+    start: 2025-09-01
+    end: 2025-09-30
+    output_path: data/raw/EURUSD_M15_period_7.csv
