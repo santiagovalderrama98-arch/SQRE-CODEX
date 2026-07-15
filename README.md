@@ -849,3 +849,85 @@ taxonomy, Event Detection defaults, Market Structure defaults, H1/H4/D1
 behavior, or existing validation behavior. It does not add operational logic,
 automated threshold changes, model selection, machine learning, backtesting, or
 a decision layer. No comparative ordering is produced.
+
+## M15 Duration Calibration Experiments
+
+Phase 7.4.8 adds a controlled M15 duration calibration experiment workflow.
+The purpose is to review how alternative maximum structure durations affect M15
+structure formation, duration utilization, state diversity, low sample pressure,
+and descriptive forward range measurements.
+
+M15 needs this separate duration review because the introduction phase showed a
+stable intraday sample set with high duration utilization and high state
+diversity. The baseline is useful as a reference, but M15 requires a dedicated
+duration profile review before any later calibration decision.
+
+Duration profiles:
+
+```text
+m15_duration_4h: 14400 seconds
+m15_duration_6h: 21600 seconds
+m15_duration_8h_baseline: 28800 seconds
+m15_duration_10h: 36000 seconds
+m15_duration_12h: 43200 seconds
+```
+
+Expected configured run count when all seven M15 raw files exist:
+
+```text
+7 M15 scenarios x 5 duration profiles = 35 runs
+```
+
+Run the M15 duration calibration experiment:
+
+```bash
+python3 scripts/run_calibration_experiments.py \
+  --config configs/validation/m15_duration_calibration_experiments.yaml \
+  --output-dir data/validation/m15_duration_calibration \
+  --summary-csv data/validation/m15_duration_calibration/m15_duration_experiment_summary.csv \
+  --report data/validation/m15_duration_calibration/m15_duration_experiment_report.txt
+```
+
+Run the M15 duration review:
+
+```bash
+python3 scripts/run_m15_duration_calibration_review.py \
+  --experiment-summary data/validation/m15_duration_calibration/m15_duration_experiment_summary.csv \
+  --output data/validation/m15_duration_calibration/m15_duration_review_summary.csv \
+  --report data/validation/m15_duration_calibration/m15_duration_review_report.txt
+```
+
+The workflow writes:
+
+```text
+data/validation/m15_duration_calibration/m15_duration_experiment_summary.csv
+data/validation/m15_duration_calibration/m15_duration_experiment_report.txt
+data/validation/m15_duration_calibration/m15_duration_review_summary.csv
+data/validation/m15_duration_calibration/m15_duration_review_report.txt
+```
+
+The review computes profile-level structure counts, structure count CV,
+duration utilization ratios, unique state counts, state composition totals and
+ratios, low sample pressure, forward range averages, direction alignment, and
+relative changes versus `m15_duration_8h_baseline`.
+
+Diagnostic flags include:
+
+```text
+Structure_Stability_Flag
+Duration_Utilization_Flag
+State_Diversity_Flag
+Low_Sample_Pressure_Flag
+Fragmentation_Flag
+Compression_Flag
+Profile_Diagnostic
+Recommended_Follow_Up
+```
+
+This phase is M15-only. It excludes M5 period 8, M5 scenarios, H1 scenarios,
+H4 scenarios, and D1 scenarios. It does not change production defaults,
+thresholds, production taxonomy, Event Detection defaults, Market Structure
+defaults, H1/H4/D1 behavior, validation behavior, or production runtime
+behavior. It does not add operational logic, automated threshold changes,
+model selection, machine learning, backtesting, or a decision layer. No
+comparative ordering is produced.
