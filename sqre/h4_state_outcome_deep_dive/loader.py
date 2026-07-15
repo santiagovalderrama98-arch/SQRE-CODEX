@@ -27,6 +27,78 @@ H4_SCENARIOS = [
     "eurusd_h4_period_3",
     "eurusd_h4_period_4",
 ]
+COLUMN_ALIASES = {
+    "Condition_Type": [
+        "Condition_Type",
+        "condition_type",
+    ],
+    "Condition_Label": [
+        "Condition_Label",
+        "condition_label",
+        "Condition_Value",
+        "condition_value",
+        "Condition",
+        "condition",
+        "State",
+        "state",
+        "Market_State",
+        "market_state",
+        "Condition_ID",
+        "condition_id",
+    ],
+    "Forward_Window": [
+        "Forward_Window",
+        "forward_window",
+        "Forward_Window_Candles",
+        "forward_window_candles",
+        "Forward_Candles",
+        "forward_candles",
+        "Window",
+        "window",
+    ],
+    "Sample_Size": [
+        "Sample_Size",
+        "sample_size",
+    ],
+    "Average_Forward_Close_Return_Pips": [
+        "Average_Forward_Close_Return_Pips",
+        "average_forward_close_return_pips",
+    ],
+    "Median_Forward_Close_Return_Pips": [
+        "Median_Forward_Close_Return_Pips",
+        "median_forward_close_return_pips",
+    ],
+    "Average_Forward_Range_Pips": [
+        "Average_Forward_Range_Pips",
+        "average_forward_range_pips",
+    ],
+    "Average_Favorable_Displacement_Pips": [
+        "Average_Favorable_Displacement_Pips",
+        "average_favorable_displacement_pips",
+        "Average_Max_Favorable_Displacement_Pips",
+        "average_max_favorable_displacement_pips",
+        "Max_Favorable_Displacement_Pips",
+        "max_favorable_displacement_pips",
+    ],
+    "Average_Adverse_Displacement_Pips": [
+        "Average_Adverse_Displacement_Pips",
+        "average_adverse_displacement_pips",
+        "Average_Max_Adverse_Displacement_Pips",
+        "average_max_adverse_displacement_pips",
+        "Max_Adverse_Displacement_Pips",
+        "max_adverse_displacement_pips",
+    ],
+    "Average_Outcome_Magnitude_Pips": [
+        "Average_Outcome_Magnitude_Pips",
+        "average_outcome_magnitude_pips",
+    ],
+    "Direction_Alignment_Rate": [
+        "Direction_Alignment_Rate",
+        "direction_alignment_rate",
+        "Average_Direction_Alignment_Rate",
+        "average_direction_alignment_rate",
+    ],
+}
 
 
 def load_price_outcome_profiles(h4_d1_research_dir: Path | str) -> list[H4StateProfileInput]:
@@ -168,6 +240,10 @@ def _resolve_index(row: pd.Series, target: str) -> str | None:
 
 def _resolve_column_name(columns: list[str], target: str) -> str | None:
     lookup = {_normalize(column): column for column in columns}
+    for alias in COLUMN_ALIASES.get(target, [target]):
+        actual = lookup.get(_normalize(alias))
+        if actual is not None:
+            return actual
     return lookup.get(_normalize(target))
 
 
