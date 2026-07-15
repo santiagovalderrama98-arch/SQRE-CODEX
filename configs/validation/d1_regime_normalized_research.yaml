@@ -1,0 +1,26 @@
+research_name: d1_regime_normalized_research
+symbol: EURUSD
+timeframe: D1
+minimum_sample_size: 5
+high_regime_sensitivity_threshold: 0.35
+moderate_regime_sensitivity_threshold: 0.20
+forward_range_stability_threshold: 0.30
+minimum_regime_count: 2
+
+scenarios:
+  - scenario_id: eurusd_d1_period_1
+    timeframe: D1
+    regime_id: D1_REGIME_2021_2026
+    regime_label: 2021_2026_recent_regime
+  - scenario_id: eurusd_d1_period_2
+    timeframe: D1
+    regime_id: D1_REGIME_2015_2020
+    regime_label: 2015_2020_pre_recent_regime
+  - scenario_id: eurusd_d1_period_3
+    timeframe: D1
+    regime_id: D1_REGIME_2010_2015
+    regime_label: 2010_2015_mid_history_regime
+  - scenario_id: eurusd_d1_period_4
+    timeframe: D1
+    regime_id: D1_REGIME_2004_2009
+    regime_label: 2004_2009_early_history_regime

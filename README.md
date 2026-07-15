@@ -1018,3 +1018,70 @@ Market Structure defaults, validation behavior, or production runtime behavior.
 It does not add operational logic, automated threshold changes, model
 selection, machine learning, backtesting, or a Decision Engine. No comparative
 ordering is produced.
+
+## D1 Regime-Normalized Price Outcome Research
+
+Phase 7.5.1 adds a D1-only research workflow for reviewing price outcome
+behavior by scenario-period regime. Calibration work remains paused. The goal is
+to compare D1 condition outcomes across historical scenario labels without
+changing production behavior.
+
+D1 is used because the H4/D1 structural research program marked it as the
+higher-timeframe regime context. Regime normalization helps separate descriptive
+outcome dispersion by scenario period before later research review.
+
+Regime labels are scenario-period labels only:
+
+```text
+eurusd_d1_period_1 -> D1_REGIME_2021_2026 -> 2021_2026_recent_regime
+eurusd_d1_period_2 -> D1_REGIME_2015_2020 -> 2015_2020_pre_recent_regime
+eurusd_d1_period_3 -> D1_REGIME_2010_2015 -> 2010_2015_mid_history_regime
+eurusd_d1_period_4 -> D1_REGIME_2004_2009 -> 2004_2009_early_history_regime
+```
+
+These labels do not make macroeconomic causal claims.
+
+Run D1 regime-normalized research after the H4/D1 validation outputs exist:
+
+```bash
+python3 scripts/run_d1_regime_normalized_research.py \
+  --config configs/validation/d1_regime_normalized_research.yaml \
+  --validation-summary data/validation/h4_d1_structural_research/h4_d1_validation_summary.csv \
+  --validation-output-dir data/validation/h4_d1_structural_research \
+  --output-dir data/research/d1_regime_normalized_research \
+  --report data/research/d1_regime_normalized_research/d1_regime_normalized_research_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/d1_regime_normalized_research/d1_regime_scenario_inventory.csv
+data/research/d1_regime_normalized_research/d1_regime_condition_outcomes.csv
+data/research/d1_regime_normalized_research/d1_regime_normalized_condition_profiles.csv
+data/research/d1_regime_normalized_research/d1_regime_state_outcome_profiles.csv
+data/research/d1_regime_normalized_research/d1_regime_transition_outcome_profiles.csv
+data/research/d1_regime_normalized_research/d1_regime_research_summary.csv
+data/research/d1_regime_normalized_research/d1_regime_normalized_research_report.txt
+```
+
+Metrics include sample size, average forward close return, average forward
+range, outcome magnitude, direction alignment rate, coefficient of variation,
+range dispersion, outcome magnitude dispersion, and regime coverage.
+
+Flags include:
+
+```text
+Sample_Adequacy_Flag
+Regime_Coverage_Flag
+Regime_Sensitivity_Flag
+Research_Readiness_Flag
+Regime_Sensitivity_Profile
+```
+
+This phase includes D1 scenario periods 1 through 4 only. It excludes H4, H1,
+M15, M5, and partial samples. It does not change production defaults,
+thresholds, production taxonomy, validation behavior, Event Detection defaults,
+Market Structure defaults, or production runtime behavior. It does not add
+operational logic, automated threshold changes, model selection, machine
+learning, backtesting, or a Decision Engine. No comparative ordering is
+produced.
