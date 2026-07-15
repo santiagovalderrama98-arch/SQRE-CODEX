@@ -1135,3 +1135,64 @@ Market State thresholds, Event Detection defaults, Market Structure defaults,
 validation behavior, or production runtime behavior. It does not add
 operational logic, automated threshold changes, machine learning, backtesting,
 or a Decision Engine. No comparative ordering is produced.
+
+## Phase 7.5.3 — D1 Research-Ready State Outcome Deep Dive
+
+Phase 7.5.3 adds a focused D1 state outcome deep dive after the Phase 7.5.2
+sample adequacy and dispersion review. It reviews research-ready D1
+`STATE_CONDITION` profiles and one configured regime-sensitive observation
+profile using the regime-level condition outcomes from Phase 7.5.1.
+
+Required inputs:
+
+```text
+data/research/d1_regime_outcome_review/d1_research_ready_condition_profiles.csv
+data/research/d1_regime_normalized_research/d1_regime_condition_outcomes.csv
+```
+
+Optional inputs include the regime-sensitive profile file, state quality
+summary, condition inventory, review summary, and D1 state outcome profile
+exports from the prior phases.
+
+Selected state profiles:
+
+```text
+DIRECTIONAL_EXPANSION / FW=3
+DIRECTIONAL_EXPANSION / FW=6
+DIRECTIONAL_EXPANSION / FW=12
+DIRECTIONAL_DISPLACEMENT / FW=6
+DIRECTIONAL_DISPLACEMENT / FW=12
+DIRECTIONAL_DISPLACEMENT / FW=3 as a regime-sensitive observation
+```
+
+Run:
+
+```bash
+python3 scripts/run_d1_state_outcome_deep_dive.py \
+  --outcome-review-dir data/research/d1_regime_outcome_review \
+  --regime-research-dir data/research/d1_regime_normalized_research \
+  --output-dir data/research/d1_state_outcome_deep_dive \
+  --report data/research/d1_state_outcome_deep_dive/d1_state_outcome_deep_dive_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/d1_state_outcome_deep_dive/d1_state_deep_dive_profile_inventory.csv
+data/research/d1_state_outcome_deep_dive/d1_state_regime_breakdown.csv
+data/research/d1_state_outcome_deep_dive/d1_state_outcome_statistics.csv
+data/research/d1_state_outcome_deep_dive/d1_state_regime_comparison_matrix.csv
+data/research/d1_state_outcome_deep_dive/d1_state_deep_dive_summary.csv
+data/research/d1_state_outcome_deep_dive/d1_state_outcome_deep_dive_report.txt
+```
+
+Metrics include regime sample size, forward close return, forward range,
+outcome magnitude, direction alignment, dispersion, profile stability, and
+regime-period deviation from each selected profile average.
+
+Regimes are scenario-period labels only, not macro causal classifications.
+This phase is research-only. It does not change production defaults,
+thresholds, production taxonomy, Event Detection defaults, Market Structure
+defaults, validation behavior, or production runtime behavior. It does not add
+operational logic, automated threshold changes, machine learning, backtesting,
+or a Decision Engine. No comparative ordering is produced.
