@@ -1,0 +1,58 @@
+experiment_name: m15_duration_calibration_experiments_v1
+symbol: EURUSD
+pip_size: 0.0001
+forward_candles: [3, 6, 12]
+
+base_scenarios:
+  - scenario_id: eurusd_m15_period_1
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_1.csv
+  - scenario_id: eurusd_m15_period_2
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_2.csv
+  - scenario_id: eurusd_m15_period_3
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_3.csv
+  - scenario_id: eurusd_m15_period_4
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_4.csv
+  - scenario_id: eurusd_m15_period_5
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_5.csv
+  - scenario_id: eurusd_m15_period_6
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_6.csv
+  - scenario_id: eurusd_m15_period_7
+    symbol: EURUSD
+    timeframe: M15
+    ohlc_path: data/raw/EURUSD_M15_period_7.csv
+
+duration_experiments:
+  - experiment_id: m15_duration_4h
+    description: M15 4 hour duration calibration candidate
+    max_structure_duration_seconds:
+      M15: 14400
+  - experiment_id: m15_duration_6h
+    description: M15 6 hour duration calibration candidate
+    max_structure_duration_seconds:
+      M15: 21600
+  - experiment_id: m15_duration_8h_baseline
+    description: M15 baseline reference duration profile
+    max_structure_duration_seconds:
+      M15: 28800
+  - experiment_id: m15_duration_10h
+    description: M15 10 hour duration calibration candidate
+    max_structure_duration_seconds:
+      M15: 36000
+  - experiment_id: m15_duration_12h
+    description: M15 12 hour duration calibration candidate
+    max_structure_duration_seconds:
+      M15: 43200
+
+sample_size_experiments: []
