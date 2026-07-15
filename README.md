@@ -931,3 +931,90 @@ defaults, H1/H4/D1 behavior, validation behavior, or production runtime
 behavior. It does not add operational logic, automated threshold changes,
 model selection, machine learning, backtesting, or a decision layer. No
 comparative ordering is produced.
+
+## H4/D1 Structural Research Program
+
+Phase 7.5 starts a dedicated H4/D1 structural research workflow. Calibration
+work is paused so SQRE can focus on descriptive historical behavior for the
+most mature structural timeframes.
+
+H4 is used as the main structural research timeframe. D1 is used as
+higher-timeframe and regime context. M15 remains a secondary intraday candidate,
+H1 remains useful intraday context, and M5 remains paused as microstructure
+context.
+
+H4 scenarios:
+
+```text
+eurusd_h4_period_1
+eurusd_h4_period_2
+eurusd_h4_period_3
+eurusd_h4_period_4
+```
+
+D1 scenarios:
+
+```text
+eurusd_d1_period_1
+eurusd_d1_period_2
+eurusd_d1_period_3
+eurusd_d1_period_4
+```
+
+Run H4/D1 validation:
+
+```bash
+python3 scripts/run_multi_scenario_validation.py \
+  --config configs/validation/h4_d1_structural_research_validation.yaml \
+  --output-dir data/validation/h4_d1_structural_research \
+  --report data/validation/h4_d1_structural_research/h4_d1_validation_report.txt \
+  --summary-csv data/validation/h4_d1_structural_research/h4_d1_validation_summary.csv
+```
+
+Run H4/D1 structural research:
+
+```bash
+python3 scripts/run_h4_d1_structural_research.py \
+  --validation-summary data/validation/h4_d1_structural_research/h4_d1_validation_summary.csv \
+  --validation-output-dir data/validation/h4_d1_structural_research \
+  --output-dir data/research/h4_d1_structural_research \
+  --report data/research/h4_d1_structural_research/h4_d1_structural_research_report.txt
+```
+
+The research workflow writes:
+
+```text
+data/research/h4_d1_structural_research/h4_d1_scenario_inventory.csv
+data/research/h4_d1_structural_research/h4_d1_state_research_profiles.csv
+data/research/h4_d1_structural_research/h4_d1_transition_research_profiles.csv
+data/research/h4_d1_structural_research/h4_d1_price_outcome_profiles.csv
+data/research/h4_d1_structural_research/h4_d1_sequence_research_profiles.csv
+data/research/h4_d1_structural_research/h4_d1_timeframe_research_summary.csv
+data/research/h4_d1_structural_research/h4_d1_structural_research_report.txt
+```
+
+The workflow computes scenario inventory, state profile counts and frequencies,
+transition profile counts and frequencies, price outcome profile ranges and
+magnitudes, sequence profile availability, sample adequacy, scenario
+consistency, and regime sensitivity.
+
+Diagnostic flags include:
+
+```text
+State_Sample_Adequacy_Flag
+State_Scenario_Consistency_Flag
+Transition_Sample_Adequacy_Flag
+Transition_Consistency_Flag
+Scenario_Sensitivity_Flag
+Sample_Adequacy_Flag
+Structural_Maturity_Flag
+Research_Sample_Quality_Flag
+```
+
+This phase includes only H4 and D1 periods 1 through 4. It excludes M5, M15,
+H1, H4 period 5, H4 period 6, and partial samples. It does not change
+production defaults, thresholds, production taxonomy, Event Detection defaults,
+Market Structure defaults, validation behavior, or production runtime behavior.
+It does not add operational logic, automated threshold changes, model
+selection, machine learning, backtesting, or a Decision Engine. No comparative
+ordering is produced.
