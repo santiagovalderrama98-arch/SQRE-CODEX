@@ -1085,3 +1085,53 @@ Market Structure defaults, or production runtime behavior. It does not add
 operational logic, automated threshold changes, model selection, machine
 learning, backtesting, or a Decision Engine. No comparative ordering is
 produced.
+
+## D1 Regime Outcome Dispersion & Sample Adequacy Review
+
+Phase 7.5.2 adds a D1-only review layer on top of the regime-normalized
+research outputs. It separates descriptive condition profiles by sample
+adequacy, regime coverage, outcome dispersion, and regime sensitivity.
+
+Run after `data/research/d1_regime_normalized_research` exists:
+
+```bash
+python3 scripts/run_d1_regime_outcome_review.py \
+  --input-dir data/research/d1_regime_normalized_research \
+  --output-dir data/research/d1_regime_outcome_review \
+  --report data/research/d1_regime_outcome_review/d1_regime_outcome_review_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/d1_regime_outcome_review/d1_condition_quality_inventory.csv
+data/research/d1_regime_outcome_review/d1_research_ready_condition_profiles.csv
+data/research/d1_regime_outcome_review/d1_regime_sensitive_condition_profiles.csv
+data/research/d1_regime_outcome_review/d1_low_sample_condition_profiles.csv
+data/research/d1_regime_outcome_review/d1_limited_coverage_condition_profiles.csv
+data/research/d1_regime_outcome_review/d1_state_condition_quality_summary.csv
+data/research/d1_regime_outcome_review/d1_transition_condition_quality_summary.csv
+data/research/d1_regime_outcome_review/d1_outcome_dispersion_summary.csv
+data/research/d1_regime_outcome_review/d1_sample_adequacy_summary.csv
+data/research/d1_regime_outcome_review/d1_regime_outcome_review_summary.csv
+data/research/d1_regime_outcome_review/d1_regime_outcome_review_report.txt
+```
+
+Default review thresholds:
+
+```text
+minimum_total_sample_size = 20
+minimum_regime_count = 2
+full_regime_count = 4
+moderate_dispersion_threshold = 0.20
+high_dispersion_threshold = 0.35
+moderate_sensitivity_threshold = 0.20
+high_sensitivity_threshold = 0.35
+low_sample_share_threshold = 0.50
+```
+
+This phase is descriptive only. It does not change production defaults,
+Market State thresholds, Event Detection defaults, Market Structure defaults,
+validation behavior, or production runtime behavior. It does not add
+operational logic, automated threshold changes, machine learning, backtesting,
+or a Decision Engine. No comparative ordering is produced.
