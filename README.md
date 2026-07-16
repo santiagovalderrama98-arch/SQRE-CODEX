@@ -1136,6 +1136,86 @@ validation behavior, or production runtime behavior. It does not add
 operational logic, automated threshold changes, machine learning, backtesting,
 or a Decision Engine. No comparative ordering is produced.
 
+## Phase 7.5.5 — H4 Scenario Dispersion Review
+
+Phase 7.5.5 adds a research-only review layer after the H4
+research-ready state outcome deep dive. Phase 7.5.4 identifies H4 state
+outcome profiles and scenario-period deviations. This phase reviews whether
+those profiles remain descriptively stable across H4 scenario periods or need
+separate scenario dispersion review before any later aggregation study.
+
+Run after `data/research/h4_state_outcome_deep_dive` exists:
+
+```bash
+python3 scripts/run_h4_scenario_dispersion_review.py \
+  --input-dir data/research/h4_state_outcome_deep_dive \
+  --output-dir data/research/h4_scenario_dispersion_review \
+  --report data/research/h4_scenario_dispersion_review/h4_scenario_dispersion_review_report.txt
+```
+
+Required inputs:
+
+```text
+data/research/h4_state_outcome_deep_dive/h4_state_outcome_statistics.csv
+data/research/h4_state_outcome_deep_dive/h4_state_scenario_comparison_matrix.csv
+```
+
+Optional inputs:
+
+```text
+data/research/h4_state_outcome_deep_dive/h4_state_deep_dive_profile_inventory.csv
+data/research/h4_state_outcome_deep_dive/h4_state_scenario_breakdown.csv
+data/research/h4_state_outcome_deep_dive/h4_state_deep_dive_summary.csv
+```
+
+The workflow writes:
+
+```text
+data/research/h4_scenario_dispersion_review/h4_profile_dispersion_diagnostics.csv
+data/research/h4_scenario_dispersion_review/h4_scenario_dispersion_contribution.csv
+data/research/h4_scenario_dispersion_review/h4_state_dispersion_summary.csv
+data/research/h4_scenario_dispersion_review/h4_forward_window_dispersion_summary.csv
+data/research/h4_scenario_dispersion_review/h4_aggregation_candidate_profiles.csv
+data/research/h4_scenario_dispersion_review/h4_scenario_sensitive_profiles.csv
+data/research/h4_scenario_dispersion_review/h4_sample_constrained_profiles.csv
+data/research/h4_scenario_dispersion_review/h4_scenario_dispersion_review_summary.csv
+data/research/h4_scenario_dispersion_review/h4_scenario_dispersion_review_report.txt
+```
+
+Classification rules remain descriptive:
+
+```text
+Profile_Dispersion_Class:
+  HIGH_DISPERSION when range CV or outcome magnitude CV reaches the high threshold
+  MODERATE_DISPERSION when either CV reaches the moderate threshold
+  STABLE_DESCRIPTIVE otherwise
+
+Dispersion_Driver_Class:
+  RANGE_DRIVEN
+  MAGNITUDE_DRIVEN
+  MIXED_DRIVEN
+  LOW_DISPERSION
+
+Profile_Research_Readiness_Class:
+  SAMPLE_REVIEW
+  SCENARIO_SENSITIVE_REVIEW
+  AGGREGATION_CANDIDATE
+  GENERAL_REVIEW
+```
+
+Metrics include forward range CV, outcome magnitude CV, direction alignment
+dispersion, high/moderate/low scenario-period deviation counts, scenario
+contribution classes, state-level dispersion summaries, and forward-window
+dispersion summaries.
+
+This phase is descriptive only. It does not change production defaults,
+thresholds, production taxonomy, Event Detection defaults, Market Structure
+defaults, validation behavior, H4 state deep dive outputs, D1 outputs, or
+production runtime behavior. It does not add operational logic, automated
+threshold changes, machine learning, backtesting, or a Decision Engine.
+Scenario periods are descriptive partitions and not causal claims. No
+comparative ordering is produced.
+
 ## Phase 7.5.4 — H4 Research-Ready State Outcome Deep Dive
 
 Phase 7.5.4 adds an H4-only research deep dive after the H4/D1 structural
