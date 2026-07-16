@@ -1136,6 +1136,66 @@ validation behavior, or production runtime behavior. It does not add
 operational logic, automated threshold changes, machine learning, backtesting,
 or a Decision Engine. No comparative ordering is produced.
 
+## Phase 7.5.4 — H4 Research-Ready State Outcome Deep Dive
+
+Phase 7.5.4 adds an H4-only research deep dive after the H4/D1 structural
+research phase and the D1 state outcome review. It reviews H4
+`STATE_CONDITION` outcome profiles across the available H4 scenario periods,
+separating research-ready, scenario-sensitive, and sample-constrained
+observations.
+
+Run after `data/research/h4_d1_structural_research` and
+`data/validation/h4_d1_structural_research` exist:
+
+```bash
+python3 scripts/run_h4_state_outcome_deep_dive.py \
+  --h4-d1-research-dir data/research/h4_d1_structural_research \
+  --validation-output-dir data/validation/h4_d1_structural_research \
+  --output-dir data/research/h4_state_outcome_deep_dive \
+  --report data/research/h4_state_outcome_deep_dive/h4_state_outcome_deep_dive_report.txt
+```
+
+Required input:
+
+```text
+data/research/h4_d1_structural_research/h4_d1_price_outcome_profiles.csv
+```
+
+Optional inputs include the H4/D1 state research profiles, timeframe research
+summary, scenario inventory, and scenario-level condition price outcome
+summaries under each H4 validation scenario directory.
+
+Selected H4 state profiles are filtered from `Timeframe=H4` and
+`Condition_Type=STATE_CONDITION`. The review classifies them as:
+
+```text
+RESEARCH_READY
+SAMPLE_CONSTRAINED_OBSERVATION
+SCENARIO_SENSITIVE_OBSERVATION
+```
+
+The workflow writes:
+
+```text
+data/research/h4_state_outcome_deep_dive/h4_state_deep_dive_profile_inventory.csv
+data/research/h4_state_outcome_deep_dive/h4_state_scenario_breakdown.csv
+data/research/h4_state_outcome_deep_dive/h4_state_outcome_statistics.csv
+data/research/h4_state_outcome_deep_dive/h4_state_scenario_comparison_matrix.csv
+data/research/h4_state_outcome_deep_dive/h4_state_deep_dive_summary.csv
+data/research/h4_state_outcome_deep_dive/h4_state_outcome_deep_dive_report.txt
+```
+
+Metrics include scenario sample size, forward close return, forward range,
+outcome magnitude, direction alignment, dispersion, profile stability, and
+scenario-period deviation from each selected profile average.
+
+This phase is research-only. It does not change production defaults,
+thresholds, production taxonomy, Event Detection defaults, Market Structure
+defaults, validation behavior, or production runtime behavior. It does not add
+operational logic, automated threshold changes, machine learning, backtesting,
+or a Decision Engine. H4 state labels do not make macro causal claims. No
+comparative ordering is produced.
+
 ## Phase 7.5.3 — D1 Research-Ready State Outcome Deep Dive
 
 Phase 7.5.3 adds a focused D1 state outcome deep dive after the Phase 7.5.2
