@@ -1136,6 +1136,97 @@ validation behavior, or production runtime behavior. It does not add
 operational logic, automated threshold changes, machine learning, backtesting,
 or a Decision Engine. No comparative ordering is produced.
 
+## Phase 7.5.6 — H4 Scenario-Sensitive State Profile Review
+
+Phase 7.5.6 adds a research-only review layer after the H4 scenario dispersion
+review. Phase 7.5.5 separates H4 state/window profiles into aggregation
+candidates, scenario-sensitive profiles, and sample-constrained profiles. This
+phase focuses on the scenario-sensitive H4 state profiles and describes which
+metric families contribute to the observed scenario-period deviation.
+
+Run after `data/research/h4_scenario_dispersion_review` and
+`data/research/h4_state_outcome_deep_dive` exist:
+
+```bash
+python3 scripts/run_h4_scenario_sensitive_state_review.py \
+  --dispersion-review-dir data/research/h4_scenario_dispersion_review \
+  --state-deep-dive-dir data/research/h4_state_outcome_deep_dive \
+  --output-dir data/research/h4_scenario_sensitive_state_review \
+  --report data/research/h4_scenario_sensitive_state_review/h4_scenario_sensitive_state_review_report.txt
+```
+
+Required inputs:
+
+```text
+data/research/h4_scenario_dispersion_review/h4_scenario_sensitive_profiles.csv
+data/research/h4_state_outcome_deep_dive/h4_state_scenario_comparison_matrix.csv
+data/research/h4_state_outcome_deep_dive/h4_state_scenario_breakdown.csv
+```
+
+Optional inputs:
+
+```text
+data/research/h4_scenario_dispersion_review/h4_profile_dispersion_diagnostics.csv
+data/research/h4_scenario_dispersion_review/h4_scenario_dispersion_contribution.csv
+data/research/h4_scenario_dispersion_review/h4_state_dispersion_summary.csv
+data/research/h4_scenario_dispersion_review/h4_forward_window_dispersion_summary.csv
+data/research/h4_scenario_dispersion_review/h4_sample_constrained_profiles.csv
+data/research/h4_scenario_dispersion_review/h4_scenario_dispersion_review_summary.csv
+data/research/h4_state_outcome_deep_dive/h4_state_outcome_statistics.csv
+data/research/h4_state_outcome_deep_dive/h4_state_deep_dive_profile_inventory.csv
+```
+
+The workflow writes:
+
+```text
+data/research/h4_scenario_sensitive_state_review/h4_scenario_sensitive_profile_review.csv
+data/research/h4_scenario_sensitive_state_review/h4_profile_scenario_deviation_detail.csv
+data/research/h4_scenario_sensitive_state_review/h4_scenario_recurrent_deviation_summary.csv
+data/research/h4_scenario_sensitive_state_review/h4_state_sensitivity_summary.csv
+data/research/h4_scenario_sensitive_state_review/h4_forward_window_sensitivity_summary.csv
+data/research/h4_scenario_sensitive_state_review/h4_near_aggregation_candidate_review.csv
+data/research/h4_scenario_sensitive_state_review/h4_scenario_sensitive_state_review_summary.csv
+data/research/h4_scenario_sensitive_state_review/h4_scenario_sensitive_state_review_report.txt
+```
+
+Classification rules remain descriptive:
+
+```text
+Primary_Deviating_Metric:
+  RANGE
+  MAGNITUDE
+  ALIGNMENT
+  MIXED
+
+Scenario_Sensitivity_Class:
+  HIGH_SCENARIO_SENSITIVITY
+  MODERATE_SCENARIO_SENSITIVITY
+  LOW_SCENARIO_SENSITIVITY
+
+Scenario_Recurrent_Deviation_Class:
+  HIGH_RECURRENT_DEVIATION
+  MODERATE_RECURRENT_DEVIATION
+  LOW_RECURRENT_DEVIATION
+
+H4_Review_Readiness_Flag:
+  READY_FOR_TARGETED_REVIEW
+  REQUIRES_SCENARIO_SENSITIVE_REVIEW
+```
+
+Metrics include forward range CV, outcome magnitude CV, direction alignment
+dispersion, scenario-period deviation intensity, recurrent deviation classes,
+state sensitivity summaries, forward-window sensitivity summaries, and
+near-aggregation candidate counts. Near-candidate review is descriptive only;
+no scenario-period is excluded or filtered automatically.
+
+This phase is descriptive only. It does not change production defaults,
+thresholds, production taxonomy, Event Detection defaults, Market Structure
+defaults, validation behavior, Phase 7.5.5 outputs, H4 state deep dive outputs,
+or production runtime behavior. It does not add operational logic, automated
+threshold changes, machine learning, backtesting, or a Decision Engine.
+Scenario periods are descriptive partitions and not causal claims. No
+comparative ordering is produced.
+
 ## Phase 7.5.5 — H4 Scenario Dispersion Review
 
 Phase 7.5.5 adds a research-only review layer after the H4
