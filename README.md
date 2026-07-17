@@ -1136,6 +1136,102 @@ validation behavior, or production runtime behavior. It does not add
 operational logic, automated threshold changes, machine learning, backtesting,
 or a Decision Engine. No comparative ordering is produced.
 
+## Phase 7.5.7 — H4 Transition Outcome Deep Dive
+
+Phase 7.5.7 adds a research-only H4 transition outcome deep dive after the H4
+scenario-sensitive state profile review. Phase 7.5.6 found that isolated H4
+state profiles remain scenario-sensitive, so this phase reviews whether H4
+`TRANSITION_CONDITION` profiles provide clearer descriptive structure than
+isolated H4 state labels.
+
+Run after `data/research/h4_d1_structural_research` and
+`data/validation/h4_d1_structural_research` exist:
+
+```bash
+python3 scripts/run_h4_transition_outcome_deep_dive.py \
+  --h4-d1-research-dir data/research/h4_d1_structural_research \
+  --validation-output-dir data/validation/h4_d1_structural_research \
+  --output-dir data/research/h4_transition_outcome_deep_dive \
+  --report data/research/h4_transition_outcome_deep_dive/h4_transition_outcome_deep_dive_report.txt
+```
+
+Required input:
+
+```text
+data/research/h4_d1_structural_research/h4_d1_price_outcome_profiles.csv
+```
+
+Optional inputs include:
+
+```text
+data/research/h4_d1_structural_research/h4_d1_transition_research_profiles.csv
+data/research/h4_d1_structural_research/h4_d1_timeframe_research_summary.csv
+data/research/h4_d1_structural_research/h4_d1_scenario_inventory.csv
+data/validation/h4_d1_structural_research/<scenario>/research/condition_price_outcome_summary.csv
+data/validation/h4_d1_structural_research/<scenario>/research/price_outcomes.csv
+data/validation/h4_d1_structural_research/<scenario>/processed/state_transitions.csv
+```
+
+Selected profiles are filtered from `Timeframe=H4` and
+`Condition_Type=TRANSITION_CONDITION`. Transition labels are parsed into:
+
+```text
+Source_State
+Target_State
+Transition_Family
+```
+
+Supported label shapes include arrow labels, `_TO_` labels, pipe-separated
+labels, double-underscore labels, slash-separated labels, and
+`TRANSITION:SOURCE:TARGET` labels. Unknown labels are retained with
+`UNKNOWN` source and target values so the workflow does not fabricate
+structure.
+
+The workflow writes:
+
+```text
+data/research/h4_transition_outcome_deep_dive/h4_transition_deep_dive_profile_inventory.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_scenario_breakdown.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_outcome_statistics.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_scenario_comparison_matrix.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_family_summary.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_deep_dive_summary.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_outcome_deep_dive_report.txt
+```
+
+Classification rules remain descriptive:
+
+```text
+Profile_Type:
+  SAMPLE_CONSTRAINED_OBSERVATION when total sample or scenario coverage is limited
+  SCENARIO_SENSITIVE_OBSERVATION when adequate-sample profiles have high dispersion
+  RESEARCH_READY otherwise
+
+Dispersion_Class:
+  HIGH_DISPERSION
+  MODERATE_DISPERSION
+  STABLE_DESCRIPTIVE
+
+Transition_Research_Class:
+  RESEARCH_READY_DESCRIPTIVE
+  SCENARIO_SENSITIVE_REVIEW
+  SAMPLE_REVIEW
+```
+
+Metrics include scenario sample size, forward close return, forward range,
+favorable and adverse displacement, outcome magnitude, direction alignment,
+forward range CV, outcome magnitude CV, scenario-period deviation classes,
+transition family summaries, and transition deep dive summaries.
+
+This phase is descriptive only. Scenario periods are descriptive partitions and
+not causal claims. It does not change production defaults, thresholds,
+production taxonomy, Event Detection defaults, Market Structure defaults,
+validation behavior, H4/D1 structural research outputs, H4 state deep dive
+outputs, H4 scenario dispersion outputs, H4 scenario-sensitive state review
+outputs, or production runtime behavior. It does not add operational logic,
+automated threshold changes, machine learning, backtesting, or a Decision
+Engine. No comparative ordering is produced.
+
 ## Phase 7.5.6 — H4 Scenario-Sensitive State Profile Review
 
 Phase 7.5.6 adds a research-only review layer after the H4 scenario dispersion
