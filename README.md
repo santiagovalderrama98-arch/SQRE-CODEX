@@ -1232,6 +1232,95 @@ outputs, or production runtime behavior. It does not add operational logic,
 automated threshold changes, machine learning, backtesting, or a Decision
 Engine. No comparative ordering is produced.
 
+## Phase 7.5.8 — H4 Transition Scenario Dispersion Review
+
+Phase 7.5.8 adds a research-only review layer after the H4 transition outcome
+deep dive. Phase 7.5.7 identified H4 `TRANSITION_CONDITION` profiles and
+scenario-period outcome differences. This phase reviews whether those
+transition profiles remain stable across scenario periods, which transition
+families carry elevated dispersion, and which profiles require scenario-aware
+interpretation before any later descriptive aggregation review.
+
+Run after `data/research/h4_transition_outcome_deep_dive` exists:
+
+```bash
+python3 scripts/run_h4_transition_scenario_dispersion_review.py \
+  --input-dir data/research/h4_transition_outcome_deep_dive \
+  --output-dir data/research/h4_transition_scenario_dispersion_review \
+  --report data/research/h4_transition_scenario_dispersion_review/h4_transition_scenario_dispersion_review_report.txt
+```
+
+Required inputs:
+
+```text
+data/research/h4_transition_outcome_deep_dive/h4_transition_outcome_statistics.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_scenario_comparison_matrix.csv
+```
+
+Optional inputs:
+
+```text
+data/research/h4_transition_outcome_deep_dive/h4_transition_deep_dive_profile_inventory.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_scenario_breakdown.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_family_summary.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_deep_dive_summary.csv
+```
+
+The workflow writes:
+
+```text
+data/research/h4_transition_scenario_dispersion_review/h4_transition_profile_dispersion_diagnostics.csv
+data/research/h4_transition_scenario_dispersion_review/h4_transition_scenario_dispersion_contribution.csv
+data/research/h4_transition_scenario_dispersion_review/h4_transition_family_dispersion_summary.csv
+data/research/h4_transition_scenario_dispersion_review/h4_transition_source_state_dispersion_summary.csv
+data/research/h4_transition_scenario_dispersion_review/h4_transition_target_state_dispersion_summary.csv
+data/research/h4_transition_scenario_dispersion_review/h4_transition_forward_window_dispersion_summary.csv
+data/research/h4_transition_scenario_dispersion_review/h4_transition_aggregation_candidate_profiles.csv
+data/research/h4_transition_scenario_dispersion_review/h4_transition_scenario_sensitive_profiles.csv
+data/research/h4_transition_scenario_dispersion_review/h4_transition_sample_constrained_profiles.csv
+data/research/h4_transition_scenario_dispersion_review/h4_transition_scenario_dispersion_review_summary.csv
+data/research/h4_transition_scenario_dispersion_review/h4_transition_scenario_dispersion_review_report.txt
+```
+
+Classification rules remain descriptive:
+
+```text
+Profile_Dispersion_Class:
+  HIGH_DISPERSION when range CV or outcome magnitude CV reaches the high threshold
+  MODERATE_DISPERSION when either CV reaches the moderate threshold
+  STABLE_DESCRIPTIVE otherwise
+
+Dispersion_Driver_Class:
+  RANGE_DRIVEN
+  MAGNITUDE_DRIVEN
+  MIXED_DRIVEN
+  LOW_DISPERSION
+
+Transition_Profile_Readiness_Class:
+  SAMPLE_REVIEW
+  SCENARIO_SENSITIVE_REVIEW
+  AGGREGATION_CANDIDATE
+  GENERAL_REVIEW
+
+Scenario_Contribution_Class:
+  HIGH_CONTRIBUTION
+  MODERATE_CONTRIBUTION
+  LOW_CONTRIBUTION
+```
+
+Metrics include transition profile dispersion diagnostics, scenario-period
+deviation contribution, transition-family dispersion summaries, source-state
+dispersion summaries, target-state dispersion summaries, forward-window
+dispersion summaries, aggregation candidate profiles, scenario-sensitive
+transition profiles, and sample-constrained transition profiles.
+
+Scenario periods are descriptive partitions and not causal claims. This phase
+does not change production defaults, thresholds, production taxonomy, Event
+Detection defaults, Market Structure defaults, validation behavior, H4 state
+outputs, H4 transition outcome outputs, or production runtime behavior. It
+does not add operational logic, automated threshold changes, machine learning,
+backtesting, or a Decision Engine. No comparative ordering is produced.
+
 ## Phase 7.5.6 — H4 Scenario-Sensitive State Profile Review
 
 Phase 7.5.6 adds a research-only review layer after the H4 scenario dispersion
