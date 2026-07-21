@@ -1232,6 +1232,65 @@ outputs, or production runtime behavior. It does not add operational logic,
 automated threshold changes, machine learning, backtesting, or a Decision
 Engine. No comparative ordering is produced.
 
+## Phase 7.5.9 — H4 Transition Scenario-Sensitive Profile Review
+
+Phase 7.5.9 adds a research-only review layer after the H4 transition scenario
+dispersion review. Phase 7.5.8 identified H4 `TRANSITION_CONDITION` profiles
+that still require scenario-sensitive interpretation. This phase explains
+which transition/window profiles remain sensitive, which scenario-periods
+recurrently contribute deviation, and whether a limited subset may be revisited
+for later selective aggregation review.
+
+Run after `data/research/h4_transition_scenario_dispersion_review` and
+`data/research/h4_transition_outcome_deep_dive` exist:
+
+```bash
+python3 scripts/run_h4_transition_scenario_sensitive_review.py \
+  --dispersion-review-dir data/research/h4_transition_scenario_dispersion_review \
+  --transition-deep-dive-dir data/research/h4_transition_outcome_deep_dive \
+  --output-dir data/research/h4_transition_scenario_sensitive_review \
+  --report data/research/h4_transition_scenario_sensitive_review/h4_transition_scenario_sensitive_review_report.txt
+```
+
+Required inputs:
+
+```text
+data/research/h4_transition_scenario_dispersion_review/h4_transition_scenario_sensitive_profiles.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_scenario_comparison_matrix.csv
+data/research/h4_transition_outcome_deep_dive/h4_transition_scenario_breakdown.csv
+```
+
+The workflow writes:
+
+```text
+data/research/h4_transition_scenario_sensitive_review/h4_transition_scenario_sensitive_profile_review.csv
+data/research/h4_transition_scenario_sensitive_review/h4_transition_profile_scenario_deviation_detail.csv
+data/research/h4_transition_scenario_sensitive_review/h4_transition_scenario_recurrent_deviation_summary.csv
+data/research/h4_transition_scenario_sensitive_review/h4_transition_family_sensitivity_summary.csv
+data/research/h4_transition_scenario_sensitive_review/h4_transition_source_state_sensitivity_summary.csv
+data/research/h4_transition_scenario_sensitive_review/h4_transition_target_state_sensitivity_summary.csv
+data/research/h4_transition_scenario_sensitive_review/h4_transition_forward_window_sensitivity_summary.csv
+data/research/h4_transition_scenario_sensitive_review/h4_transition_near_aggregation_candidate_review.csv
+data/research/h4_transition_scenario_sensitive_review/h4_transition_focus_profile_review.csv
+data/research/h4_transition_scenario_sensitive_review/h4_transition_scenario_sensitive_review_summary.csv
+data/research/h4_transition_scenario_sensitive_review/h4_transition_scenario_sensitive_review_report.txt
+```
+
+Classification remains descriptive. Profile-level deviation drivers compare
+forward range CV, outcome magnitude CV, and direction alignment dispersion.
+Scenario-level drivers compare scenario deviation from each transition profile
+average. The review also computes transition family, source state, target
+state, forward window, recurrent scenario-period, focus transition, and
+near-candidate summaries.
+
+Scenario periods are descriptive partitions, not causal claims. This phase
+does not change production defaults, thresholds, production taxonomy, Event
+Detection defaults, Market Structure defaults, validation behavior, existing
+H4 transition outcome deep dive outputs, existing H4 transition scenario
+dispersion outputs, or production runtime behavior. It does not add
+operational logic, automated threshold changes, machine learning, backtesting,
+or a Decision Engine. No comparative ordering is produced.
+
 ## Phase 7.5.8 — H4 Transition Scenario Dispersion Review
 
 Phase 7.5.8 adds a research-only review layer after the H4 transition outcome
