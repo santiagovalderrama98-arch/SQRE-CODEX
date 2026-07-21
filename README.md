@@ -1232,6 +1232,67 @@ outputs, or production runtime behavior. It does not add operational logic,
 automated threshold changes, machine learning, backtesting, or a Decision
 Engine. No comparative ordering is produced.
 
+## Phase 7.5.10 — Expanded H4 Historical Sample Feasibility Review
+
+Phase 7.5.10 adds a research-only diagnostic review for expanded H4 historical
+sample feasibility. It reviews existing local configs, availability summaries,
+validation summaries, H4/D1 research inventory, and local `EURUSD_H4*.csv`
+files to identify which H4 sample periods already have evidence, which periods
+appear locally available for targeted validation review, and which periods
+remain constrained by sample availability or incomplete evidence.
+
+Run:
+
+```bash
+python3 scripts/run_h4_expanded_sample_feasibility_review.py \
+  --output-dir data/research/h4_expanded_sample_feasibility_review \
+  --report data/research/h4_expanded_sample_feasibility_review/h4_expanded_sample_feasibility_review_report.txt
+```
+
+Optional inputs use these defaults:
+
+```text
+configs/validation/eurusd_expanded_historical_samples.yaml
+configs/validation/eurusd_expanded_historical_validation.yaml
+configs/validation/h4_d1_structural_research_validation.yaml
+data/validation/expanded_historical_data_availability.csv
+data/validation/master_historical_calibration/master_historical_summary.csv
+data/validation/expanded_historical_consolidated/all_timeframes_expanded_summary.csv
+data/validation/h4_d1_structural_research/h4_d1_validation_summary.csv
+data/research/h4_d1_structural_research
+data/raw
+data/raw/partial
+```
+
+The workflow writes:
+
+```text
+data/research/h4_expanded_sample_feasibility_review/h4_sample_source_inventory.csv
+data/research/h4_expanded_sample_feasibility_review/h4_defined_sample_inventory.csv
+data/research/h4_expanded_sample_feasibility_review/h4_raw_file_inventory.csv
+data/research/h4_expanded_sample_feasibility_review/h4_availability_review.csv
+data/research/h4_expanded_sample_feasibility_review/h4_validation_coverage_review.csv
+data/research/h4_expanded_sample_feasibility_review/h4_expansion_feasibility_matrix.csv
+data/research/h4_expanded_sample_feasibility_review/h4_feasible_expansion_candidates.csv
+data/research/h4_expanded_sample_feasibility_review/h4_constrained_or_missing_samples.csv
+data/research/h4_expanded_sample_feasibility_review/h4_expanded_sample_feasibility_summary.csv
+data/research/h4_expanded_sample_feasibility_review/h4_expanded_sample_feasibility_review_report.txt
+```
+
+Availability classes include `AVAILABLE_FULL`, `AVAILABLE_PARTIAL`, `MISSING`,
+and `UNKNOWN`. Feasibility classes include `ALREADY_VALIDATED`,
+`FEASIBLE_FULL_SAMPLE`, `FEASIBLE_PARTIAL_SAMPLE`,
+`CONSTRAINED_PARTIAL_SAMPLE`, `MISSING_SAMPLE`, and
+`UNKNOWN_FEASIBILITY`. Summary fields include source counts, defined H4 sample
+counts, raw file counts, coverage ratios, dominant constraint class, feasibility
+profile, and readiness flag.
+
+This phase does not download data, call provider APIs, mutate sample configs,
+change production defaults, change thresholds, change taxonomy, change
+validation behavior, add automated threshold changes, add machine learning, add
+backtesting, add portfolio logic, or add Decision Engine behavior. No
+comparative ordering is produced.
+
 ## Phase 7.5.9 — H4 Transition Scenario-Sensitive Profile Review
 
 Phase 7.5.9 adds a research-only review layer after the H4 transition scenario
