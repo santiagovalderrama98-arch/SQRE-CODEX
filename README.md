@@ -1232,6 +1232,65 @@ outputs, or production runtime behavior. It does not add operational logic,
 automated threshold changes, machine learning, backtesting, or a Decision
 Engine. No comparative ordering is produced.
 
+## Phase 7.5.11 — H4 Targeted Partial Expansion Validation
+
+Phase 7.5.11 adds a research-only diagnostic pass for H4 partial samples
+identified by the expanded sample feasibility review. It selects
+`FEASIBLE_PARTIAL_SAMPLE` H4 candidates, focuses by default on
+`eurusd_h4_period_5_partial`, runs the current SQRE research pipeline for that
+partial sample only, and writes isolated validation and research artifacts.
+
+Run after the Phase 7.5.10 feasibility review:
+
+```bash
+python3 scripts/run_h4_targeted_partial_expansion_validation.py \
+  --feasibility-dir data/research/h4_expanded_sample_feasibility_review \
+  --baseline-validation-dir data/validation/h4_d1_structural_research \
+  --baseline-research-dir data/research/h4_d1_structural_research \
+  --output-dir data/validation/h4_targeted_partial_expansion_validation \
+  --research-output-dir data/research/h4_targeted_partial_expansion_validation \
+  --report data/research/h4_targeted_partial_expansion_validation/h4_targeted_partial_expansion_validation_report.txt
+```
+
+Default partial raw file lookup checks:
+
+```text
+data/raw/partial/EURUSD_H4_period_5_partial.csv
+data/raw/EURUSD_H4_period_5_partial.csv
+data/raw/partial/EURUSD_H4*.csv
+data/raw/EURUSD_H4*.csv
+```
+
+The workflow writes:
+
+```text
+data/research/h4_targeted_partial_expansion_validation/h4_partial_candidate_inventory.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_validation_run_summary.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_structure_state_summary.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_transition_summary.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_price_outcome_summary.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_vs_baseline_comparison.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_sample_adequacy_review.csv
+data/research/h4_targeted_partial_expansion_validation/h4_targeted_partial_expansion_validation_summary.csv
+data/research/h4_targeted_partial_expansion_validation/h4_targeted_partial_expansion_validation_report.txt
+```
+
+The partial sample is marked as `PARTIAL_SAMPLE`. The review separates raw
+availability, isolated pipeline status, sample adequacy, partial structure and
+state context, transition context, price outcome context, and descriptive
+baseline comparison.
+
+Classification fields include `Raw_File_Status`, `Run_Status`,
+`Sample_Adequacy_Class`, `Partial_Comparison_Class`,
+`H4_Partial_Expansion_Profile`, and
+`H4_Partial_Expansion_Readiness_Flag`.
+
+This phase does not download data, call provider APIs, mutate sample configs,
+change production defaults, change thresholds, change taxonomy, change
+validation behavior, add automated threshold changes, add machine learning, add
+backtesting, add portfolio logic, or add Decision Engine behavior. The partial
+sample is not merged silently into the full H4 baseline.
+
 ## Phase 7.5.10 — Expanded H4 Historical Sample Feasibility Review
 
 Phase 7.5.10 adds a research-only diagnostic review for expanded H4 historical
