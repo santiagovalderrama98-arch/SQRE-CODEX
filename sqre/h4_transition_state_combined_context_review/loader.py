@@ -80,6 +80,22 @@ def read_first_summary_row(directory: Path) -> pd.Series | None:
     return None
 
 
+def read_first_existing_row(directory: Path, filenames: Iterable[str]) -> pd.Series | None:
+    for filename in filenames:
+        row = first_row(read_optional_csv(directory / filename))
+        if row is not None:
+            return row
+    return None
+
+
+def first_existing_path(directory: Path, filenames: Iterable[str]) -> Path:
+    for filename in filenames:
+        path = directory / filename
+        if path.exists():
+            return path
+    return directory / next(iter(filenames))
+
+
 def source_inventory_row(source_name: str, source_type: str, path: Path):
     frame = read_optional_csv(path)
     if not path.exists():
@@ -94,11 +110,15 @@ def source_inventory_row(source_name: str, source_type: str, path: Path):
 
 
 def build_source_inventory(config: H4TransitionStateCombinedContextReviewConfig):
+    state_sensitive_path = first_existing_path(
+        config.h4_state_sensitive_dir,
+        STATE_SENSITIVE_FILENAMES,
+    )
     files = [
         ("state_deep_dive_profile_inventory", "STATE_DEEP_DIVE", config.h4_state_deep_dive_dir / "h4_state_deep_dive_profile_inventory.csv"),
         ("state_deep_dive_summary", "STATE_DEEP_DIVE", config.h4_state_deep_dive_dir / "h4_state_deep_dive_summary.csv"),
         ("state_dispersion_summary", "STATE_DISPERSION", config.h4_state_dispersion_dir / "h4_scenario_dispersion_review_summary.csv"),
-        ("state_sensitive_summary", "STATE_SENSITIVITY", config.h4_state_sensitive_dir / "h4_scenario_sensitive_review_summary.csv"),
+        ("state_sensitive_summary", "STATE_SENSITIVITY", state_sensitive_path),
         ("transition_deep_dive_profile_inventory", "TRANSITION_DEEP_DIVE", config.h4_transition_deep_dive_dir / "h4_transition_deep_dive_profile_inventory.csv"),
         ("transition_outcome_statistics", "TRANSITION_DEEP_DIVE", config.h4_transition_deep_dive_dir / "h4_transition_outcome_statistics.csv"),
         ("transition_dispersion_summary", "TRANSITION_DISPERSION", config.h4_transition_dispersion_dir / "h4_transition_scenario_dispersion_review_summary.csv"),
@@ -132,4 +152,11 @@ READINESS_ALIASES = [
     "H4_Review_Readiness_Flag",
     "H4_Transition_Aggregation_Readiness_Flag",
     "H4_Transition_Scenario_Sensitive_Review_Diagnostic",
+]
+
+STATE_SENSITIVE_FILENAMES = [
+    "h4_scenario_sensitive_state_review_summary.csv",
+    "h4_scenario_sensitive_review_summary.csv",
+    "h4_scenario_sensitive_state_profile_review.csv",
+    "h4_scenario_sensitive_profile_review.csv",
 ]

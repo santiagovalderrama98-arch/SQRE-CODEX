@@ -10,8 +10,10 @@ from sqre.h4_transition_state_combined_context_review.loader import (
     FORWARD_WINDOW_ALIASES,
     READINESS_ALIASES,
     SAMPLE_SIZE_ALIASES,
+    STATE_SENSITIVE_FILENAMES,
     first_row,
     int_value,
+    read_first_existing_row,
     read_first_summary_row,
     read_optional_csv,
     text_value,
@@ -21,7 +23,12 @@ from sqre.h4_transition_state_combined_context_review.models import StateContext
 
 STATE_LABEL_ALIASES = ["Condition_Label", "Condition_Value", "State", "Market_State", "Source_State", "Target_State"]
 PROFILE_ALIASES = ["Profile_Type", "State_Profile_Status", "Research_Class", "Transition_Research_Class"]
-SENSITIVITY_ALIASES = ["Sensitivity_Class", "H4_Scenario_Sensitive_Profile", "Scenario_Sensitive_Profile"]
+SENSITIVITY_ALIASES = [
+    "Sensitivity_Class",
+    "Scenario_Sensitivity_Class",
+    "H4_Scenario_Sensitive_Profile",
+    "Scenario_Sensitive_Profile",
+]
 
 
 def load_state_contexts(config: H4TransitionStateCombinedContextReviewConfig) -> dict[tuple[str, str], StateContext]:
@@ -48,7 +55,7 @@ def load_state_contexts(config: H4TransitionStateCombinedContextReviewConfig) ->
                 sample_size=int_value(row, SAMPLE_SIZE_ALIASES, 0),
             )
     summary = read_first_summary_row(config.h4_state_dispersion_dir)
-    sensitive = read_first_summary_row(config.h4_state_sensitive_dir)
+    sensitive = read_first_existing_row(config.h4_state_sensitive_dir, STATE_SENSITIVE_FILENAMES)
     summary_dispersion = text_value(summary, DISPERSION_ALIASES, "STATE_DISPERSION_UNAVAILABLE") if summary is not None else "STATE_DISPERSION_UNAVAILABLE"
     summary_ready = text_value(summary, READINESS_ALIASES, "STATE_READINESS_UNAVAILABLE") if summary is not None else "STATE_READINESS_UNAVAILABLE"
     summary_sensitivity = text_value(sensitive, SENSITIVITY_ALIASES, "STATE_SENSITIVITY_UNAVAILABLE") if sensitive is not None else "STATE_SENSITIVITY_UNAVAILABLE"
@@ -68,7 +75,7 @@ def load_state_contexts(config: H4TransitionStateCombinedContextReviewConfig) ->
 
 def load_state_summary_context(config: H4TransitionStateCombinedContextReviewConfig) -> StateContext:
     summary = read_first_summary_row(config.h4_state_dispersion_dir)
-    sensitive = read_first_summary_row(config.h4_state_sensitive_dir)
+    sensitive = read_first_existing_row(config.h4_state_sensitive_dir, STATE_SENSITIVE_FILENAMES)
     return StateContext(
         state_label="STATE_CONTEXT",
         forward_window="",
