@@ -50,17 +50,61 @@ def _match_state_context(
     states: dict[tuple[str, str], StateContext],
     summary: StateContext,
 ) -> StateContext:
-    candidates = [
-        (transition.source_state, transition.forward_window),
-        (transition.target_state, transition.forward_window),
-        (transition.source_state, ""),
-        (transition.target_state, ""),
-    ]
-    for key in candidates:
+    source = _find_state(transition.source_state, transition.forward_window, states)
+    target = _find_state(transition.target_state, transition.forward_window, states)
+    if source is not None and target is not None:
+        return _combine_state_contexts(source, target)
+    if source is not None:
+        return source
+    if target is not None:
+        return target
+    return summary
+
+
+def _find_state(
+    state_label: str,
+    forward_window: str,
+    states: dict[tuple[str, str], StateContext],
+) -> StateContext | None:
+    for key in [(state_label, forward_window), (state_label, "")]:
         state = states.get(key)
         if state is not None:
             return state
-    return summary
+    return None
+
+
+def _combine_state_contexts(source: StateContext, target: StateContext) -> StateContext:
+    dominant = source if _rank(source.dispersion_status) >= _rank(target.dispersion_status) else target
+    sensitivity = source.sensitivity_status
+    if sensitivity.endswith("UNAVAILABLE") and not target.sensitivity_status.endswith("UNAVAILABLE"):
+        sensitivity = target.sensitivity_status
+    readiness = source.readiness_flag
+    if readiness.endswith("UNAVAILABLE") and not target.readiness_flag.endswith("UNAVAILABLE"):
+        readiness = target.readiness_flag
+    return StateContext(
+        state_label=f"{source.state_label} | {target.state_label}",
+        forward_window=source.forward_window or target.forward_window,
+        profile_status=dominant.profile_status,
+        dispersion_status=dominant.dispersion_status,
+        sensitivity_status=sensitivity,
+        readiness_flag=readiness,
+        sample_size=source.sample_size + target.sample_size,
+    )
+
+
+def _rank(value: str) -> int:
+    text = str(value or "").upper()
+    if "HIGH" in text or "SCENARIO_SENSITIVE" in text:
+        return 5
+    if "MODERATE" in text:
+        return 4
+    if "STABLE" in text or "DESCRIPTIVE" in text or "CONSISTENT" in text:
+        return 3
+    if "SAMPLE" in text or "CONSTRAINED" in text:
+        return 2
+    if not text or "UNAVAILABLE" in text or "MISSING" in text:
+        return 0
+    return 1
 
 
 def _partial_context_status(partial: PartialContext) -> str:

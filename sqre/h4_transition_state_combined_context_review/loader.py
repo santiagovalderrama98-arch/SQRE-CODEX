@@ -138,13 +138,18 @@ TARGET_STATE_ALIASES = ["Target_State", "To_State", "Next_State", "State_To"]
 FORWARD_WINDOW_ALIASES = ["Forward_Window", "Forward_Window_Candles", "forward_window", "FW"]
 SAMPLE_SIZE_ALIASES = ["Sample_Size", "sample_size", "Condition_Count", "condition_count", "Transition_Count", "State_Count"]
 DISPERSION_ALIASES = [
+    "Profile_Dispersion_Class",
     "Dispersion_Class",
     "Outcome_Dispersion_Class",
+    "Dominant_Dispersion_Class",
+    "Dispersion_Driver_Class",
     "H4_Dispersion_Profile",
     "H4_Transition_Dispersion_Profile",
     "Sensitivity_Class",
     "H4_Scenario_Sensitive_Profile",
     "H4_Transition_Scenario_Sensitive_Profile",
+    "Profile_Research_Readiness_Class",
+    "Transition_Profile_Readiness_Class",
 ]
 READINESS_ALIASES = [
     "Readiness_Flag",
@@ -152,6 +157,10 @@ READINESS_ALIASES = [
     "H4_Review_Readiness_Flag",
     "H4_Transition_Aggregation_Readiness_Flag",
     "H4_Transition_Scenario_Sensitive_Review_Diagnostic",
+    "Profile_Research_Readiness_Class",
+    "Transition_Profile_Readiness_Class",
+    "Profile_Readiness_Class",
+    "Sample_Adequacy_Class",
 ]
 
 STATE_SENSITIVE_FILENAMES = [
@@ -159,4 +168,21 @@ STATE_SENSITIVE_FILENAMES = [
     "h4_scenario_sensitive_review_summary.csv",
     "h4_scenario_sensitive_state_profile_review.csv",
     "h4_scenario_sensitive_profile_review.csv",
+]
+
+STATE_DISPERSION_FILENAMES = [
+    "h4_profile_dispersion_diagnostics.csv",
+    "h4_scenario_sensitive_profiles.csv",
+    "h4_sample_constrained_profiles.csv",
+    "h4_state_dispersion_summary.csv",
+    "h4_scenario_dispersion_review_summary.csv",
+]
+
+TRANSITION_DISPERSION_FILENAMES = [
+    "h4_transition_profile_dispersion_diagnostics.csv",
+    "h4_transition_scenario_sensitive_profiles.csv",
+    "h4_transition_sample_constrained_profiles.csv",
+    "h4_transition_source_state_dispersion_summary.csv",
+    "h4_transition_target_state_dispersion_summary.csv",
+    "h4_transition_scenario_dispersion_review_summary.csv",
 ]

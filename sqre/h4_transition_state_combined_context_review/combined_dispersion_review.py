@@ -36,10 +36,10 @@ def _build_row(row: CombinedContextInventoryRow) -> CombinedDispersionReviewRow:
 
 
 def _classify(state: str, transition: str) -> tuple[str, str]:
-    if is_unavailable(state) or is_unavailable(transition):
+    state_unavailable = is_unavailable(state)
+    transition_unavailable = is_unavailable(transition)
+    if state_unavailable and transition_unavailable:
         return "COMBINED_BASELINE_UNAVAILABLE", "INPUT_LIMITED"
-    if is_sample_constrained(state) or is_sample_constrained(transition):
-        return "COMBINED_SAMPLE_CONSTRAINED", "SAMPLE_DRIVEN"
     if is_high(state) and is_high(transition):
         return "COMBINED_HIGH_DISPERSION", "MIXED_DRIVEN"
     if is_high(state):
@@ -48,6 +48,8 @@ def _classify(state: str, transition: str) -> tuple[str, str]:
         return "COMBINED_HIGH_DISPERSION", "TRANSITION_DRIVEN"
     if is_moderate(state) or is_moderate(transition):
         return "COMBINED_MODERATE_DISPERSION", "MIXED_DRIVEN"
+    if is_sample_constrained(state) or is_sample_constrained(transition):
+        return "COMBINED_SAMPLE_CONSTRAINED", "SAMPLE_DRIVEN"
     if is_stable(state) and is_stable(transition):
         return "COMBINED_STABLE_DESCRIPTIVE", "MIXED_DRIVEN"
     return "COMBINED_INCONCLUSIVE", "INPUT_LIMITED"
