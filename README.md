@@ -1232,6 +1232,72 @@ outputs, or production runtime behavior. It does not add operational logic,
 automated threshold changes, machine learning, backtesting, or a Decision
 Engine. No comparative ordering is produced.
 
+## Phase 7.5.12 — H4 Partial Sample Complementary Dispersion Review
+
+Phase 7.5.12 adds a research-only diagnostic review after the targeted H4
+partial expansion validation. It reads the Phase 7.5.11 partial sample outputs
+for `eurusd_h4_period_5_partial`, compares them against prior H4 dispersion
+summaries when those files are present, and keeps the sample marked as
+`PARTIAL_SAMPLE`.
+
+Run after Phase 7.5.11 has written its research outputs:
+
+```bash
+python3 scripts/run_h4_partial_complementary_dispersion_review.py \
+  --partial-validation-dir data/research/h4_targeted_partial_expansion_validation \
+  --h4-state-dispersion-dir data/research/h4_scenario_dispersion_review \
+  --h4-state-sensitive-dir data/research/h4_scenario_sensitive_state_review \
+  --h4-transition-dispersion-dir data/research/h4_transition_scenario_dispersion_review \
+  --h4-transition-sensitive-dir data/research/h4_transition_scenario_sensitive_review \
+  --h4-transition-deep-dive-dir data/research/h4_transition_outcome_deep_dive \
+  --output-dir data/research/h4_partial_complementary_dispersion_review \
+  --report data/research/h4_partial_complementary_dispersion_review/h4_partial_complementary_dispersion_review_report.txt
+```
+
+Primary inputs:
+
+```text
+data/research/h4_targeted_partial_expansion_validation/h4_partial_candidate_inventory.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_validation_run_summary.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_structure_state_summary.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_transition_summary.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_price_outcome_summary.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_vs_baseline_comparison.csv
+data/research/h4_targeted_partial_expansion_validation/h4_partial_sample_adequacy_review.csv
+data/research/h4_targeted_partial_expansion_validation/h4_targeted_partial_expansion_validation_summary.csv
+```
+
+The workflow writes:
+
+```text
+data/research/h4_partial_complementary_dispersion_review/h4_partial_complement_source_inventory.csv
+data/research/h4_partial_complementary_dispersion_review/h4_partial_sample_review_inventory.csv
+data/research/h4_partial_complementary_dispersion_review/h4_partial_state_complement_review.csv
+data/research/h4_partial_complementary_dispersion_review/h4_partial_transition_complement_review.csv
+data/research/h4_partial_complementary_dispersion_review/h4_partial_sensitivity_complement_review.csv
+data/research/h4_partial_complementary_dispersion_review/h4_partial_baseline_interpretation_matrix.csv
+data/research/h4_partial_complementary_dispersion_review/h4_partial_sample_caveat_review.csv
+data/research/h4_partial_complementary_dispersion_review/h4_partial_complementary_dispersion_summary.csv
+data/research/h4_partial_complementary_dispersion_review/h4_partial_complementary_dispersion_review_report.txt
+```
+
+Classification fields include `Partial_Sample_Status`,
+`Partial_State_Consistency_Class`, `Partial_Transition_Consistency_Class`,
+`Partial_Sensitivity_Interpretation`,
+`Partial_Baseline_Interpretation_Class`, `Partial_Sample_Caveat_Class`, and
+`H4_Partial_Complementary_Readiness_Flag`.
+
+Metrics include coverage ratio, condition profile count, baseline scenario
+count, state consistency class, transition consistency class, sensitivity
+interpretation, caveat class, and H4 complementary readiness flag.
+
+This phase does not download data, call provider APIs, mutate data files,
+change production defaults, change thresholds, change production taxonomy,
+change validation behavior, add automated threshold changes, add machine
+learning, add backtesting, add portfolio logic, add operational logic, or add a
+Decision Engine. The partial sample is not silently merged into the full H4
+baseline.
+
 ## Phase 7.5.11 — H4 Targeted Partial Expansion Validation
 
 Phase 7.5.11 adds a research-only diagnostic pass for H4 partial samples
