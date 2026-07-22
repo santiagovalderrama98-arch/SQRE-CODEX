@@ -102,6 +102,8 @@ def test_pipeline_handles_missing_raw_without_generated_counts(tmp_path: Path):
         feasibility_dir=feasibility_dir,
         baseline_validation_dir=baseline_validation_dir,
         baseline_research_dir=baseline_research_dir,
+        raw_data_dir=tmp_path / "empty_raw",
+        partial_data_dir=tmp_path / "empty_partial",
         output_dir=tmp_path / "validation",
         research_output_dir=tmp_path / "research",
         report_path=tmp_path / "research" / "report.txt",

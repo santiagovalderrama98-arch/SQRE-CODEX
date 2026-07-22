@@ -31,7 +31,11 @@ def test_selector_ignores_already_validated_rows(tmp_path: Path):
 
 def test_raw_locator_reports_missing(tmp_path: Path):
     feasibility_dir = write_feasibility_inputs(tmp_path)
-    config = H4TargetedPartialExpansionValidationConfig(feasibility_dir=feasibility_dir)
+    config = H4TargetedPartialExpansionValidationConfig(
+        feasibility_dir=feasibility_dir,
+        raw_data_dir=tmp_path / "empty_raw",
+        partial_data_dir=tmp_path / "empty_partial",
+    )
 
     candidates = load_partial_candidates(config)
 
