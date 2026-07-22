@@ -70,6 +70,40 @@ This module is descriptive only. It does not implement trading signals, Market
 States, Coverage, a Transition Engine, backtesting, optimization, or portfolio
 logic.
 
+## H4 Transition/State Combined Context Review
+
+After the H4 state, transition, dispersion, sensitivity, partial validation, and
+partial complementary review outputs exist, run:
+
+```bash
+python3 scripts/run_h4_transition_state_combined_context_review.py \
+  --h4-state-deep-dive-dir data/research/h4_state_outcome_deep_dive \
+  --h4-state-dispersion-dir data/research/h4_scenario_dispersion_review \
+  --h4-state-sensitive-dir data/research/h4_scenario_sensitive_state_review \
+  --h4-transition-deep-dive-dir data/research/h4_transition_outcome_deep_dive \
+  --h4-transition-dispersion-dir data/research/h4_transition_scenario_dispersion_review \
+  --h4-transition-sensitive-dir data/research/h4_transition_scenario_sensitive_review \
+  --partial-complement-dir data/research/h4_partial_complementary_dispersion_review \
+  --partial-validation-dir data/research/h4_targeted_partial_expansion_validation \
+  --output-dir data/research/h4_transition_state_combined_context_review \
+  --report data/research/h4_transition_state_combined_context_review/h4_transition_state_combined_context_review_report.txt
+```
+
+The review writes:
+
+- `data/research/h4_transition_state_combined_context_review/h4_transition_state_source_inventory.csv`
+- `data/research/h4_transition_state_combined_context_review/h4_transition_state_context_inventory.csv`
+- `data/research/h4_transition_state_combined_context_review/h4_state_transition_alignment_review.csv`
+- `data/research/h4_transition_state_combined_context_review/h4_combined_context_dispersion_review.csv`
+- `data/research/h4_transition_state_combined_context_review/h4_combined_context_sensitivity_review.csv`
+- `data/research/h4_transition_state_combined_context_review/h4_partial_context_caveat_integration.csv`
+- `data/research/h4_transition_state_combined_context_review/h4_transition_state_context_interpretation_matrix.csv`
+- `data/research/h4_transition_state_combined_context_review/h4_transition_state_combined_context_summary.csv`
+- `data/research/h4_transition_state_combined_context_review/h4_transition_state_combined_context_review_report.txt`
+
+This review is research-only and descriptive. It does not modify production
+defaults, thresholds, taxonomy, provider behavior, or generated source data.
+
 ## Market States
 
 After `data/processed/structures.csv` exists, run:
