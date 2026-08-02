@@ -21,3 +21,34 @@ def test_loader_handles_missing_optional_inputs(tmp_path: Path):
     assert read_optional_csv(tmp_path / "missing.csv").empty
     assert len(inventory) == 10
     assert {row.load_status for row in inventory} == {"MISSING"}
+
+
+def test_source_inventory_recognizes_phase_filename_aliases(tmp_path: Path):
+    d1_normalized = tmp_path / "d1_normalized"
+    structural = tmp_path / "structural"
+    validation = tmp_path / "validation"
+    d1_normalized.mkdir()
+    structural.mkdir()
+    validation.mkdir()
+    (d1_normalized / "d1_regime_research_summary.csv").write_text("Rows\n1\n", encoding="utf-8")
+    (structural / "h4_d1_timeframe_research_summary.csv").write_text("Rows\n1\n", encoding="utf-8")
+    (validation / "h4_d1_validation_summary.csv").write_text("Rows\n1\n", encoding="utf-8")
+    config = H4D1ContextualTransitionReviewConfig(
+        h4_combined_context_dir=tmp_path / "missing_h4",
+        d1_regime_normalized_dir=d1_normalized,
+        d1_regime_outcome_review_dir=tmp_path / "missing_d1_outcome",
+        d1_state_deep_dive_dir=tmp_path / "missing_d1_state",
+        h4_d1_structural_research_dir=structural,
+        h4_d1_validation_dir=validation,
+        partial_complement_dir=tmp_path / "missing_partial",
+        partial_validation_dir=tmp_path / "missing_partial_validation",
+    )
+
+    inventory = {row.source_name: row for row in build_source_inventory(config)}
+
+    assert inventory["d1_regime_normalized_summary"].load_status == "LOADED"
+    assert inventory["d1_regime_normalized_summary"].path.endswith("d1_regime_research_summary.csv")
+    assert inventory["h4_d1_structural_research_summary"].load_status == "LOADED"
+    assert inventory["h4_d1_structural_research_summary"].path.endswith("h4_d1_timeframe_research_summary.csv")
+    assert inventory["h4_d1_validation_summary"].load_status == "LOADED"
+    assert inventory["h4_d1_validation_summary"].path.endswith("h4_d1_validation_summary.csv")

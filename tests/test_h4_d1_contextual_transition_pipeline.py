@@ -66,3 +66,45 @@ def test_pipeline_writes_all_expected_outputs(tmp_path: Path):
     assert all((config.output_dir / filename).exists() for filename in expected)
     assert result.report_path.exists()
     assert result.summary is not None
+
+
+def test_pipeline_summary_counts_condition_level_mapping(tmp_path: Path):
+    h4_dir = tmp_path / "h4"
+    d1_dir = tmp_path / "d1"
+    h4_dir.mkdir()
+    d1_dir.mkdir()
+    (h4_dir / "h4_transition_state_context_interpretation_matrix.csv").write_text(
+        "Context_ID,Source_State,Target_State,Transition_Label,Forward_Window,"
+        "Combined_Context_Interpretation_Class,Combined_Context_Readiness_Flag,"
+        "Combined_Dispersion_Class,Combined_Sensitivity_Class\n"
+        "CTX_1,EXPANSION,CONSOLIDATION,EXPANSION -> CONSOLIDATION,12,"
+        "CONTEXT_CONSISTENT_BUT_DISPERSED,REQUIRES_SCENARIO_LEVEL_INTERPRETATION,"
+        "COMBINED_HIGH_DISPERSION,COMBINED_SCENARIO_SENSITIVE\n",
+        encoding="utf-8",
+    )
+    (d1_dir / "d1_condition_quality_inventory.csv").write_text(
+        "Condition_Type,Condition_Label,Forward_Window,Regime_Count,Regimes_Present,"
+        "Dispersion_Class,Sensitivity_Class,Sample_Adequacy_Class\n"
+        "TRANSITION,EXPANSION -> CONSOLIDATION,12,2,TREND|RANGE,HIGH_DISPERSION,"
+        "REGIME_SENSITIVE,SAMPLE_ADEQUATE\n",
+        encoding="utf-8",
+    )
+    config = H4D1ContextualTransitionReviewConfig(
+        h4_combined_context_dir=h4_dir,
+        d1_regime_outcome_review_dir=d1_dir,
+        d1_regime_normalized_dir=tmp_path / "missing_regime",
+        d1_state_deep_dive_dir=tmp_path / "missing_state",
+        h4_d1_structural_research_dir=tmp_path / "missing_structural",
+        h4_d1_validation_dir=tmp_path / "missing_validation",
+        partial_complement_dir=tmp_path / "missing_partial",
+        partial_validation_dir=tmp_path / "missing_partial_validation",
+        output_dir=tmp_path / "out",
+        report_path=tmp_path / "out" / "report.txt",
+    )
+
+    result = run_h4_d1_contextual_transition_review(config)
+
+    assert result.summary is not None
+    assert result.summary.mapped_context_count == 1
+    assert result.summary.unmapped_context_count == 0
+    assert result.context_inventory[0].d1_context_status == "D1_CONTEXT_AVAILABLE_CONDITION_LEVEL"

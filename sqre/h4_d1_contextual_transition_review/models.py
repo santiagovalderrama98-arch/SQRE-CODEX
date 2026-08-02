@@ -46,6 +46,11 @@ class D1ContextRow:
     d1_readiness_flag: str
     start_date: str = ""
     end_date: str = ""
+    d1_condition_type: str = ""
+    d1_forward_window: str = ""
+    d1_context_status: str = "D1_CONTEXT_AVAILABLE_SUMMARY_LEVEL"
+    d1_sensitivity_class: str = ""
+    source_type: str = ""
 
 
 @dataclass(frozen=True)
@@ -82,6 +87,7 @@ class H4D1ContextInventoryRow:
     partial_context_status: str
     mapping_confidence_class: str
     context_inventory_diagnostic: str
+    d1_regime_sensitivity_class: str = ""
 
 
 @dataclass(frozen=True)

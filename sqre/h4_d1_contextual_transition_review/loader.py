@@ -88,20 +88,73 @@ def source_inventory_row(source_name: str, source_type: str, path: Path) -> Sour
     return SourceInventoryRow(source_name, source_type, str(path), True, "LOADED", len(frame), "Source file loaded.")
 
 
+def source_inventory_alias_row(
+    source_name: str,
+    source_type: str,
+    directory: Path,
+    filenames: Iterable[str],
+) -> SourceInventoryRow:
+    path, _frame = first_existing_frame(directory, filenames)
+    return source_inventory_row(source_name, source_type, path)
+
+
 def build_source_inventory(config: H4D1ContextualTransitionReviewConfig) -> list[SourceInventoryRow]:
     files = [
-        ("h4_context_inventory", "H4_COMBINED_CONTEXT", config.h4_combined_context_dir / "h4_transition_state_context_inventory.csv"),
-        ("h4_context_interpretation", "H4_COMBINED_CONTEXT", config.h4_combined_context_dir / "h4_transition_state_context_interpretation_matrix.csv"),
-        ("h4_context_summary", "H4_COMBINED_CONTEXT", config.h4_combined_context_dir / "h4_transition_state_combined_context_summary.csv"),
-        ("d1_regime_normalized_summary", "D1_REGIME_NORMALIZED", config.d1_regime_normalized_dir / "d1_regime_normalized_summary.csv"),
-        ("d1_regime_outcome_review_summary", "D1_REGIME_OUTCOME", config.d1_regime_outcome_review_dir / "d1_regime_outcome_review_summary.csv"),
-        ("d1_state_deep_dive_inventory", "D1_STATE_DEEP_DIVE", config.d1_state_deep_dive_dir / "d1_state_deep_dive_profile_inventory.csv"),
-        ("h4_d1_structural_research_summary", "H4_D1_STRUCTURAL_RESEARCH", config.h4_d1_structural_research_dir / "h4_d1_structural_research_summary.csv"),
-        ("h4_d1_validation_summary", "H4_D1_VALIDATION", config.h4_d1_validation_dir / "multi_scenario_validation_summary.csv"),
-        ("partial_complementary_summary", "PARTIAL_CONTEXT", config.partial_complement_dir / "h4_partial_complementary_dispersion_summary.csv"),
-        ("partial_validation_summary", "PARTIAL_VALIDATION", config.partial_validation_dir / "h4_partial_validation_run_summary.csv"),
+        source_inventory_row(
+            "h4_context_inventory",
+            "H4_COMBINED_CONTEXT",
+            config.h4_combined_context_dir / "h4_transition_state_context_inventory.csv",
+        ),
+        source_inventory_row(
+            "h4_context_interpretation",
+            "H4_COMBINED_CONTEXT",
+            config.h4_combined_context_dir / "h4_transition_state_context_interpretation_matrix.csv",
+        ),
+        source_inventory_row(
+            "h4_context_summary",
+            "H4_COMBINED_CONTEXT",
+            config.h4_combined_context_dir / "h4_transition_state_combined_context_summary.csv",
+        ),
+        source_inventory_alias_row(
+            "d1_regime_normalized_summary",
+            "D1_REGIME_NORMALIZED",
+            config.d1_regime_normalized_dir,
+            ["d1_regime_research_summary.csv", "d1_regime_normalized_summary.csv"],
+        ),
+        source_inventory_row(
+            "d1_regime_outcome_review_summary",
+            "D1_REGIME_OUTCOME",
+            config.d1_regime_outcome_review_dir / "d1_regime_outcome_review_summary.csv",
+        ),
+        source_inventory_row(
+            "d1_state_deep_dive_inventory",
+            "D1_STATE_DEEP_DIVE",
+            config.d1_state_deep_dive_dir / "d1_state_deep_dive_profile_inventory.csv",
+        ),
+        source_inventory_alias_row(
+            "h4_d1_structural_research_summary",
+            "H4_D1_STRUCTURAL_RESEARCH",
+            config.h4_d1_structural_research_dir,
+            ["h4_d1_timeframe_research_summary.csv", "h4_d1_structural_research_summary.csv"],
+        ),
+        source_inventory_alias_row(
+            "h4_d1_validation_summary",
+            "H4_D1_VALIDATION",
+            config.h4_d1_validation_dir,
+            ["h4_d1_validation_summary.csv", "multi_scenario_validation_summary.csv"],
+        ),
+        source_inventory_row(
+            "partial_complementary_summary",
+            "PARTIAL_CONTEXT",
+            config.partial_complement_dir / "h4_partial_complementary_dispersion_summary.csv",
+        ),
+        source_inventory_row(
+            "partial_validation_summary",
+            "PARTIAL_VALIDATION",
+            config.partial_validation_dir / "h4_partial_validation_run_summary.csv",
+        ),
     ]
-    return [source_inventory_row(name, source_type, path) for name, source_type, path in files]
+    return files
 
 
 CONTEXT_ID_ALIASES = ["Context_ID", "context_id"]
@@ -125,14 +178,33 @@ D1_DISPERSION_ALIASES = [
     "Outcome_Dispersion_Class",
     "Profile_Dispersion_Class",
     "D1_Outcome_Dispersion_Class",
+    "Dispersion_Class",
     "Regime_Sensitivity_Class",
 ]
 SAMPLE_ADEQUACY_ALIASES = [
     "Sample_Adequacy_Class",
+    "Sample_Adequacy_Flag",
     "Profile_Research_Readiness_Class",
     "Research_Readiness_Flag",
     "D1_Research_Readiness_Flag",
 ]
 READINESS_ALIASES = ["Readiness_Flag", "D1_Outcome_Review_Readiness_Flag", "Research_Readiness_Flag"]
+CONDITION_TYPE_ALIASES = ["Condition_Type", "condition_type", "Profile_Type", "profile_type"]
+CONDITION_LABEL_ALIASES = [
+    "Condition_Label",
+    "condition_label",
+    "Condition_Value",
+    "condition_value",
+    "Condition",
+    "condition",
+    "State",
+    "state",
+    "Market_State",
+    "market_state",
+]
+D1_FORWARD_WINDOW_ALIASES = ["Forward_Window", "forward_window", "Forward_Window_Candles", "forward_window_candles"]
+REGIMES_PRESENT_ALIASES = ["Regimes_Present", "regimes_present"]
+REGIME_COUNT_ALIASES = ["Regime_Count", "regime_count", "D1_Regime_Count", "d1_regime_count"]
+D1_SENSITIVITY_ALIASES = ["Sensitivity_Class", "Regime_Sensitivity_Class", "Regime_Sensitivity_Flag"]
 START_DATE_ALIASES = ["Start_Date", "Scenario_Start", "Period_Start", "From_Date"]
 END_DATE_ALIASES = ["End_Date", "Scenario_End", "Period_End", "To_Date"]
