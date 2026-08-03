@@ -1891,3 +1891,69 @@ thresholds, production taxonomy, Event Detection defaults, Market Structure
 defaults, validation behavior, or production runtime behavior. It does not add
 operational logic, automated threshold changes, machine learning, backtesting,
 or a Decision Engine. No comparative ordering is produced.
+
+## Phase 7.5.14 — H4/D1 Contextual Transition Review
+
+Phase 7.5.14 follows the H4 transition/state combined context review. That
+prior phase showed that H4 combined context remains dispersed and useful only
+as scenario-level descriptive reference. This phase adds D1 higher-timeframe
+context as a diagnostic conditioning layer to review whether D1 regime/context
+information reinforces, segments, or remains limited for interpreting H4
+transition/state context.
+
+Primary inputs:
+
+```text
+data/research/h4_transition_state_combined_context_review
+data/research/d1_regime_normalized_research
+data/research/d1_regime_outcome_review
+data/research/d1_state_outcome_deep_dive
+data/research/h4_d1_structural_research
+data/validation/h4_d1_structural_research
+data/research/h4_partial_complementary_dispersion_review
+data/research/h4_targeted_partial_expansion_validation
+```
+
+Run:
+
+```bash
+python3 scripts/run_h4_d1_contextual_transition_review.py \
+  --h4-combined-context-dir data/research/h4_transition_state_combined_context_review \
+  --d1-regime-normalized-dir data/research/d1_regime_normalized_research \
+  --d1-regime-outcome-review-dir data/research/d1_regime_outcome_review \
+  --d1-state-deep-dive-dir data/research/d1_state_outcome_deep_dive \
+  --h4-d1-structural-research-dir data/research/h4_d1_structural_research \
+  --h4-d1-validation-dir data/validation/h4_d1_structural_research \
+  --partial-complement-dir data/research/h4_partial_complementary_dispersion_review \
+  --partial-validation-dir data/research/h4_targeted_partial_expansion_validation \
+  --output-dir data/research/h4_d1_contextual_transition_review \
+  --report data/research/h4_d1_contextual_transition_review/h4_d1_contextual_transition_review_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/h4_d1_contextual_transition_review/h4_d1_context_source_inventory.csv
+data/research/h4_d1_contextual_transition_review/h4_d1_scenario_context_map.csv
+data/research/h4_d1_contextual_transition_review/h4_d1_context_inventory.csv
+data/research/h4_d1_contextual_transition_review/h4_d1_regime_context_review.csv
+data/research/h4_d1_contextual_transition_review/h4_d1_alignment_review.csv
+data/research/h4_d1_contextual_transition_review/h4_d1_contextual_dispersion_review.csv
+data/research/h4_d1_contextual_transition_review/h4_d1_contextual_sensitivity_review.csv
+data/research/h4_d1_contextual_transition_review/h4_d1_partial_context_integration.csv
+data/research/h4_d1_contextual_transition_review/h4_d1_contextual_interpretation_matrix.csv
+data/research/h4_d1_contextual_transition_review/h4_d1_contextual_transition_summary.csv
+data/research/h4_d1_contextual_transition_review/h4_d1_contextual_transition_review_report.txt
+```
+
+Classification rules evaluate D1 context availability, regime sensitivity,
+sample adequacy, H4/D1 mapping confidence, contextual dispersion,
+contextual sensitivity, and partial-sample use. Metrics include context count,
+mapped and unmapped counts, D1 regime count, dispersion review counts,
+sensitivity review counts, sample-constrained count, input-limited count, and
+readiness counts.
+
+This phase is research-only. No data is downloaded. The partial sample is not
+silently merged into the full H4 baseline. No production defaults are changed.
+No thresholds are changed. No production taxonomy is changed. No operational
+logic is introduced. This phase does not create a Decision Engine.
