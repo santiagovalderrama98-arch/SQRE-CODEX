@@ -2053,3 +2053,98 @@ No production taxonomy is changed.
 No operational logic is added.
 No Decision Engine is added.
 ```
+
+## Phase 7.5.14B — H4 Timestamped Context Table Generation
+
+Phase 7.5.14B implements the follow-up recommended by the H4/D1 temporal
+alignment feasibility review. Phase 7.5.14A found that the current H4 combined
+context outputs are condition-level only. This phase attempts to generate a
+timestamped H4 context table from existing H4 validation and research outputs
+so a later phase can evaluate H4/D1 same-time alignment using real temporal
+keys.
+
+Purpose:
+
+```text
+Generate H4 timestamped context rows where timestamped H4 state/transition
+outputs are available.
+Preserve Scenario_ID, symbol, timeframe, period start/end, H4 event time,
+source state, target state, transition label, and forward window.
+Build H4_D1_Alignment_Date_Key as a future alignment key only.
+Review which scenarios have sufficient timestamped H4 context coverage.
+```
+
+Timestamped H4 context generation is not D1 alignment. This workflow creates
+H4-side temporal keys only. It does not compare H4 rows to D1 rows, does not
+infer same-time context, and does not interpret D1 regime/state evidence.
+
+Primary inputs:
+
+```text
+data/research/h4_transition_state_combined_context_review
+data/validation/h4_d1_structural_research
+data/research/h4_d1_structural_research
+```
+
+Run:
+
+```bash
+python3 scripts/run_h4_timestamped_context_table_generation.py \
+  --h4-combined-context-dir data/research/h4_transition_state_combined_context_review \
+  --h4-d1-validation-dir data/validation/h4_d1_structural_research \
+  --h4-d1-structural-research-dir data/research/h4_d1_structural_research \
+  --output-dir data/research/h4_timestamped_context_table_generation \
+  --report data/research/h4_timestamped_context_table_generation/h4_timestamped_context_table_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/h4_timestamped_context_table_generation/h4_timestamped_source_inventory.csv
+data/research/h4_timestamped_context_table_generation/h4_timestamped_scenario_inventory.csv
+data/research/h4_timestamped_context_table_generation/h4_timestamped_context_rows.csv
+data/research/h4_timestamped_context_table_generation/h4_timestamped_context_coverage_review.csv
+data/research/h4_timestamped_context_table_generation/h4_timestamped_missing_context_review.csv
+data/research/h4_timestamped_context_table_generation/h4_timestamped_context_generation_summary.csv
+data/research/h4_timestamped_context_table_generation/h4_timestamped_context_table_report.txt
+```
+
+Classification rules:
+
+```text
+EXACT_EVENT_TIMESTAMP
+SCENARIO_PERIOD_TIMESTAMP
+DATE_ONLY_TIMESTAMP
+TEMPORAL_KEY_INCOMPLETE
+
+FULL_TEMPORAL_CONTEXT_COVERAGE
+PARTIAL_TEMPORAL_CONTEXT_COVERAGE
+LOW_TEMPORAL_CONTEXT_COVERAGE
+NO_TEMPORAL_CONTEXT_COVERAGE
+
+READY_FOR_H4_D1_TEMPORAL_ALIGNMENT
+PARTIAL_READY_FOR_H4_D1_TEMPORAL_ALIGNMENT
+NOT_READY_TIMESTAMPED_CONTEXT_INCOMPLETE
+NOT_READY_TIMESTAMPED_CONTEXT_MISSING
+INPUT_COMPLETENESS_REVIEW_REQUIRED
+```
+
+Expected interpretation: if no timestamped H4 transition or state files exist
+under the H4 validation/research directories, the workflow should produce empty
+context rows, classify coverage as missing, and recommend generating H4 state
+transition outputs with timestamps. If timestamped transition rows exist, the
+workflow should map them to aggregate H4 context rows when transition label,
+state pair, and forward window evidence allows it.
+
+Scope limitations:
+
+```text
+No D1 alignment is produced yet.
+No same-time H4/D1 interpretation is produced.
+No data is downloaded.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+No operational logic is added.
+No Decision Engine is added.
+```
