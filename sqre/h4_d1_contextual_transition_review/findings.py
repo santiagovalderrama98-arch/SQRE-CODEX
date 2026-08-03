@@ -23,7 +23,7 @@ def build_summary(
     sensitivity = Counter(row.contextual_sensitivity_class for row in rows)
     mapped_count = sum(1 for row in mappings if row.mapping_method != "UNMAPPED")
     dominant = _dominant(interpretations)
-    flag = _summary_readiness(readiness)
+    flag = _summary_readiness(readiness, dominant)
     return H4D1ContextualTransitionSummary(
         symbol=config.symbol,
         h4_timeframe=config.h4_timeframe,
@@ -60,6 +60,7 @@ def descriptive_findings(summary: H4D1ContextualTransitionSummary | None) -> lis
         f"Unmapped context count: {summary.unmapped_context_count}",
         f"Dominant H4/D1 contextual interpretation: {summary.dominant_h4_d1_contextual_interpretation}",
         f"H4/D1 contextual readiness flag: {summary.h4_d1_contextual_readiness_flag}",
+        f"H4/D1 contextual diagnostic: {summary.h4_d1_contextual_diagnostic}",
         f"Recommended follow-up: {summary.recommended_follow_up}",
     ]
 
@@ -104,14 +105,21 @@ def _dominant(counter: Counter[str]) -> str:
     return sorted(counter.items(), key=lambda item: (-item[1], item[0]))[0][0]
 
 
-def _summary_readiness(readiness: Counter[str]) -> str:
-    if readiness["REQUIRES_SCENARIO_AND_REGIME_LEVEL_INTERPRETATION"]:
-        return "H4_D1_REQUIRES_SCENARIO_AND_REGIME_LEVEL_INTERPRETATION"
-    if readiness["REQUIRES_SAMPLE_ADEQUACY_REVIEW"]:
+def _summary_readiness(readiness: Counter[str], dominant_interpretation: str) -> str:
+    sample_count = readiness["REQUIRES_SAMPLE_ADEQUACY_REVIEW"]
+    scenario_count = readiness["REQUIRES_SCENARIO_AND_REGIME_LEVEL_INTERPRETATION"]
+    input_count = readiness["REQUIRES_INPUT_COMPLETENESS_REVIEW"]
+    ready_count = readiness["READY_FOR_CONTEXTUAL_DESCRIPTIVE_REFERENCE"]
+
+    if dominant_interpretation == "D1_CONTEXT_SAMPLE_CONSTRAINED":
         return "H4_D1_REQUIRES_SAMPLE_ADEQUACY_REVIEW"
-    if readiness["REQUIRES_INPUT_COMPLETENESS_REVIEW"]:
+    if sample_count and sample_count >= max(scenario_count, input_count, ready_count):
+        return "H4_D1_REQUIRES_SAMPLE_ADEQUACY_REVIEW"
+    if scenario_count and scenario_count > max(sample_count, input_count, ready_count):
+        return "H4_D1_REQUIRES_SCENARIO_AND_REGIME_LEVEL_INTERPRETATION"
+    if input_count and input_count >= max(sample_count, scenario_count, ready_count):
         return "H4_D1_REQUIRES_INPUT_COMPLETENESS_REVIEW"
-    if readiness["READY_FOR_CONTEXTUAL_DESCRIPTIVE_REFERENCE"]:
+    if ready_count:
         return "H4_D1_SUPPORTS_CONTEXTUAL_DESCRIPTIVE_REFERENCE"
     return "H4_D1_CONTEXT_INCONCLUSIVE"
 
@@ -119,7 +127,10 @@ def _summary_readiness(readiness: Counter[str]) -> str:
 def _diagnostic(flag: str) -> str:
     diagnostics = {
         "H4_D1_REQUIRES_SCENARIO_AND_REGIME_LEVEL_INTERPRETATION": "H4/D1 context remains scenario and regime-level descriptive.",
-        "H4_D1_REQUIRES_SAMPLE_ADEQUACY_REVIEW": "H4/D1 context requires sample adequacy review.",
+        "H4_D1_REQUIRES_SAMPLE_ADEQUACY_REVIEW": (
+            "H4/D1 context is dominated by D1 sample adequacy constraints; condition-level mapping remains "
+            "descriptive and does not infer scenario/date alignment."
+        ),
         "H4_D1_REQUIRES_INPUT_COMPLETENESS_REVIEW": "H4/D1 context requires input completeness review.",
         "H4_D1_SUPPORTS_CONTEXTUAL_DESCRIPTIVE_REFERENCE": "H4/D1 context supports descriptive reference use.",
         "H4_D1_CONTEXT_INCONCLUSIVE": "H4/D1 context remains inconclusive.",
@@ -130,7 +141,7 @@ def _diagnostic(flag: str) -> str:
 def _follow_up(flag: str) -> str:
     mapping = {
         "H4_D1_REQUIRES_SCENARIO_AND_REGIME_LEVEL_INTERPRETATION": "D1 regime context deepening",
-        "H4_D1_REQUIRES_SAMPLE_ADEQUACY_REVIEW": "Manual provider history coverage review",
+        "H4_D1_REQUIRES_SAMPLE_ADEQUACY_REVIEW": "D1 sample adequacy review; D1 regime context deepening",
         "H4_D1_REQUIRES_INPUT_COMPLETENESS_REVIEW": "H4/D1 scenario mapping completeness review",
         "H4_D1_SUPPORTS_CONTEXTUAL_DESCRIPTIVE_REFERENCE": "Research reference-store design",
         "H4_D1_CONTEXT_INCONCLUSIVE": "H1 secondary context monitoring",
