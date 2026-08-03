@@ -2054,6 +2054,91 @@ No operational logic is added.
 No Decision Engine is added.
 ```
 
+## Phase 7.5.14C — H4 Timestamped State/Transition Output Generation
+
+Purpose: generate research-only H4 timestamped market state and state transition
+source tables needed before retrying H4 timestamped context table generation.
+
+This phase follows Phase 7.5.14B because the context table workflow found no
+usable timestamped H4 source rows. Phase 7.5.14C focuses one layer earlier:
+it discovers or normalizes timestamped state/transition outputs by scenario.
+It does not build the final H4 timestamped context table.
+
+Primary inputs:
+
+```text
+data/validation/h4_d1_structural_research
+data/research/h4_d1_structural_research
+configs/validation/h4_d1_structural_research_validation.yaml
+```
+
+Run:
+
+```bash
+python3 scripts/run_h4_timestamped_state_transition_outputs.py \
+  --h4-d1-validation-dir data/validation/h4_d1_structural_research \
+  --h4-d1-structural-research-dir data/research/h4_d1_structural_research \
+  --validation-config configs/validation/h4_d1_structural_research_validation.yaml \
+  --output-dir data/research/h4_timestamped_state_transition_outputs \
+  --report data/research/h4_timestamped_state_transition_outputs/h4_timestamped_state_transition_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/h4_timestamped_state_transition_outputs/h4_timestamped_state_transition_source_inventory.csv
+data/research/h4_timestamped_state_transition_outputs/h4_timestamped_state_transition_scenario_inventory.csv
+data/research/h4_timestamped_state_transition_outputs/h4_timestamped_market_states.csv
+data/research/h4_timestamped_state_transition_outputs/h4_timestamped_state_transitions.csv
+data/research/h4_timestamped_state_transition_outputs/h4_timestamped_state_transition_coverage_review.csv
+data/research/h4_timestamped_state_transition_outputs/h4_timestamped_state_transition_missing_output_review.csv
+data/research/h4_timestamped_state_transition_outputs/h4_timestamped_state_transition_generation_summary.csv
+data/research/h4_timestamped_state_transition_outputs/h4_timestamped_state_transition_report.txt
+```
+
+Classification rules:
+
+```text
+TIMESTAMPED_STATES_AND_TRANSITIONS_AVAILABLE
+TIMESTAMPED_STATES_ONLY_AVAILABLE
+TIMESTAMPED_TRANSITIONS_ONLY_AVAILABLE
+REGENERATED_TIMESTAMPED_OUTPUTS_AVAILABLE
+PARTIAL_TIMESTAMPED_OUTPUTS_AVAILABLE
+TIMESTAMPED_OUTPUTS_MISSING
+SCENARIO_INPUT_MISSING
+
+FULL_TIMESTAMPED_STATE_TRANSITION_COVERAGE
+PARTIAL_TIMESTAMPED_STATE_TRANSITION_COVERAGE
+STATES_ONLY_TIMESTAMPED_COVERAGE
+TRANSITIONS_ONLY_TIMESTAMPED_COVERAGE
+LOW_TIMESTAMPED_STATE_TRANSITION_COVERAGE
+NO_TIMESTAMPED_STATE_TRANSITION_COVERAGE
+
+READY_FOR_H4_TIMESTAMPED_CONTEXT_TABLE
+PARTIAL_READY_FOR_H4_TIMESTAMPED_CONTEXT_TABLE
+NOT_READY_TRANSITIONS_TIMESTAMPED_OUTPUT_MISSING
+NOT_READY_STATES_TIMESTAMPED_OUTPUT_MISSING
+NOT_READY_STATE_TRANSITION_OUTPUTS_MISSING
+INPUT_COMPLETENESS_REVIEW_REQUIRED
+```
+
+Expected interpretation: this workflow only confirms whether timestamped H4
+market state and state transition rows are available by scenario. Generated
+timestamps are future alignment keys only.
+
+Scope limitations:
+
+```text
+No D1 alignment is produced.
+No same-time H4/D1 interpretation is produced.
+No Decision Engine is added.
+No operational logic is added.
+No data is downloaded.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+```
+
 ## Phase 7.5.14B — H4 Timestamped Context Table Generation
 
 Phase 7.5.14B implements the follow-up recommended by the H4/D1 temporal
