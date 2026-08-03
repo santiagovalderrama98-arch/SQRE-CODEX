@@ -2278,3 +2278,80 @@ No provider download is required unless explicitly enabled in a future extension
 No production defaults, thresholds, or taxonomy are changed.
 No operational logic or Decision Engine is added.
 ```
+
+## Phase 7.5.14E — Timestamped H4/D1 State & Regime Table Generation
+
+Phase 7.5.14E runs after H4/D1 Synchronized Historical Data Preparation. It
+uses the synchronized local H4 and H4-derived D1 OHLC files to generate
+timestamped H4 state rows, timestamped H4 state transition rows, and timestamped
+D1 market state/regime rows.
+
+This phase is generation only. It creates future alignment keys, but it does
+not perform H4/D1 same-time alignment and does not perform H4/D1 contextual
+interpretation.
+
+Inputs:
+
+```text
+data/research/h4_d1_synchronized_data_preparation/h4_normalized_ohlc.csv
+data/research/h4_d1_synchronized_data_preparation/d1_from_h4_ohlc.csv
+data/research/h4_d1_synchronized_data_preparation/h4_d1_candle_alignment_map.csv
+data/research/h4_d1_synchronized_data_preparation/h4_d1_synchronized_data_summary.csv
+```
+
+Run:
+
+```bash
+python3 scripts/run_timestamped_h4_d1_state_regime_generation.py \
+  --synchronized-data-dir data/research/h4_d1_synchronized_data_preparation \
+  --output-dir data/research/timestamped_h4_d1_state_regime_generation \
+  --report data/research/timestamped_h4_d1_state_regime_generation/timestamped_h4_d1_state_regime_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_h4_d1_source_inventory.csv
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_h4_market_states.csv
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_h4_state_transitions.csv
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_d1_market_states.csv
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_h4_d1_generation_coverage_review.csv
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_h4_d1_missing_output_review.csv
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_h4_d1_state_regime_summary.csv
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_h4_d1_state_regime_report.txt
+```
+
+Classification rules:
+
+```text
+H4 state rows are generated from synchronized H4 OHLC windows.
+H4 transition rows are generated from ordered timestamped H4 state rows.
+D1 state/regime rows are generated from synchronized H4-derived D1 OHLC windows.
+Existing SQRE Market State classification is reused without changing defaults.
+Generated timestamps are future alignment keys only.
+```
+
+Expected interpretation:
+
+```text
+READY_FOR_H4_D1_SAME_TIME_ALIGNMENT_TABLE means timestamped H4/D1 state/regime
+tables are available for a later alignment-table phase.
+PARTIAL_READY_FOR_H4_D1_SAME_TIME_ALIGNMENT_TABLE means at least one generated
+table has partial coverage and should be reviewed before same-time work.
+INPUT_COMPLETENESS_REVIEW_REQUIRED means synchronized input files are missing or
+empty.
+```
+
+Scope limitations:
+
+```text
+This phase generates timestamped H4/D1 state/regime tables only.
+This phase does not perform H4/D1 same-time alignment.
+This phase does not perform H4/D1 contextual interpretation.
+This phase does not generate trading signals.
+No data download is performed.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+No operational logic or Decision Engine is added.
+```
