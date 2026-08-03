@@ -2356,6 +2356,97 @@ No production taxonomy is changed.
 No operational logic or Decision Engine is added.
 ```
 
+## Phase 7.5.14G — H4/D1 Same-Time Contextual Transition Review
+
+Phase 7.5.14G follows Phase 7.5.14F because the H4 transition rows are now
+aligned to same-time D1 state/regime context. This workflow reviews those
+aligned combinations descriptively and prepares context profiles for later
+outcome research.
+
+Purpose:
+
+```text
+Review which H4 transitions occur under same-time D1 market states.
+Review which H4 transitions occur under same-time D1 regime labels.
+Measure contextual concentration and dispersion.
+Classify context sample adequacy for later outcome research.
+Identify whether aligned context profiles are ready for later study.
+```
+
+Contextual review is not outcome research. This phase counts and classifies
+same-time H4/D1 context combinations only. It does not study forward price
+outcomes and does not decide whether any context is favorable or unfavorable.
+
+Inputs:
+
+```text
+data/research/h4_d1_same_time_alignment_table/h4_transition_d1_same_time_alignment.csv
+data/research/h4_d1_same_time_alignment_table/h4_state_d1_same_time_alignment.csv
+data/research/h4_d1_same_time_alignment_table/h4_d1_same_time_alignment_coverage_review.csv
+data/research/h4_d1_same_time_alignment_table/h4_d1_same_time_alignment_summary.csv
+```
+
+Run:
+
+```bash
+python3 scripts/run_h4_d1_same_time_contextual_transition_review.py \
+  --same-time-alignment-dir data/research/h4_d1_same_time_alignment_table \
+  --timestamped-state-regime-dir data/research/timestamped_h4_d1_state_regime_generation \
+  --output-dir data/research/h4_d1_same_time_contextual_transition_review \
+  --report data/research/h4_d1_same_time_contextual_transition_review/h4_d1_same_time_contextual_transition_review_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/h4_d1_same_time_contextual_transition_review/h4_d1_contextual_transition_source_inventory.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_d1_same_time_contextual_transition_profiles.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_transition_d1_market_state_distribution.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_transition_d1_regime_distribution.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_transition_context_concentration_review.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_d1_context_sample_adequacy_review.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_d1_same_time_contextual_transition_review_summary.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_d1_same_time_contextual_transition_review_report.txt
+```
+
+Classification rules:
+
+```text
+RESEARCH_READY_CONTEXT_SAMPLE requires enough same-time context observations.
+MODERATE_CONTEXT_SAMPLE has usable descriptive coverage but remains cautious.
+LOW_CONTEXT_SAMPLE and INSUFFICIENT_CONTEXT_SAMPLE are sample-constrained.
+D1_CONTEXT_CONCENTRATED means one D1 context contains most observations.
+D1_CONTEXT_MIXED means observations are split across limited D1 contexts.
+D1_CONTEXT_DISPERSED means observations are spread across several D1 contexts.
+```
+
+Expected interpretation:
+
+```text
+READY_FOR_H4_D1_ALIGNED_OUTCOME_RESEARCH means at least one aligned context
+profile is research-ready for a later outcome phase.
+PARTIAL_READY_FOR_H4_D1_ALIGNED_OUTCOME_RESEARCH means some context profiles
+are usable and others remain constrained.
+NOT_READY_CONTEXT_SAMPLE_CONSTRAINED means aligned contexts need more sample
+coverage before outcome research.
+INPUT_COMPLETENESS_REVIEW_REQUIRED means same-time alignment inputs are missing
+or empty.
+```
+
+Scope limitations:
+
+```text
+This phase performs contextual review only.
+This phase does not perform outcome research.
+This phase does not generate trading signals.
+This phase does not add trading interpretation.
+No data download is performed.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+No operational logic or Decision Engine is added.
+```
+
 ## Phase 7.5.14F — H4/D1 Same-Time Alignment Table
 
 Phase 7.5.14F follows Phase 7.5.14E because the timestamped H4 state,
