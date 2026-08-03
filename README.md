@@ -2233,3 +2233,48 @@ No production taxonomy is changed.
 No operational logic is added.
 No Decision Engine is added.
 ```
+
+## H4/D1 Synchronized Historical Data Preparation
+
+Phase 7.5.14D prepares a local H4 OHLC dataset as the synchronized historical
+base for future timestamped H4/D1 research. It normalizes H4 data, reviews H4
+continuity, derives D1 candles from H4 by default, maps H4 candles to derived D1
+candles, and writes a missing-data/readiness review.
+
+Run:
+
+```bash
+python3 scripts/run_h4_d1_synchronized_data_preparation.py \
+  --symbol EURUSD \
+  --h4-input data/raw/EURUSD_H4.csv \
+  --output-dir data/research/h4_d1_synchronized_data_preparation \
+  --report data/research/h4_d1_synchronized_data_preparation/h4_d1_synchronized_data_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/h4_d1_synchronized_data_preparation/h4_d1_synchronized_source_inventory.csv
+data/research/h4_d1_synchronized_data_preparation/h4_normalized_ohlc.csv
+data/research/h4_d1_synchronized_data_preparation/h4_continuity_review.csv
+data/research/h4_d1_synchronized_data_preparation/d1_from_h4_ohlc.csv
+data/research/h4_d1_synchronized_data_preparation/h4_d1_candle_alignment_map.csv
+data/research/h4_d1_synchronized_data_preparation/h4_d1_synchronization_review.csv
+data/research/h4_d1_synchronized_data_preparation/h4_d1_missing_data_review.csv
+data/research/h4_d1_synchronized_data_preparation/h4_d1_synchronized_data_summary.csv
+data/research/h4_d1_synchronized_data_preparation/h4_d1_synchronized_data_report.txt
+```
+
+Scope limitations:
+
+```text
+This phase prepares synchronized H4/D1 OHLC data only.
+D1 is derived from H4 by default to preserve temporal consistency.
+No market states are generated.
+No state transitions are generated.
+No D1 regimes are generated.
+No same-time H4/D1 interpretation is produced.
+No provider download is required unless explicitly enabled in a future extension.
+No production defaults, thresholds, or taxonomy are changed.
+No operational logic or Decision Engine is added.
+```
