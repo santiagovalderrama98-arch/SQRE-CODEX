@@ -1957,3 +1957,99 @@ This phase is research-only. No data is downloaded. The partial sample is not
 silently merged into the full H4 baseline. No production defaults are changed.
 No thresholds are changed. No production taxonomy is changed. No operational
 logic is introduced. This phase does not create a Decision Engine.
+
+## Phase 7.5.14A — H4/D1 Temporal Alignment Feasibility Review
+
+Phase 7.5.14A follows the H4/D1 contextual transition review. Phase 7.5.14
+mapped H4 contexts to D1 condition-level evidence by condition label and
+forward window, but it explicitly did not infer same-time scenario/date
+alignment. This phase checks whether the existing H4 and D1 outputs contain
+enough temporal keys to support true H4/D1 temporal alignment in a later
+research phase.
+
+Purpose:
+
+```text
+Inspect available source files for timestamp, interval, scenario-period,
+date-range, condition-only, and regime keys.
+Classify whether same-time H4/D1 alignment is feasible.
+Identify missing source keys and required source-generation actions.
+```
+
+Condition-level mapping is not temporal alignment. A condition label such as a
+state, transition, or forward-window profile can compare aggregate evidence,
+but it does not prove that a specific H4 context and a specific D1 context
+occurred at the same timestamp or inside the same D1 candle/period.
+
+Primary inputs:
+
+```text
+data/research/h4_transition_state_combined_context_review
+data/research/h4_d1_structural_research
+data/validation/h4_d1_structural_research
+data/research/d1_regime_normalized_research
+data/research/d1_regime_outcome_review
+data/research/d1_state_outcome_deep_dive
+```
+
+Run:
+
+```bash
+python3 scripts/run_h4_d1_temporal_alignment_feasibility_review.py \
+  --h4-combined-context-dir data/research/h4_transition_state_combined_context_review \
+  --h4-d1-structural-research-dir data/research/h4_d1_structural_research \
+  --h4-d1-validation-dir data/validation/h4_d1_structural_research \
+  --d1-regime-normalized-dir data/research/d1_regime_normalized_research \
+  --d1-regime-outcome-review-dir data/research/d1_regime_outcome_review \
+  --d1-state-deep-dive-dir data/research/d1_state_outcome_deep_dive \
+  --output-dir data/research/h4_d1_temporal_alignment_feasibility_review \
+  --report data/research/h4_d1_temporal_alignment_feasibility_review/h4_d1_temporal_alignment_feasibility_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/h4_d1_temporal_alignment_feasibility_review/h4_d1_temporal_source_inventory.csv
+data/research/h4_d1_temporal_alignment_feasibility_review/h4_d1_temporal_key_inventory.csv
+data/research/h4_d1_temporal_alignment_feasibility_review/h4_d1_temporal_alignment_candidate_review.csv
+data/research/h4_d1_temporal_alignment_feasibility_review/h4_d1_missing_temporal_keys_review.csv
+data/research/h4_d1_temporal_alignment_feasibility_review/h4_d1_temporal_alignment_feasibility_summary.csv
+data/research/h4_d1_temporal_alignment_feasibility_review/h4_d1_temporal_alignment_feasibility_report.txt
+```
+
+Classification rules:
+
+```text
+EXACT_TIMESTAMP_KEYS_AVAILABLE
+START_END_TIME_KEYS_AVAILABLE
+SCENARIO_PERIOD_KEYS_AVAILABLE
+DATE_RANGE_KEYS_AVAILABLE
+CONDITION_ONLY_KEYS_AVAILABLE
+TEMPORAL_KEYS_MISSING
+INPUT_MISSING
+```
+
+Candidate feasibility classes distinguish exact timestamp alignment, interval
+overlap alignment, scenario-period alignment, condition-only matching that is
+not temporal alignment, missing H4 temporal keys, missing D1 temporal keys,
+missing keys on both sides, and limited inputs.
+
+Expected interpretation: if H4 combined context only exposes `Context_ID`,
+`Source_State`, `Target_State`, `Transition_Label`, and `Forward_Window`, the
+workflow should report that the current evidence is condition-level only and is
+not ready for same-time H4/D1 alignment. The likely follow-up is to generate an
+H4 timestamped context table and, where needed, D1 timestamped regime/state
+tables or H4/D1 interval-overlap alignment tables.
+
+Scope limitations:
+
+```text
+No H4/D1 contextual interpretation is performed.
+No condition-level match is treated as same-time temporal alignment.
+No data is downloaded.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+No operational logic is added.
+No Decision Engine is added.
+```
