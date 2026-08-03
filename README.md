@@ -2355,3 +2355,101 @@ No thresholds are changed.
 No production taxonomy is changed.
 No operational logic or Decision Engine is added.
 ```
+
+## Phase 7.5.14F — H4/D1 Same-Time Alignment Table
+
+Phase 7.5.14F follows Phase 7.5.14E because the timestamped H4 state,
+timestamped H4 transition, and timestamped D1 state/regime outputs are now
+available. This workflow maps each H4 timestamped state and each H4 timestamped
+transition to the D1 state/regime row active at the same time.
+
+Purpose:
+
+```text
+Build research-only H4/D1 same-time alignment tables.
+Align H4 timestamps to contemporaneous D1 state/regime context.
+Measure alignment coverage before later contextual research.
+Identify unmatched H4 rows without fabricating D1 context.
+```
+
+Same-time alignment is not contextual interpretation. This phase only produces
+data-level timestamp mappings. A later phase may review historical outcomes by
+aligned context, but this phase does not interpret whether any aligned context
+is favorable or unfavorable.
+
+Inputs:
+
+```text
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_h4_market_states.csv
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_h4_state_transitions.csv
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_d1_market_states.csv
+data/research/timestamped_h4_d1_state_regime_generation/timestamped_h4_d1_state_regime_summary.csv
+data/research/h4_d1_synchronized_data_preparation/h4_d1_candle_alignment_map.csv
+```
+
+Run:
+
+```bash
+python3 scripts/run_h4_d1_same_time_alignment_table.py \
+  --timestamped-state-regime-dir data/research/timestamped_h4_d1_state_regime_generation \
+  --synchronized-data-dir data/research/h4_d1_synchronized_data_preparation \
+  --output-dir data/research/h4_d1_same_time_alignment_table \
+  --report data/research/h4_d1_same_time_alignment_table/h4_d1_same_time_alignment_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/h4_d1_same_time_alignment_table/h4_d1_same_time_source_inventory.csv
+data/research/h4_d1_same_time_alignment_table/h4_transition_d1_same_time_alignment.csv
+data/research/h4_d1_same_time_alignment_table/h4_state_d1_same_time_alignment.csv
+data/research/h4_d1_same_time_alignment_table/h4_d1_same_time_alignment_coverage_review.csv
+data/research/h4_d1_same_time_alignment_table/h4_d1_unmatched_alignment_review.csv
+data/research/h4_d1_same_time_alignment_table/h4_d1_same_time_alignment_summary.csv
+data/research/h4_d1_same_time_alignment_table/h4_d1_same_time_alignment_report.txt
+```
+
+Alignment methods:
+
+```text
+D1_INTERVAL_CONTAINMENT_MATCH
+D1_DATE_MATCH
+H4_D1_CANDLE_MAP_DATE_MATCH
+NO_D1_SAME_TIME_MATCH
+```
+
+Coverage classifications:
+
+```text
+FULL_SAME_TIME_ALIGNMENT_COVERAGE
+ACCEPTABLE_SAME_TIME_ALIGNMENT_COVERAGE
+PARTIAL_SAME_TIME_ALIGNMENT_COVERAGE
+LOW_SAME_TIME_ALIGNMENT_COVERAGE
+NO_SAME_TIME_ALIGNMENT_COVERAGE
+INPUT_MISSING
+```
+
+Expected interpretation:
+
+```text
+READY_FOR_H4_D1_SAME_TIME_CONTEXTUAL_REVIEW means H4/D1 same-time alignment
+tables are ready for a later contextual review.
+PARTIAL_READY_FOR_H4_D1_SAME_TIME_CONTEXTUAL_REVIEW means coverage is acceptable
+but not complete.
+INPUT_COMPLETENESS_REVIEW_REQUIRED means timestamped H4/D1 inputs require
+completeness review.
+```
+
+Scope limitations:
+
+```text
+This phase builds same-time alignment tables only.
+This phase aligns H4 timestamps to contemporaneous D1 state/regime context.
+This phase does not perform H4/D1 contextual interpretation.
+This phase does not generate trading signals.
+No data download is performed.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+No operational logic or Decision Engine is added.
+```
