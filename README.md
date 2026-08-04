@@ -2569,6 +2569,117 @@ No production taxonomy is changed.
 Reference lookup results are descriptive historical references only.
 ```
 
+## Phase 7.5.19 Research Query Interface Design
+
+This phase follows Phase 7.5.18 by turning the research reference store usage
+review into a research-only query interface design. It retrieves descriptive
+historical references for supplied or simulated H4/D1 structural contexts and
+records match level, fallback trace, evidence quality, result quality, and
+coverage diagnostics.
+
+The research query interface is not decision logic. It does not create
+production decision logic, does not generate signals, does not generate
+operational recommendations, and does not decide whether any context is
+favorable or unfavorable.
+
+Inputs:
+
+```text
+data/research/research_reference_store_design/research_reference_store.csv
+data/research/research_reference_store_design/research_reference_candidates.csv
+data/research/research_reference_store_design/research_reference_granularity_review.csv
+data/research/research_reference_store_design/research_reference_horizon_review.csv
+data/research/research_reference_store_design/research_reference_store_design_summary.csv
+data/research/research_reference_store_usage_review/research_reference_lookup_results.csv
+data/research/research_reference_store_usage_review/research_reference_usage_scenarios.csv
+data/research/research_reference_store_usage_review/research_reference_availability_review.csv
+data/research/research_reference_store_usage_review/research_reference_granularity_usage_review.csv
+data/research/research_reference_store_usage_review/research_reference_horizon_usage_review.csv
+data/research/research_reference_store_usage_review/research_reference_evidence_quality_review.csv
+data/research/research_reference_store_usage_review/research_reference_store_usage_review_summary.csv
+```
+
+Batch scenario mode:
+
+```bash
+python3 scripts/run_research_query_interface_design.py \
+  --reference-store-dir data/research/research_reference_store_design \
+  --usage-review-dir data/research/research_reference_store_usage_review \
+  --interpretation-dir data/research/h4_d1_forward_outcome_interpretation_review \
+  --same-time-alignment-dir data/research/h4_d1_same_time_alignment_table \
+  --output-dir data/research/research_query_interface_design \
+  --report data/research/research_query_interface_design/research_query_interface_design_report.txt
+```
+
+Single query mode:
+
+```bash
+python3 scripts/run_research_query_interface_design.py \
+  --reference-store-dir data/research/research_reference_store_design \
+  --usage-review-dir data/research/research_reference_store_usage_review \
+  --output-dir data/research/research_query_interface_design_single \
+  --report data/research/research_query_interface_design_single/research_query_interface_design_report.txt \
+  --query-h4-transition-label "H4_TRANSITION_LABEL" \
+  --query-d1-market-state "D1_MARKET_STATE" \
+  --query-d1-regime-label "D1_REGIME_LABEL" \
+  --query-forward-horizon 1
+```
+
+The workflow writes:
+
+```text
+data/research/research_query_interface_design/research_query_interface_source_inventory.csv
+data/research/research_query_interface_design/research_query_requests.csv
+data/research/research_query_interface_design/research_query_results.csv
+data/research/research_query_interface_design/research_query_fallback_trace.csv
+data/research/research_query_interface_design/research_query_evidence_quality_review.csv
+data/research/research_query_interface_design/research_query_coverage_review.csv
+data/research/research_query_interface_design/research_query_result_quality_review.csv
+data/research/research_query_interface_design/research_query_interface_design_summary.csv
+data/research/research_query_interface_design/research_query_interface_design_report.txt
+```
+
+Query match levels:
+
+```text
+EXACT_D1_STATE_REGIME_CONTEXT_QUERY_MATCH
+D1_REGIME_CONTEXT_QUERY_MATCH
+D1_MARKET_STATE_CONTEXT_QUERY_MATCH
+H4_TRANSITION_ONLY_QUERY_MATCH
+BROADER_H4_TRANSITION_ANY_HORIZON_QUERY_MATCH
+NO_RESEARCH_REFERENCE_QUERY_MATCH
+INPUT_MISSING
+```
+
+Evidence quality classifications:
+
+```text
+CORE_RESEARCH_REFERENCE_EVIDENCE
+SUPPORTING_RESEARCH_REFERENCE_EVIDENCE
+WATCHLIST_RESEARCH_REFERENCE_EVIDENCE
+INSUFFICIENT_RESEARCH_REFERENCE_EVIDENCE
+INPUT_MISSING
+```
+
+The coverage review measures how many query requests found descriptive
+historical references. The fallback trace records each attempted match level so
+researchers can see whether the result came from exact H4/D1 context,
+D1-regime fallback, D1-market-state fallback, H4-only fallback, or no matched
+reference.
+
+Scope limitations:
+
+```text
+This phase designs a research-only query interface.
+Query results are descriptive historical references only.
+This phase does not generate signals.
+This phase does not generate operational recommendations.
+This phase does not create a Decision Engine.
+This phase does not create production decision logic.
+No thresholds, defaults, or production taxonomy are changed.
+No provider behavior is changed.
+```
+
 ## Phase 7.5.14G — H4/D1 Same-Time Contextual Transition Review
 
 Phase 7.5.14G follows Phase 7.5.14F because the H4 transition rows are now
