@@ -2447,6 +2447,84 @@ No production taxonomy is changed.
 No operational logic or Decision Engine is added.
 ```
 
+## Phase 7.5.14H — D1 Regime Context Adequacy Review
+
+Phase 7.5.14H follows Phase 7.5.14G because same-time H4/D1 contextual
+transition profiles now exist. This workflow reviews whether D1 context
+segmentation preserves enough descriptive sample depth for later research.
+
+Purpose:
+
+```text
+Inventory Phase 7.5.14G contextual transition outputs.
+Review D1 market state and regime context sample adequacy.
+Measure H4 transition fragmentation after D1 context segmentation.
+Measure H4 transition sample loss after D1 context segmentation.
+Identify descriptive D1 context grouping candidates for later research review.
+Classify readiness for limited later H4/D1 aligned outcome research.
+```
+
+This phase is a sample adequacy review only. It does not perform forward price
+outcome research, does not aggregate D1 regimes in production, and does not
+modify any taxonomy or thresholds.
+
+Inputs:
+
+```text
+data/research/h4_d1_same_time_contextual_transition_review/h4_d1_same_time_contextual_transition_profiles.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_transition_d1_market_state_distribution.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_transition_d1_regime_distribution.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_transition_context_concentration_review.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_d1_context_sample_adequacy_review.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_d1_same_time_contextual_transition_review_summary.csv
+```
+
+Optional supporting diagnostics:
+
+```text
+data/research/h4_d1_same_time_alignment_table
+data/research/timestamped_h4_d1_state_regime_generation
+```
+
+Run:
+
+```bash
+python3 scripts/run_d1_regime_context_adequacy_review.py \
+  --contextual-transition-dir data/research/h4_d1_same_time_contextual_transition_review \
+  --same-time-alignment-dir data/research/h4_d1_same_time_alignment_table \
+  --timestamped-state-regime-dir data/research/timestamped_h4_d1_state_regime_generation \
+  --output-dir data/research/d1_regime_context_adequacy_review \
+  --report data/research/d1_regime_context_adequacy_review/d1_regime_context_adequacy_review_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/d1_regime_context_adequacy_review/d1_regime_context_adequacy_source_inventory.csv
+data/research/d1_regime_context_adequacy_review/d1_context_inventory.csv
+data/research/d1_regime_context_adequacy_review/h4_transition_d1_fragmentation_review.csv
+data/research/d1_regime_context_adequacy_review/h4_transition_sample_loss_review.csv
+data/research/d1_regime_context_adequacy_review/d1_context_sample_adequacy_review.csv
+data/research/d1_regime_context_adequacy_review/d1_context_aggregation_candidate_review.csv
+data/research/d1_regime_context_adequacy_review/d1_regime_context_adequacy_review_summary.csv
+data/research/d1_regime_context_adequacy_review/d1_regime_context_adequacy_review_report.txt
+```
+
+Scope limitations:
+
+```text
+This phase reviews D1 context adequacy only.
+This phase does not perform forward price outcome research.
+This phase does not change D1 regime definitions.
+This phase does not aggregate taxonomy in production.
+This phase does not add trading interpretation.
+No data download is performed.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+No operational logic or Decision Engine is added.
+```
+
 ## Phase 7.5.14F — H4/D1 Same-Time Alignment Table
 
 Phase 7.5.14F follows Phase 7.5.14E because the timestamped H4 state,
