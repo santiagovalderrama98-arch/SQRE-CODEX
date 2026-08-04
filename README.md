@@ -2279,6 +2279,114 @@ No production defaults, thresholds, or taxonomy are changed.
 No operational logic or Decision Engine is added.
 ```
 
+## Phase 7.5.20 — Current Market State Snapshot Research Workflow
+
+Phase 7.5.20 follows the Research Query Interface Design from Phase 7.5.19.
+It builds a research-only current or latest-available structural snapshot,
+converts that snapshot into descriptive research queries, retrieves comparable
+historical references, and writes diagnostic outputs for review.
+
+This workflow is different from decision logic. It does not create live
+production logic, trading signals, recommendations, profitability analysis,
+or a Decision Engine. Latest available snapshot mode depends on local research
+files and is not live market data unless a later phase explicitly connects it.
+
+Latest available snapshot mode:
+
+```bash
+python3 scripts/run_current_market_state_snapshot_research.py \
+  --reference-store-dir data/research/research_reference_store_design \
+  --query-interface-dir data/research/research_query_interface_design \
+  --usage-review-dir data/research/research_reference_store_usage_review \
+  --same-time-alignment-dir data/research/h4_d1_same_time_alignment_table \
+  --timestamped-state-regime-dir data/research/h4_d1_timestamped_state_regime_table \
+  --output-dir data/research/current_market_state_snapshot_research \
+  --report data/research/current_market_state_snapshot_research/current_market_state_snapshot_research_report.txt
+```
+
+User-supplied snapshot mode:
+
+```bash
+python3 scripts/run_current_market_state_snapshot_research.py \
+  --reference-store-dir data/research/research_reference_store_design \
+  --query-interface-dir data/research/research_query_interface_design \
+  --usage-review-dir data/research/research_reference_store_usage_review \
+  --same-time-alignment-dir data/research/h4_d1_same_time_alignment_table \
+  --timestamped-state-regime-dir data/research/h4_d1_timestamped_state_regime_table \
+  --output-dir data/research/current_market_state_snapshot_research_user \
+  --report data/research/current_market_state_snapshot_research_user/current_market_state_snapshot_research_report.txt \
+  --snapshot-mode USER_SUPPLIED_SNAPSHOT \
+  --snapshot-h4-transition-label "SYNTHETIC_TEST_TRANSITION" \
+  --snapshot-d1-market-state "D1_STATE_LABEL" \
+  --snapshot-d1-regime-label "D1_REGIME_LABEL" \
+  --snapshot-d1-structure-direction "UP" \
+  --snapshot-forward-horizon 1
+```
+
+Primary inputs:
+
+```text
+data/research/research_reference_store_design/research_reference_store.csv
+data/research/research_query_interface_design/research_query_requests.csv
+data/research/research_query_interface_design/research_query_results.csv
+data/research/research_reference_store_usage_review/research_reference_usage_scenarios.csv
+data/research/h4_d1_same_time_alignment_table/h4_transition_d1_same_time_alignment.csv
+data/research/h4_d1_timestamped_state_regime_table/h4_timestamped_transitions.csv
+data/research/h4_d1_timestamped_state_regime_table/d1_timestamped_market_states.csv
+```
+
+The workflow writes:
+
+```text
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_source_inventory.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_context.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_query_requests.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_reference_results.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_fallback_trace.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_evidence_review.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_behavior_summary.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_diagnostic_review.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_research_summary.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_research_report.txt
+```
+
+Fallback levels:
+
+```text
+EXACT_D1_STATE_REGIME_CONTEXT_QUERY_MATCH
+D1_REGIME_CONTEXT_QUERY_MATCH
+D1_MARKET_STATE_CONTEXT_QUERY_MATCH
+H4_TRANSITION_ONLY_QUERY_MATCH
+BROADER_H4_TRANSITION_ANY_HORIZON_QUERY_MATCH
+NO_RESEARCH_REFERENCE_QUERY_MATCH
+```
+
+Evidence classes:
+
+```text
+HIGH_EVIDENCE_SNAPSHOT_REFERENCE
+MODERATE_EVIDENCE_SNAPSHOT_REFERENCE
+LOW_EVIDENCE_SNAPSHOT_REFERENCE
+NO_USABLE_SNAPSHOT_REFERENCE
+CORE_SNAPSHOT_REFERENCE_EVIDENCE
+SUPPORTING_SNAPSHOT_REFERENCE_EVIDENCE
+WATCHLIST_SNAPSHOT_REFERENCE_EVIDENCE
+INSUFFICIENT_SNAPSHOT_REFERENCE_EVIDENCE
+```
+
+Scope limitations:
+
+```text
+Snapshot reference results are descriptive historical references only.
+Snapshot matches do not imply predictive edge.
+No live trading integration is implemented.
+No recommendations are generated.
+No Decision Engine is created.
+No production defaults are changed.
+No thresholds are changed.
+No taxonomy is changed.
+```
+
 ## Phase 7.5.17 — Research Reference Store Design
 
 Purpose:
