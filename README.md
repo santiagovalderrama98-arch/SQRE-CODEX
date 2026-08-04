@@ -2463,6 +2463,112 @@ No production taxonomy is changed.
 No operational logic or Decision Engine is added.
 ```
 
+## Phase 7.5.18 Research Reference Store Usage Review
+
+This phase reviews how the Phase 7.5.17 research reference store can be queried
+by later research workflows. It follows the reference-store design phase by
+testing descriptive lookup coverage against H4/D1 same-time aligned historical
+contexts where available, with fallback scenarios derived from the reference
+store itself.
+
+Reference usage here means descriptive lookup availability only. It is not
+production decision logic.
+
+Inputs:
+
+```text
+data/research/research_reference_store_design/research_reference_store.csv
+data/research/research_reference_store_design/research_reference_candidates.csv
+data/research/research_reference_store_design/research_reference_exclusion_review.csv
+data/research/research_reference_store_design/research_reference_granularity_review.csv
+data/research/research_reference_store_design/research_reference_horizon_review.csv
+data/research/research_reference_store_design/research_reference_store_design_summary.csv
+data/research/h4_d1_forward_outcome_interpretation_review/*.csv
+data/research/h4_d1_same_time_alignment_table/h4_transition_d1_same_time_alignment.csv
+```
+
+Run:
+
+```bash
+python3 scripts/run_research_reference_store_usage_review.py \
+  --reference-store-dir data/research/research_reference_store_design \
+  --interpretation-dir data/research/h4_d1_forward_outcome_interpretation_review \
+  --same-time-alignment-dir data/research/h4_d1_same_time_alignment_table \
+  --output-dir data/research/research_reference_store_usage_review \
+  --report data/research/research_reference_store_usage_review/research_reference_store_usage_review_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/research_reference_store_usage_review/research_reference_store_usage_source_inventory.csv
+data/research/research_reference_store_usage_review/research_reference_usage_scenarios.csv
+data/research/research_reference_store_usage_review/research_reference_lookup_results.csv
+data/research/research_reference_store_usage_review/research_reference_availability_review.csv
+data/research/research_reference_store_usage_review/research_reference_granularity_usage_review.csv
+data/research/research_reference_store_usage_review/research_reference_horizon_usage_review.csv
+data/research/research_reference_store_usage_review/research_reference_evidence_quality_review.csv
+data/research/research_reference_store_usage_review/research_reference_store_usage_review_summary.csv
+data/research/research_reference_store_usage_review/research_reference_store_usage_review_report.txt
+```
+
+Lookup levels:
+
+```text
+EXACT_D1_STATE_REGIME_CONTEXT_MATCH
+D1_REGIME_CONTEXT_MATCH
+D1_MARKET_STATE_CONTEXT_MATCH
+H4_TRANSITION_ONLY_CONTEXT_MATCH
+NO_REFERENCE_MATCH
+```
+
+Match quality classes:
+
+```text
+HIGH_QUALITY_REFERENCE_MATCH
+MODERATE_QUALITY_REFERENCE_MATCH
+LOW_QUALITY_REFERENCE_MATCH
+NO_USABLE_REFERENCE_MATCH
+INPUT_MISSING
+```
+
+Evidence quality classes:
+
+```text
+CORE_REFERENCE_EVIDENCE
+SUPPORTING_REFERENCE_EVIDENCE
+WATCHLIST_REFERENCE_EVIDENCE
+INSUFFICIENT_REFERENCE_EVIDENCE
+INPUT_MISSING
+```
+
+Usage review classes:
+
+```text
+PRIMARY_USAGE_GRANULARITY
+SUPPORTING_USAGE_GRANULARITY
+LIMITED_USAGE_GRANULARITY
+SAMPLE_CONSTRAINED_USAGE_GRANULARITY
+PRIMARY_USAGE_HORIZON
+SUPPORTING_USAGE_HORIZON
+LIMITED_USAGE_HORIZON
+SAMPLE_CONSTRAINED_USAGE_HORIZON
+```
+
+Limitations:
+
+```text
+This phase reviews research reference usage only.
+This phase does not generate trading signals.
+This phase does not generate operational recommendations.
+This phase does not create a Decision Engine.
+This phase does not create production decision logic.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+Reference lookup results are descriptive historical references only.
+```
+
 ## Phase 7.5.14G — H4/D1 Same-Time Contextual Transition Review
 
 Phase 7.5.14G follows Phase 7.5.14F because the H4 transition rows are now
