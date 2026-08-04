@@ -2279,6 +2279,113 @@ No production defaults, thresholds, or taxonomy are changed.
 No operational logic or Decision Engine is added.
 ```
 
+## Phase 7.5.17 — Research Reference Store Design
+
+Purpose:
+
+Phase 7.5.17 builds a research-only reference store from the interpreted H4/D1
+forward outcome profiles produced by Phase 7.5.16. It follows Phase 7.5.16
+because that phase classifies outcome profile interpretability, directional
+behavior, excursion behavior, horizon stability, and context granularity utility.
+
+The research reference store is different from decision logic. It is a
+descriptive artifact for later research workflows. It does not create a
+production Knowledge Base, trading signals, operational recommendations, a
+Decision Engine, or any execution logic.
+
+Inputs:
+
+```text
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_outcome_profile_interpretability_review.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_directional_behavior_review.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_excursion_behavior_review.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_horizon_stability_review.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_context_granularity_utility_review.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_forward_outcome_interpretation_review_summary.csv
+```
+
+Optional diagnostic inputs:
+
+```text
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_forward_outcome_profiles.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_forward_outcome_sample_adequacy_review.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_forward_outcome_dispersion_review.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_aligned_forward_outcome_research_summary.csv
+```
+
+Run:
+
+```bash
+python3 scripts/run_research_reference_store_design.py \
+  --interpretation-dir data/research/h4_d1_forward_outcome_interpretation_review \
+  --forward-outcome-dir data/research/h4_d1_aligned_forward_outcome_research \
+  --output-dir data/research/research_reference_store_design \
+  --report data/research/research_reference_store_design/research_reference_store_design_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/research_reference_store_design/research_reference_store_source_inventory.csv
+data/research/research_reference_store_design/research_reference_candidates.csv
+data/research/research_reference_store_design/research_reference_store.csv
+data/research/research_reference_store_design/research_reference_exclusion_review.csv
+data/research/research_reference_store_design/research_reference_granularity_review.csv
+data/research/research_reference_store_design/research_reference_horizon_review.csv
+data/research/research_reference_store_design/research_reference_store_design_summary.csv
+data/research/research_reference_store_design/research_reference_store_design_report.txt
+```
+
+Reference tier classifications:
+
+```text
+CORE_RESEARCH_REFERENCE
+SUPPORTING_RESEARCH_REFERENCE
+WATCHLIST_RESEARCH_REFERENCE
+EXCLUDED_SAMPLE_CONSTRAINED
+EXCLUDED_HIGH_DISPERSION
+EXCLUDED_LOW_INTERPRETABILITY
+INPUT_MISSING
+```
+
+Inclusion and exclusion rules:
+
+```text
+Core references require interpretable profile quality, sufficient sample size,
+and contained dispersion.
+Supporting references preserve moderately interpretable or sufficiently sampled
+profiles within supporting dispersion limits.
+Watchlist rows preserve historical structure when sample, dispersion, or
+horizon stability limits stronger classification.
+Excluded rows are separated by sample constraint, high dispersion, low
+interpretability, or missing inputs.
+```
+
+Granularity and horizon review:
+
+```text
+The granularity review summarizes candidate, included, core, supporting,
+watchlist, and excluded counts by context granularity.
+The horizon review summarizes the same counts by H4 forward horizon.
+Primary classifications identify the strongest descriptive reference support
+within this research artifact only.
+```
+
+Scope limitations:
+
+```text
+This phase designs a research-only reference artifact.
+This phase does not generate trading signals.
+This phase does not generate operational recommendations.
+This phase does not create a Decision Engine.
+This phase does not create a production Knowledge Base.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+No provider behavior is changed.
+No data download is performed.
+```
+
 ## Phase 7.5.14E — Timestamped H4/D1 State & Regime Table Generation
 
 Phase 7.5.14E runs after H4/D1 Synchronized Historical Data Preparation. It
