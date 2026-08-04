@@ -2525,6 +2525,74 @@ No production taxonomy is changed.
 No operational logic or Decision Engine is added.
 ```
 
+## Phase 7.5.15 — H4/D1 Aligned Forward Outcome Research
+
+Phase 7.5.15 follows the same-time H4/D1 alignment and contextual transition
+review phases. It measures historical forward price behavior after aligned H4
+transitions while preserving separate context granularities so later research
+can compare H4-only outcomes against H4 plus D1 context.
+
+Purpose:
+
+```text
+Inventory H4/D1 alignment, synchronized OHLC, and contextual transition inputs.
+Use synchronized H4 OHLC as the forward price path source.
+Measure H4 forward outcomes across fixed H4 candle horizons.
+Build outcome profiles by H4 transition only and H4 transition plus D1 context.
+Review outcome dispersion and sample adequacy.
+Classify readiness for later H4/D1 outcome interpretation review.
+```
+
+Inputs:
+
+```text
+data/research/h4_d1_same_time_alignment_table/h4_transition_d1_same_time_alignment.csv
+data/research/h4_d1_same_time_alignment_table/h4_state_d1_same_time_alignment.csv
+data/research/h4_d1_same_time_alignment_table/h4_d1_same_time_alignment_summary.csv
+data/research/h4_d1_synchronized_data_preparation/h4_normalized_ohlc.csv
+data/research/h4_d1_synchronized_data_preparation/d1_from_h4_ohlc.csv
+data/research/h4_d1_synchronized_data_preparation/h4_d1_candle_alignment_map.csv
+data/research/h4_d1_synchronized_data_preparation/h4_d1_synchronized_data_summary.csv
+data/research/h4_d1_same_time_contextual_transition_review
+```
+
+Run:
+
+```bash
+python3 scripts/run_h4_d1_aligned_forward_outcome_research.py \
+  --same-time-alignment-dir data/research/h4_d1_same_time_alignment_table \
+  --synchronized-data-dir data/research/h4_d1_synchronized_data_preparation \
+  --contextual-transition-dir data/research/h4_d1_same_time_contextual_transition_review \
+  --output-dir data/research/h4_d1_aligned_forward_outcome_research \
+  --report data/research/h4_d1_aligned_forward_outcome_research/h4_d1_aligned_forward_outcome_research_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_aligned_forward_outcome_source_inventory.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_transition_forward_outcomes.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_forward_outcome_profiles.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_forward_outcome_dispersion_review.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_forward_outcome_sample_adequacy_review.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_aligned_forward_outcome_research_summary.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_aligned_forward_outcome_research_report.txt
+```
+
+Scope limitations:
+
+```text
+This phase measures historical forward price behavior after aligned H4 transitions.
+This phase does not decide whether any context is favorable or unfavorable.
+This phase does not generate trading signals.
+This phase does not add operational logic.
+This phase does not add a Decision Engine.
+No data download is performed.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+```
+
 ## Phase 7.5.14F — H4/D1 Same-Time Alignment Table
 
 Phase 7.5.14F follows Phase 7.5.14E because the timestamped H4 state,
