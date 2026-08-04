@@ -2593,6 +2593,141 @@ No thresholds are changed.
 No production taxonomy is changed.
 ```
 
+## Phase 7.5.16 — H4/D1 Forward Outcome Interpretation Review
+
+Phase 7.5.16 follows Phase 7.5.15 because aligned H4/D1 forward outcome
+profiles now exist. This workflow interprets those profiles descriptively: it
+separates interpretable profiles from mixed, high-dispersion, and
+sample-constrained profiles without producing operational decision logic.
+
+Outcome interpretation is not a production decision layer. It summarizes
+historically observed follow-through, excursion, horizon stability, and context
+granularity behavior. It does not decide whether a context is favorable or
+unfavorable, and it does not recommend any action.
+
+Purpose:
+
+```text
+Inventory Phase 7.5.15 forward outcome outputs.
+Classify outcome profile interpretability.
+Review observed directional behavior descriptively.
+Review forward excursion behavior descriptively.
+Review horizon stability across forward H4 candle windows.
+Review which context granularity has the strongest descriptive sample support.
+Classify readiness for later research reference-store design.
+```
+
+Inputs:
+
+```text
+data/research/h4_d1_aligned_forward_outcome_research/h4_transition_forward_outcomes.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_forward_outcome_profiles.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_forward_outcome_dispersion_review.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_forward_outcome_sample_adequacy_review.csv
+data/research/h4_d1_aligned_forward_outcome_research/h4_d1_aligned_forward_outcome_research_summary.csv
+```
+
+Optional supporting diagnostics:
+
+```text
+data/research/h4_d1_same_time_contextual_transition_review/h4_d1_same_time_contextual_transition_profiles.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_d1_context_sample_adequacy_review.csv
+data/research/h4_d1_same_time_contextual_transition_review/h4_d1_same_time_contextual_transition_review_summary.csv
+```
+
+Run:
+
+```bash
+python3 scripts/run_h4_d1_forward_outcome_interpretation_review.py \
+  --forward-outcome-dir data/research/h4_d1_aligned_forward_outcome_research \
+  --contextual-transition-dir data/research/h4_d1_same_time_contextual_transition_review \
+  --output-dir data/research/h4_d1_forward_outcome_interpretation_review \
+  --report data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_forward_outcome_interpretation_review_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_forward_outcome_interpretation_source_inventory.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_outcome_profile_interpretability_review.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_directional_behavior_review.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_excursion_behavior_review.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_horizon_stability_review.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_context_granularity_utility_review.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_forward_outcome_interpretation_review_summary.csv
+data/research/h4_d1_forward_outcome_interpretation_review/h4_d1_forward_outcome_interpretation_review_report.txt
+```
+
+Outcome interpretability classifications:
+
+```text
+INTERPRETABLE_OUTCOME_PROFILE
+MODERATELY_INTERPRETABLE_OUTCOME_PROFILE
+LOW_INTERPRETABILITY_OUTCOME_PROFILE
+NOT_INTERPRETABLE_SAMPLE_CONSTRAINED
+NOT_INTERPRETABLE_HIGH_DISPERSION
+INPUT_MISSING
+```
+
+Directional behavior classifications:
+
+```text
+OBSERVED_UPWARD_FOLLOW_THROUGH_DOMINANCE
+OBSERVED_DOWNWARD_FOLLOW_THROUGH_DOMINANCE
+OBSERVED_MIXED_DIRECTIONAL_BEHAVIOR
+OBSERVED_FLAT_OR_LOW_DIRECTIONAL_BEHAVIOR
+SAMPLE_CONSTRAINED_DIRECTIONAL_BEHAVIOR
+INPUT_MISSING
+```
+
+Excursion behavior classifications:
+
+```text
+UPSIDE_EXCURSION_DOMINANT
+DOWNSIDE_EXCURSION_DOMINANT
+BALANCED_EXCURSION_BEHAVIOR
+HIGH_RANGE_EXPANSION_BEHAVIOR
+SAMPLE_CONSTRAINED_EXCURSION_BEHAVIOR
+INPUT_MISSING
+```
+
+Horizon stability classifications:
+
+```text
+STABLE_ACROSS_HORIZONS
+MODERATELY_STABLE_ACROSS_HORIZONS
+UNSTABLE_ACROSS_HORIZONS
+INSUFFICIENT_HORIZON_COVERAGE
+INPUT_MISSING
+```
+
+Context granularity utility review classifications:
+
+```text
+BROAD_CONTEXT_MORE_USEFUL
+D1_REGIME_CONTEXT_USEFUL
+D1_MARKET_STATE_CONTEXT_USEFUL
+GRANULAR_D1_CONTEXT_SAMPLE_CONSTRAINED
+MIXED_GRANULARITY_UTILITY
+INPUT_MISSING
+```
+
+Scope limitations:
+
+```text
+This phase interprets historical forward outcome profiles descriptively.
+This phase does not generate trading signals.
+This phase does not produce operational recommendations.
+This phase does not decide whether any context is favorable or unfavorable.
+This phase does not perform profitability analysis.
+This phase does not add operational logic.
+This phase does not add a Decision Engine.
+No data download is performed.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+```
+
 ## Phase 7.5.14F — H4/D1 Same-Time Alignment Table
 
 Phase 7.5.14F follows Phase 7.5.14E because the timestamped H4 state,
