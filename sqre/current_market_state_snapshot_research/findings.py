@@ -69,11 +69,14 @@ def potential_follow_up_areas() -> list[str]:
 
 def do_not_change_yet_lines() -> list[str]:
     return [
-        "Do not change production defaults.",
-        "Do not change thresholds.",
-        "Do not change taxonomy.",
-        "Do not add operational logic.",
-        "Do not add a Decision Engine.",
+        "No production defaults were modified.",
+        "No thresholds were modified.",
+        "No production taxonomy was modified.",
+        "No Decision Engine was added.",
+        "No operational logic was added.",
+        "No provider behavior was changed.",
+        "No trading signals were produced.",
+        "No operational recommendations were produced.",
     ]
 
 
@@ -101,30 +104,30 @@ def _readiness(
 ) -> tuple[str, str, str]:
     if query_count == 0:
         return (
-            "SNAPSHOT_INPUTS_MISSING",
+            "INPUT_MISSING",
             "REQUIRES_SNAPSHOT_INPUTS",
             "No snapshot query requests were available for reference lookup.",
         )
     if query_with == 0:
         return (
-            "SNAPSHOT_REFERENCE_COVERAGE_MISSING",
+            "CURRENT_MARKET_STATE_SNAPSHOT_INPUT_LIMITED",
             "REQUIRES_REFERENCE_STORE_EXPANSION",
             "Snapshot workflow found no descriptive historical references.",
         )
     if high > 0 or moderate > 0:
         return (
-            "SNAPSHOT_REFERENCE_CONTEXT_AVAILABLE",
+            "CURRENT_MARKET_STATE_SNAPSHOT_RESEARCH_READY",
             "READY_FOR_RESEARCH_DASHBOARD_PROTOTYPE",
             "Snapshot workflow has descriptive historical references for research review.",
         )
     if low > 0:
         return (
-            "SNAPSHOT_REFERENCE_CONTEXT_LIMITED",
+            "PARTIAL_CURRENT_MARKET_STATE_SNAPSHOT_RESEARCH_READY",
             "READY_FOR_MANUAL_RESEARCH_REVIEW",
             "Snapshot workflow has limited descriptive references that require review.",
         )
     return (
-        "SNAPSHOT_REFERENCE_CONTEXT_INSUFFICIENT",
+        "CURRENT_MARKET_STATE_SNAPSHOT_SAMPLE_CONSTRAINED",
         "REQUIRES_REFERENCE_STORE_EXPANSION",
         f"{no_usable} snapshot reference results were not usable for descriptive review.",
     )
