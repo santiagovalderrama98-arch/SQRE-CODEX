@@ -94,7 +94,7 @@ def limitation_lines() -> list[str]:
 def recommended_follow_up(readiness_flag: str) -> str:
     if readiness_flag == "READY_FOR_RESEARCH_DASHBOARD_PROTOTYPE":
         return "Research dashboard prototype; Reference stability validation"
-    if readiness_flag == "READY_FOR_MANUAL_RESEARCH_REVIEW":
+    if readiness_flag == "PARTIAL_READY_FOR_RESEARCH_DASHBOARD_PROTOTYPE":
         return "Manual research review; Reference stability validation"
     return "Expanded H4 historical data coverage; Reference stability validation"
 
@@ -105,13 +105,13 @@ def _readiness(
     if query_count == 0:
         return (
             "INPUT_MISSING",
-            "REQUIRES_SNAPSHOT_INPUTS",
+            "INPUT_COMPLETENESS_REVIEW_REQUIRED",
             "No snapshot query requests were available for reference lookup.",
         )
     if query_with == 0:
         return (
             "CURRENT_MARKET_STATE_SNAPSHOT_INPUT_LIMITED",
-            "REQUIRES_REFERENCE_STORE_EXPANSION",
+            "NOT_READY_SNAPSHOT_INPUT_LIMITED",
             "Snapshot workflow found no descriptive historical references.",
         )
     if high > 0 or moderate > 0:
@@ -123,12 +123,12 @@ def _readiness(
     if low > 0:
         return (
             "PARTIAL_CURRENT_MARKET_STATE_SNAPSHOT_RESEARCH_READY",
-            "READY_FOR_MANUAL_RESEARCH_REVIEW",
+            "PARTIAL_READY_FOR_RESEARCH_DASHBOARD_PROTOTYPE",
             "Snapshot workflow has limited descriptive references that require review.",
         )
     return (
         "CURRENT_MARKET_STATE_SNAPSHOT_SAMPLE_CONSTRAINED",
-        "REQUIRES_REFERENCE_STORE_EXPANSION",
+        "NOT_READY_SNAPSHOT_SAMPLE_CONSTRAINED",
         f"{no_usable} snapshot reference results were not usable for descriptive review.",
     )
 
