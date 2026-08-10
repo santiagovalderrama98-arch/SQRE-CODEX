@@ -2571,6 +2571,91 @@ No production taxonomy is changed.
 No operational logic or Decision Engine is added.
 ```
 
+## Phase 7.5.22 — Manual Research Dashboard Review & Usability Refinement
+
+Phase 7.5.22 follows the Research Dashboard Prototype by reviewing whether the
+generated static dashboard is usable for repeated manual research review. This
+phase is a dashboard usability review, not decision logic.
+
+Purpose:
+
+```text
+Load Phase 7.5.21 dashboard prototype outputs.
+Review panel completeness and readability.
+Review field usefulness and possible redundant fields.
+Check that limitations and research-only scope statements are explicit.
+Check that forbidden operational language is absent.
+Generate a refined static HTML dashboard when inputs are sufficient.
+```
+
+Inputs:
+
+```text
+data/research/research_dashboard_prototype/research_dashboard_source_inventory.csv
+data/research/research_dashboard_prototype/research_dashboard_snapshot_panel.csv
+data/research/research_dashboard_prototype/research_dashboard_reference_cards.csv
+data/research/research_dashboard_prototype/research_dashboard_evidence_panel.csv
+data/research/research_dashboard_prototype/research_dashboard_behavior_panel.csv
+data/research/research_dashboard_prototype/research_dashboard_fallback_panel.csv
+data/research/research_dashboard_prototype/research_dashboard_diagnostic_panel.csv
+data/research/research_dashboard_prototype/research_dashboard_summary.csv
+data/research/research_dashboard_prototype/research_dashboard_prototype_report.txt
+data/research/research_dashboard_prototype/research_dashboard_prototype.html
+```
+
+Run:
+
+```bash
+python3 scripts/run_manual_research_dashboard_review.py \
+  --dashboard-dir data/research/research_dashboard_prototype \
+  --snapshot-research-dir data/research/current_market_state_snapshot_research \
+  --query-interface-dir data/research/research_query_interface_design \
+  --output-dir data/research/manual_research_dashboard_review \
+  --report data/research/manual_research_dashboard_review/manual_research_dashboard_review_report.txt \
+  --html data/research/manual_research_dashboard_review/manual_research_dashboard_refined.html
+```
+
+The workflow writes:
+
+```text
+data/research/manual_research_dashboard_review/manual_research_dashboard_source_inventory.csv
+data/research/manual_research_dashboard_review/manual_research_dashboard_panel_completeness_review.csv
+data/research/manual_research_dashboard_review/manual_research_dashboard_panel_readability_review.csv
+data/research/manual_research_dashboard_review/manual_research_dashboard_field_usefulness_review.csv
+data/research/manual_research_dashboard_review/manual_research_dashboard_redundancy_review.csv
+data/research/manual_research_dashboard_review/manual_research_dashboard_scope_safety_review.csv
+data/research/manual_research_dashboard_review/manual_research_dashboard_refinement_recommendations.csv
+data/research/manual_research_dashboard_review/manual_research_dashboard_review_summary.csv
+data/research/manual_research_dashboard_review/manual_research_dashboard_review_report.txt
+data/research/manual_research_dashboard_review/manual_research_dashboard_refined.html
+```
+
+Review outputs:
+
+```text
+Panel completeness review: checks whether each expected dashboard panel has visible rows.
+Panel readability review: checks field density, empty panels, limitations, and research-only context.
+Field usefulness review: classifies core, supporting, diagnostic, and low-use fields.
+Redundancy review: flags repeated or duplicative diagnostic fields.
+Scope safety review: scans dashboard report and HTML text for forbidden operational language.
+Refined HTML output: groups snapshot context, coverage, evidence, references, fallback trace, diagnostics, limitations, and scope.
+Readiness assessment: classifies repeated manual research usability.
+```
+
+Scope limitations:
+
+```text
+This phase reviews dashboard usability only.
+This phase does not connect live data.
+This phase does not generate trading signals.
+This phase does not generate operational recommendations.
+This phase does not create a Decision Engine.
+This phase does not create production decision logic.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+```
+
 ## Phase 7.5.21 — Research Dashboard Prototype
 
 Purpose:
