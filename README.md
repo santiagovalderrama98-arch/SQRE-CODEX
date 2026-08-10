@@ -2571,6 +2571,101 @@ No production taxonomy is changed.
 No operational logic or Decision Engine is added.
 ```
 
+## Phase 7.5.21 — Research Dashboard Prototype
+
+Purpose:
+
+```text
+Phase 7.5.21 creates a research-only static dashboard prototype from the local
+Current Market State Snapshot Research outputs produced in Phase 7.5.20.
+It exists because Phase 7.5.20 can produce a ready-for-dashboard snapshot
+summary, but that output still needs a readable static review surface.
+```
+
+Dashboard prototype versus decision logic:
+
+```text
+The dashboard summarizes descriptive local research outputs.
+It does not create production decision logic.
+It does not use live data unless explicitly connected in a later phase.
+It does not generate trading signals.
+It does not generate operational recommendations.
+It does not create a Decision Engine.
+```
+
+Inputs:
+
+```text
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_source_inventory.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_context.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_query_requests.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_reference_results.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_fallback_trace.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_evidence_review.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_behavior_summary.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_diagnostic_review.csv
+data/research/current_market_state_snapshot_research/current_market_state_snapshot_research_summary.csv
+```
+
+Optional inputs:
+
+```text
+data/research/research_query_interface_design
+data/research/research_reference_store_design
+```
+
+Run:
+
+```bash
+python3 scripts/run_research_dashboard_prototype.py \
+  --snapshot-research-dir data/research/current_market_state_snapshot_research \
+  --query-interface-dir data/research/research_query_interface_design \
+  --reference-store-dir data/research/research_reference_store_design \
+  --output-dir data/research/research_dashboard_prototype \
+  --report data/research/research_dashboard_prototype/research_dashboard_prototype_report.txt \
+  --html data/research/research_dashboard_prototype/research_dashboard_prototype.html
+```
+
+The workflow writes:
+
+```text
+data/research/research_dashboard_prototype/research_dashboard_source_inventory.csv
+data/research/research_dashboard_prototype/research_dashboard_snapshot_panel.csv
+data/research/research_dashboard_prototype/research_dashboard_reference_cards.csv
+data/research/research_dashboard_prototype/research_dashboard_evidence_panel.csv
+data/research/research_dashboard_prototype/research_dashboard_behavior_panel.csv
+data/research/research_dashboard_prototype/research_dashboard_fallback_panel.csv
+data/research/research_dashboard_prototype/research_dashboard_diagnostic_panel.csv
+data/research/research_dashboard_prototype/research_dashboard_summary.csv
+data/research/research_dashboard_prototype/research_dashboard_prototype_report.txt
+data/research/research_dashboard_prototype/research_dashboard_prototype.html
+```
+
+Dashboard panels:
+
+```text
+Snapshot panel: latest/current-available snapshot context.
+Reference cards: selected descriptive historical reference rows.
+Evidence panel: evidence class counts and descriptive averages.
+Behavior panel: descriptive result counts only.
+Fallback panel: snapshot lookup attempts and diagnostics.
+Diagnostic panel: snapshot workflow diagnostic rows.
+Readiness assessment: dashboard prototype readiness, not operational readiness.
+```
+
+Scope limitations:
+
+```text
+The static HTML dashboard is self-contained and does not require a web server.
+The dashboard is not live market data unless explicitly connected later.
+No thresholds, production defaults, or production taxonomy are changed.
+No provider behavior is changed.
+No trading signals are produced.
+No operational recommendations are produced.
+No production decision logic is added.
+No Decision Engine is added.
+```
+
 ## Phase 7.5.18 Research Reference Store Usage Review
 
 This phase reviews how the Phase 7.5.17 research reference store can be queried
