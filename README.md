@@ -2571,6 +2571,72 @@ No production taxonomy is changed.
 No operational logic or Decision Engine is added.
 ```
 
+## Phase 7.5.23 — Reference Stability Validation
+
+This phase validates whether SQRE research references are stable enough for repeated
+manual research review. It follows Phase 7.5.22 by checking the references shown
+or implied by the dashboard against historical stability dimensions: horizon,
+context granularity, sample size, dispersion, directional consistency, match
+level usage, and dashboard reference cards.
+
+Reference stability validation is not decision logic. It produces descriptive
+research diagnostics only and does not classify any context as favorable or
+unfavorable.
+
+Inputs:
+
+```text
+data/research/research_reference_store_design
+data/research/research_query_interface_design
+data/research/current_market_state_snapshot_research
+data/research/research_dashboard_prototype
+data/research/manual_research_dashboard_review
+```
+
+Run:
+
+```bash
+python3 scripts/run_reference_stability_validation.py \
+  --reference-store-dir data/research/research_reference_store_design \
+  --query-interface-dir data/research/research_query_interface_design \
+  --snapshot-research-dir data/research/current_market_state_snapshot_research \
+  --dashboard-dir data/research/research_dashboard_prototype \
+  --manual-dashboard-review-dir data/research/manual_research_dashboard_review \
+  --output-dir data/research/reference_stability_validation \
+  --report data/research/reference_stability_validation/reference_stability_validation_report.txt
+```
+
+The workflow writes:
+
+```text
+data/research/reference_stability_validation/reference_stability_source_inventory.csv
+data/research/reference_stability_validation/reference_population_review.csv
+data/research/reference_stability_validation/reference_horizon_stability_review.csv
+data/research/reference_stability_validation/reference_granularity_stability_review.csv
+data/research/reference_stability_validation/reference_sample_adequacy_review.csv
+data/research/reference_stability_validation/reference_dispersion_stability_review.csv
+data/research/reference_stability_validation/reference_directional_consistency_review.csv
+data/research/reference_stability_validation/reference_match_level_stability_review.csv
+data/research/reference_stability_validation/dashboard_reference_stability_review.csv
+data/research/reference_stability_validation/reference_stability_scorecard.csv
+data/research/reference_stability_validation/reference_stability_validation_summary.csv
+data/research/reference_stability_validation/reference_stability_validation_report.txt
+```
+
+Scope limitations:
+
+```text
+This phase validates reference stability for research review.
+This phase does not generate trading signals.
+This phase does not generate operational recommendations.
+This phase does not perform profitability analysis.
+No data download is performed.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+No operational logic or Decision Engine is added.
+```
+
 ## Phase 7.5.22 — Manual Research Dashboard Review & Usability Refinement
 
 Phase 7.5.22 follows the Research Dashboard Prototype by reviewing whether the
