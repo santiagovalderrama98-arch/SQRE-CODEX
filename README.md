@@ -3503,3 +3503,130 @@ No thresholds are changed.
 No production taxonomy is changed.
 No operational logic or Decision Engine is added.
 ```
+
+## Phase 7.5.24 — Reference Stability Documentation
+
+Phase 7.5.24 follows Phase 7.5.23 because the reference stability validation
+outputs now summarize reference population, horizon stability, granularity
+stability, sample adequacy, dispersion stability, directional consistency,
+match-level stability, dashboard reference stability, and readiness.
+
+Purpose:
+
+```text
+Convert reference stability diagnostics into research-only documentation.
+Explain what the Research Reference Store currently supports.
+Document strong, partial, constrained, unstable, and fallback-dependent evidence.
+Provide a dashboard reading guide for manual research review.
+Document limitations and follow-up areas before production or live use.
+```
+
+Stability documentation is not decision logic. It explains how to read research
+evidence safely; it does not decide whether any context is favorable or
+unfavorable.
+
+Inputs:
+
+```text
+data/research/reference_stability_validation/reference_stability_source_inventory.csv
+data/research/reference_stability_validation/reference_population_review.csv
+data/research/reference_stability_validation/reference_horizon_stability_review.csv
+data/research/reference_stability_validation/reference_granularity_stability_review.csv
+data/research/reference_stability_validation/reference_sample_adequacy_review.csv
+data/research/reference_stability_validation/reference_dispersion_stability_review.csv
+data/research/reference_stability_validation/reference_directional_consistency_review.csv
+data/research/reference_stability_validation/reference_match_level_stability_review.csv
+data/research/reference_stability_validation/dashboard_reference_stability_review.csv
+data/research/reference_stability_validation/reference_stability_scorecard.csv
+data/research/reference_stability_validation/reference_stability_validation_summary.csv
+data/research/reference_stability_validation/reference_stability_validation_report.txt
+```
+
+Optional inputs:
+
+```text
+data/research/research_dashboard_prototype/research_dashboard_summary.csv
+data/research/research_dashboard_prototype/research_dashboard_reference_cards.csv
+data/research/research_dashboard_prototype/research_dashboard_prototype_report.txt
+data/research/research_dashboard_prototype/research_dashboard_prototype.html
+data/research/manual_research_dashboard_review/manual_research_dashboard_review_summary.csv
+data/research/manual_research_dashboard_review/manual_research_dashboard_review_report.txt
+data/research/manual_research_dashboard_review/manual_research_dashboard_refinement_recommendations.csv
+data/research/manual_research_dashboard_review/manual_research_dashboard_refined.html
+```
+
+Run:
+
+```bash
+python3 scripts/run_reference_stability_documentation.py \
+  --stability-validation-dir data/research/reference_stability_validation \
+  --dashboard-dir data/research/research_dashboard_prototype \
+  --manual-dashboard-review-dir data/research/manual_research_dashboard_review \
+  --output-dir data/research/reference_stability_documentation \
+  --report data/research/reference_stability_documentation/reference_stability_documentation_report.txt \
+  --markdown data/research/reference_stability_documentation/reference_stability_documentation.md
+```
+
+The workflow writes:
+
+```text
+data/research/reference_stability_documentation/reference_stability_documentation_source_inventory.csv
+data/research/reference_stability_documentation/reference_stability_interpretation_guide.csv
+data/research/reference_stability_documentation/reference_evidence_usage_policy.csv
+data/research/reference_stability_documentation/reference_dashboard_reading_guide.csv
+data/research/reference_stability_documentation/reference_stability_limitations_documentation.csv
+data/research/reference_stability_documentation/reference_stability_follow_up_plan.csv
+data/research/reference_stability_documentation/reference_stability_documentation_scope_safety_review.csv
+data/research/reference_stability_documentation/reference_stability_documentation_summary.csv
+data/research/reference_stability_documentation/reference_stability_documentation_report.txt
+data/research/reference_stability_documentation/reference_stability_documentation.md
+```
+
+Documentation outputs include:
+
+```text
+Stability interpretation guide
+Evidence usage policy
+Dashboard reading guide
+Limitations documentation
+Follow-up plan
+Markdown documentation
+Scope safety review
+Readiness assessment
+```
+
+Readiness classes:
+
+```text
+REFERENCE_STABILITY_DOCUMENTATION_READY
+PARTIAL_REFERENCE_STABILITY_DOCUMENTATION_READY
+REFERENCE_STABILITY_DOCUMENTATION_INPUT_LIMITED
+INPUT_MISSING
+```
+
+Readiness flags:
+
+```text
+READY_FOR_DASHBOARD_STABILITY_INDICATORS
+PARTIAL_READY_FOR_DASHBOARD_STABILITY_INDICATORS
+NOT_READY_DOCUMENTATION_INPUT_LIMITED
+INPUT_COMPLETENESS_REVIEW_REQUIRED
+```
+
+Scope limitations:
+
+```text
+This phase documents reference stability for manual research review.
+This phase converts stability diagnostics into interpretation guidance.
+This phase does not generate trading signals.
+This phase does not generate operational recommendations.
+This phase does not decide whether any context is favorable or unfavorable.
+This phase does not perform profitability analysis.
+This phase does not create a Decision Engine.
+This phase does not create production decision logic.
+No data download is performed.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+No operational logic is added.
+```
