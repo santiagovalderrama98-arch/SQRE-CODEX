@@ -151,14 +151,56 @@ def write_synthetic_dashboard_stability_inputs(tmp_path) -> DashboardStabilityIn
         dashboard_dir / "research_dashboard_behavior_panel.csv", index=False
     )
     pd.DataFrame(
-        {
-            "Snapshot_Query_ID": ["Q2"],
-            "Fallback_Attempt_Order": [1],
-            "Attempted_Match_Level": ["BROADER_CONTEXT_FALLBACK"],
-            "Candidate_Reference_Count": [5],
-            "Selected_Result_Count": [1],
-            "Fallback_Attempt_Status": ["FALLBACK_SELECTED"],
-        }
+        [
+            {
+                "Snapshot_Query_ID": "Q1",
+                "Fallback_Attempt_Order": 1,
+                "Attempted_Match_Level": "EXACT_D1_STATE_REGIME_CONTEXT_QUERY_MATCH",
+                "Candidate_Reference_Count": 1,
+                "Selected_Result_Count": 1,
+                "Fallback_Attempt_Status": "MATCH_FOUND",
+            },
+            {
+                "Snapshot_Query_ID": "Q2",
+                "Fallback_Attempt_Order": 1,
+                "Attempted_Match_Level": "EXACT_D1_STATE_REGIME_CONTEXT_QUERY_MATCH",
+                "Candidate_Reference_Count": 0,
+                "Selected_Result_Count": 0,
+                "Fallback_Attempt_Status": "NO_MATCH_FOUND",
+            },
+            {
+                "Snapshot_Query_ID": "Q2",
+                "Fallback_Attempt_Order": 2,
+                "Attempted_Match_Level": "D1_REGIME_CONTEXT_QUERY_MATCH",
+                "Candidate_Reference_Count": 2,
+                "Selected_Result_Count": 2,
+                "Fallback_Attempt_Status": "MATCH_FOUND",
+            },
+            {
+                "Snapshot_Query_ID": "Q3",
+                "Fallback_Attempt_Order": 1,
+                "Attempted_Match_Level": "EXACT_D1_STATE_REGIME_CONTEXT_QUERY_MATCH",
+                "Candidate_Reference_Count": 0,
+                "Selected_Result_Count": 0,
+                "Fallback_Attempt_Status": "NO_MATCH_FOUND",
+            },
+            {
+                "Snapshot_Query_ID": "Q3",
+                "Fallback_Attempt_Order": 2,
+                "Attempted_Match_Level": "D1_REGIME_CONTEXT_QUERY_MATCH",
+                "Candidate_Reference_Count": 2,
+                "Selected_Result_Count": 2,
+                "Fallback_Attempt_Status": "MATCH_FOUND",
+            },
+            {
+                "Snapshot_Query_ID": "Q4",
+                "Fallback_Attempt_Order": 1,
+                "Attempted_Match_Level": "EXACT_D1_STATE_REGIME_CONTEXT_QUERY_MATCH",
+                "Candidate_Reference_Count": 0,
+                "Selected_Result_Count": 0,
+                "Fallback_Attempt_Status": "NO_MATCH_FOUND",
+            },
+        ]
     ).to_csv(dashboard_dir / "research_dashboard_fallback_panel.csv", index=False)
     pd.DataFrame({"Diagnostic": ["Synthetic dashboard diagnostic"]}).to_csv(
         dashboard_dir / "research_dashboard_diagnostic_panel.csv", index=False
