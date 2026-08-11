@@ -12,3 +12,12 @@ def test_findings_produce_partial_readiness_for_warning_annotated_cards(tmp_path
     assert result.summary is not None
     assert result.summary.dashboard_stability_readiness_flag == "PARTIAL_READY_FOR_STABILITY_AWARE_DASHBOARD_REVIEW"
     assert result.summary.warning_evidence_indicator_count >= 1
+
+
+def test_findings_count_affected_fallback_dependent_reference_cards(tmp_path):
+    config = write_synthetic_dashboard_stability_inputs(tmp_path)
+
+    result = DashboardStabilityIndicatorsPipeline(config).run()
+
+    assert result.summary is not None
+    assert result.summary.fallback_dependent_indicator_count == 2

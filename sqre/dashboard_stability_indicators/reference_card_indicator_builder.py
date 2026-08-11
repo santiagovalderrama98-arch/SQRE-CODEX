@@ -5,7 +5,7 @@ from __future__ import annotations
 import pandas as pd
 
 from sqre.dashboard_stability_indicators.config import DashboardStabilityIndicatorsConfig
-from sqre.dashboard_stability_indicators.models import numeric_series, text_series
+from sqre.dashboard_stability_indicators.fallback_indicator_builder import build_query_fallback_statuses
 
 
 REFERENCE_CARD_COLUMNS = [
@@ -31,14 +31,20 @@ REFERENCE_CARD_COLUMNS = [
 ]
 
 
-def build_reference_card_indicators(config: DashboardStabilityIndicatorsConfig, reference_cards: pd.DataFrame) -> pd.DataFrame:
+def build_reference_card_indicators(
+    config: DashboardStabilityIndicatorsConfig,
+    reference_cards: pd.DataFrame,
+    fallback_panel: pd.DataFrame | None = None,
+) -> pd.DataFrame:
     if not config.include_reference_card_indicators or reference_cards.empty:
         return pd.DataFrame(columns=REFERENCE_CARD_COLUMNS)
     cards = reference_cards.head(config.maximum_reference_cards).copy()
+    fallback_statuses = build_query_fallback_statuses(fallback_panel) if fallback_panel is not None else {}
     rows = []
     for index, row in cards.iterrows():
         values = _extract(cards, index)
-        klass, indicator, severity, primary, secondary = _classify_card(values)
+        fallback_status = fallback_statuses.get(str(values["Snapshot_Query_ID"]), "")
+        klass, indicator, severity, primary, secondary = _classify_card(values, fallback_status)
         values.update(
             {
                 "Reference_Card_Stability_Class": klass,
@@ -72,31 +78,32 @@ def _extract(frame: pd.DataFrame, index: int) -> dict[str, object]:
     }
 
 
-def _classify_card(values: dict[str, object]) -> tuple[str, str, str, str, str]:
+def _classify_card(values: dict[str, object], fallback_status: str = "") -> tuple[str, str, str, str, str]:
     match = str(values["Snapshot_Query_Match_Level"]).upper()
     direction = str(values["Matched_Directional_Behavior_Class"]).upper()
     horizon = str(values["Matched_Horizon_Stability_Class"]).upper()
     evidence = str(values["Snapshot_Evidence_Class"]).upper()
     granularity = str(values["Matched_Context_Granularity"]).upper()
-    fallback = "FALLBACK" in match or "BROADER" in match
+    fallback = fallback_status == "FALLBACK_MATCH_USED" or "FALLBACK" in match or "BROADER" in match
     unstable_direction = "UNSTABLE" in direction or "MIXED" in direction
     partial_horizon = "PARTIAL" in horizon
     partial_granularity = "PARTIAL" in granularity or "FRAGMENTED" in granularity
     if unstable_direction:
+        secondary = "Fallback-dependent broader context used." if fallback else "Review only as descriptive historical context."
         return (
             "REFERENCE_CARD_WARNING_REQUIRED",
             "WARNING_EVIDENCE_INDICATOR",
             "HIGH_STABILITY_WARNING",
             "Directionally unstable reference evidence.",
-            "Review only as descriptive historical context.",
+            secondary,
         )
     if fallback:
         return (
-            "REFERENCE_CARD_WARNING_REQUIRED",
+            "REFERENCE_CARD_STABLE_FOR_REVIEW",
             "WARNING_EVIDENCE_INDICATOR",
             "MODERATE_STABILITY_WARNING",
             "Fallback-dependent reference match.",
-            "Broader matching reduces context specificity.",
+            "Fallback-dependent broader context used.",
         )
     if partial_horizon or partial_granularity or "PARTIAL" in evidence:
         return (

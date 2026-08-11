@@ -38,7 +38,11 @@ class DashboardStabilityIndicatorsPipeline:
         source_inventory = build_source_inventory(self.config)
         legend = build_stability_indicator_legend(self.config.include_stability_legend)
         indicator_map = build_stability_indicator_map(frames.get("interpretation_guide"))
-        reference_cards = build_reference_card_indicators(self.config, frames.get("reference_cards"))
+        reference_cards = build_reference_card_indicators(
+            self.config,
+            frames.get("reference_cards"),
+            frames.get("fallback_panel"),
+        )
         evidence_panel = build_evidence_stability_panel(reference_cards, frames.get("evidence_panel"))
         behavior_panel = build_behavior_stability_panel(reference_cards, frames.get("behavior_panel"))
         fallback_panel = build_fallback_stability_panel(self.config, frames.get("fallback_panel"))

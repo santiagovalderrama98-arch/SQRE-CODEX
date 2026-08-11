@@ -18,7 +18,7 @@ WARNING_SUMMARY_COLUMNS = [
 def build_dashboard_warning_summary(reference_cards: pd.DataFrame, fallback_panel: pd.DataFrame) -> pd.DataFrame:
     rows = []
     rows.extend(_card_warning_rows(reference_cards))
-    rows.extend(_fallback_warning_rows(fallback_panel))
+    rows.extend(_fallback_warning_rows(fallback_panel, _card_query_ids(reference_cards)))
     if not rows:
         return pd.DataFrame(columns=WARNING_SUMMARY_COLUMNS)
     frame = pd.DataFrame(rows)
@@ -43,46 +43,69 @@ def _card_warning_rows(cards: pd.DataFrame) -> list[dict[str, str]]:
     if cards.empty:
         return rows
     for _, row in cards.iterrows():
-        warning_class = _card_warning_class(row)
-        rows.append(
-            {
-                "Dashboard_Warning_Class": warning_class,
-                "Reference_Card_ID": str(row.get("Reference_Card_ID", "")),
-                "Snapshot_Query_ID": str(row.get("Snapshot_Query_ID", "")),
-                "Dashboard_Stability_Severity_Class": str(row.get("Dashboard_Stability_Severity_Class", "")),
-            }
-        )
+        for warning_class in _card_warning_classes(row):
+            rows.append(
+                {
+                    "Dashboard_Warning_Class": warning_class,
+                    "Reference_Card_ID": str(row.get("Reference_Card_ID", "")),
+                    "Snapshot_Query_ID": str(row.get("Snapshot_Query_ID", "")),
+                    "Dashboard_Stability_Severity_Class": _severity_for_warning(
+                        warning_class, str(row.get("Dashboard_Stability_Severity_Class", ""))
+                    ),
+                }
+            )
     return rows
 
 
-def _fallback_warning_rows(fallback: pd.DataFrame) -> list[dict[str, str]]:
+def _fallback_warning_rows(fallback: pd.DataFrame, card_query_ids: set[str]) -> list[dict[str, str]]:
     rows = []
     if fallback.empty:
         return rows
     for _, row in fallback.iterrows():
+        warning_class = str(row.get("Dashboard_Warning_Class", "DASHBOARD_WARNING_NONE"))
+        query_id = str(row.get("Snapshot_Query_ID", ""))
+        if warning_class == "DASHBOARD_WARNING_FALLBACK_DEPENDENCY" and query_id in card_query_ids:
+            continue
         rows.append(
             {
-                "Dashboard_Warning_Class": str(row.get("Dashboard_Warning_Class", "DASHBOARD_WARNING_NONE")),
+                "Dashboard_Warning_Class": warning_class,
                 "Reference_Card_ID": "",
-                "Snapshot_Query_ID": str(row.get("Snapshot_Query_ID", "")),
+                "Snapshot_Query_ID": query_id,
                 "Dashboard_Stability_Severity_Class": str(row.get("Dashboard_Stability_Severity_Class", "")),
             }
         )
     return rows
 
 
-def _card_warning_class(row: pd.Series) -> str:
-    primary = str(row.get("Primary_Stability_Warning", "")).upper()
+def _card_warning_classes(row: pd.Series) -> list[str]:
+    primary = str(row.get("Primary_Stability_Warning", ""))
+    secondary = str(row.get("Secondary_Stability_Warning", ""))
+    text = f"{primary} {secondary}".upper()
     severity = str(row.get("Dashboard_Stability_Severity_Class", "")).upper()
-    if "DIRECTIONALLY" in primary:
-        return "DASHBOARD_WARNING_DIRECTIONAL_INSTABILITY"
-    if "FALLBACK" in primary:
-        return "DASHBOARD_WARNING_FALLBACK_DEPENDENCY"
-    if "PARTIAL" in primary or severity == "MODERATE_STABILITY_WARNING":
-        return "DASHBOARD_WARNING_PARTIAL_EVIDENCE"
-    if severity == "HIGH_STABILITY_WARNING":
-        return "DASHBOARD_WARNING_INPUT_LIMITED"
-    return "DASHBOARD_WARNING_NONE"
+    classes: list[str] = []
+    if "DIRECTIONALLY" in text:
+        classes.append("DASHBOARD_WARNING_DIRECTIONAL_INSTABILITY")
+    if "FALLBACK" in text:
+        classes.append("DASHBOARD_WARNING_FALLBACK_DEPENDENCY")
+    if not classes and ("PARTIAL" in text or severity == "MODERATE_STABILITY_WARNING"):
+        classes.append("DASHBOARD_WARNING_PARTIAL_EVIDENCE")
+    if not classes and severity == "HIGH_STABILITY_WARNING":
+        classes.append("DASHBOARD_WARNING_INPUT_LIMITED")
+    return classes or ["DASHBOARD_WARNING_NONE"]
+
+
+def _card_query_ids(cards: pd.DataFrame) -> set[str]:
+    if cards.empty or "Snapshot_Query_ID" not in cards.columns:
+        return set()
+    return set(cards["Snapshot_Query_ID"].astype(str))
+
+
+def _severity_for_warning(warning_class: str, card_severity: str) -> str:
+    if warning_class == "DASHBOARD_WARNING_DIRECTIONAL_INSTABILITY":
+        return "HIGH_STABILITY_WARNING"
+    if warning_class == "DASHBOARD_WARNING_FALLBACK_DEPENDENCY":
+        return "MODERATE_STABILITY_WARNING"
+    return card_severity
 
 
 def _highest_severity(values: pd.Series) -> str:
