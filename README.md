@@ -3630,3 +3630,133 @@ No thresholds are changed.
 No production taxonomy is changed.
 No operational logic is added.
 ```
+
+## Phase 7.5.25 — Dashboard Stability Indicators
+
+Purpose:
+
+```text
+Add research-only stability indicators to dashboard-facing outputs.
+Show which evidence is stable, partial, warning-labeled, or documentation-only.
+Flag fallback-dependent reference cards and directionally unstable reference evidence.
+Provide evidence, behavior, fallback, warning, scope safety, and readiness summaries.
+Render a static self-contained HTML dashboard with stability labels.
+```
+
+This phase follows Phase 7.5.24 by taking the reference stability documentation
+and making it visible in dashboard artifacts. Stability indicators describe
+evidence quality and stability constraints. They are not decision logic and do
+not decide whether any context is favorable or unfavorable.
+
+Inputs:
+
+```text
+data/research/reference_stability_documentation/reference_stability_documentation_source_inventory.csv
+data/research/reference_stability_documentation/reference_stability_interpretation_guide.csv
+data/research/reference_stability_documentation/reference_evidence_usage_policy.csv
+data/research/reference_stability_documentation/reference_dashboard_reading_guide.csv
+data/research/reference_stability_documentation/reference_stability_limitations_documentation.csv
+data/research/reference_stability_documentation/reference_stability_follow_up_plan.csv
+data/research/reference_stability_documentation/reference_stability_documentation_scope_safety_review.csv
+data/research/reference_stability_documentation/reference_stability_documentation_summary.csv
+data/research/reference_stability_documentation/reference_stability_documentation_report.txt
+data/research/reference_stability_documentation/reference_stability_documentation.md
+data/research/reference_stability_validation/*.csv
+data/research/research_dashboard_prototype/*.csv
+data/research/research_dashboard_prototype/research_dashboard_prototype.html
+data/research/manual_research_dashboard_review/*.csv
+```
+
+Run:
+
+```bash
+python3 scripts/run_dashboard_stability_indicators.py \
+  --stability-documentation-dir data/research/reference_stability_documentation \
+  --stability-validation-dir data/research/reference_stability_validation \
+  --dashboard-dir data/research/research_dashboard_prototype \
+  --manual-dashboard-review-dir data/research/manual_research_dashboard_review \
+  --output-dir data/research/dashboard_stability_indicators \
+  --report data/research/dashboard_stability_indicators/dashboard_stability_indicators_report.txt \
+  --html data/research/dashboard_stability_indicators/dashboard_stability_indicators.html
+```
+
+The workflow writes:
+
+```text
+data/research/dashboard_stability_indicators/dashboard_stability_indicator_source_inventory.csv
+data/research/dashboard_stability_indicators/dashboard_stability_indicator_legend.csv
+data/research/dashboard_stability_indicators/dashboard_stability_indicator_map.csv
+data/research/dashboard_stability_indicators/dashboard_reference_card_stability_indicators.csv
+data/research/dashboard_stability_indicators/dashboard_evidence_stability_panel.csv
+data/research/dashboard_stability_indicators/dashboard_behavior_stability_panel.csv
+data/research/dashboard_stability_indicators/dashboard_fallback_stability_panel.csv
+data/research/dashboard_stability_indicators/dashboard_stability_warning_summary.csv
+data/research/dashboard_stability_indicators/dashboard_stability_scope_safety_review.csv
+data/research/dashboard_stability_indicators/dashboard_stability_indicators_summary.csv
+data/research/dashboard_stability_indicators/dashboard_stability_indicators_report.txt
+data/research/dashboard_stability_indicators/dashboard_stability_indicators.html
+```
+
+Stability indicator legend:
+
+```text
+STABLE_EVIDENCE
+PARTIAL_EVIDENCE
+STABILITY_WARNING
+DOCUMENTATION_ONLY
+FALLBACK_DEPENDENT
+DIRECTIONALLY_UNSTABLE
+HORIZON_PARTIAL
+GRANULARITY_PARTIAL
+SAMPLE_STABLE
+DISPERSION_STABLE
+```
+
+Dashboard stability outputs include:
+
+```text
+Indicator map
+Reference card stability indicators
+Evidence stability panel
+Behavior stability panel
+Fallback stability panel
+Warning summary
+Static HTML output
+Scope safety review
+Readiness assessment
+```
+
+Readiness classes:
+
+```text
+DASHBOARD_STABILITY_INDICATORS_READY
+PARTIAL_DASHBOARD_STABILITY_INDICATORS_READY
+DASHBOARD_STABILITY_INDICATORS_INPUT_LIMITED
+INPUT_MISSING
+```
+
+Readiness flags:
+
+```text
+READY_FOR_STABILITY_AWARE_DASHBOARD_REVIEW
+PARTIAL_READY_FOR_STABILITY_AWARE_DASHBOARD_REVIEW
+NOT_READY_DASHBOARD_STABILITY_INPUT_LIMITED
+INPUT_COMPLETENESS_REVIEW_REQUIRED
+```
+
+Scope limitations:
+
+```text
+This phase adds research-only stability indicators to dashboard outputs.
+This phase does not generate trading signals.
+This phase does not generate operational recommendations.
+This phase does not decide whether any context is favorable or unfavorable.
+This phase does not create a Decision Engine.
+This phase does not create production decision logic.
+No data download is performed.
+No production defaults are changed.
+No thresholds are changed.
+No production taxonomy is changed.
+No provider behavior is changed.
+No operational logic is added.
+```
